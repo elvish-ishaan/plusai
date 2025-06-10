@@ -1,51 +1,80 @@
 "use client";
 
-import { useState } from "react";
-import { Globe, Paperclip, ChevronUp } from "lucide-react";
+import { Globe, Paperclip, ArrowUp } from "lucide-react";
 import TextareaAutosize from "react-textarea-autosize";
 import ModelSelector from "./ModelSelector";
 
-export default function ChatInputBox() {
-  const [message, setMessage] = useState("");
+type Props = {
+  message: string;
+  setMessage: (val: string) => void;
+  onSend: (val: string) => void;
+  inputRef: React.RefObject<HTMLTextAreaElement>;
+};
+
+export default function ChatInputBox({
+  message,
+  setMessage,
+  onSend,
+  inputRef,
+}: Props) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      onSend(message);
+    }
+  };
 
   return (
-    <div className="max-w-3xl mx-auto w-full px-4 pt-4 pb-2">
-      <div className="relative rounded-2xl shadow-md overflow-hidden">
-        {/* Top thick border with rounded corners */}
-        <div className="absolute top-0 left-0 right-0 h-6 rounded-t-2xl bg-[#fadefd] pointer-events-none"></div>
-
-        <div className="bg-white rounded-t-2xl px-4 py-3 flex flex-col justify-between relative z-10">
-          {/* Auto-expanding Text Input */}
+    <div className="max-w-4xl mx-auto w-full px-4 pt-4 pb-2">
+      <div
+        className="relative bg-[--chat-input-background] backdrop-blur-lg rounded-t-[20px] border border-white/70 border-b-0 p-2 pb-0 shadow-[0_80px_50px_rgba(0,0,0,0.1),0_50px_30px_rgba(0,0,0,0.07),0_30px_15px_rgba(0,0,0,0.06),0_15px_8px_rgba(0,0,0,0.04),0_6px_4px_rgba(0,0,0,0.04),0_2px_2px_rgba(0,0,0,0.02)] outline outline-8 outline-[hsl(var(--chat-input-gradient)/0.5)]"
+        style={{
+          //@ts-ignore
+          "--chat-input-gradient": "322 70% 85%",
+          "--chat-input-background": "rgba(255, 255, 255, 0.7)",
+        }}
+      >
+        <div className="flex flex-col gap-2 rounded-t-xl px-3 pt-3">
           <TextareaAutosize
+            ref={inputRef}
             minRows={2}
             maxRows={10}
             placeholder="Type your message here..."
-            className="w-full resize-none bg-white focus:outline-none text-[#a14a86] placeholder-[#d088b5] text-sm mb-2 pr-12"
+            className="w-full resize-none bg-transparent text-sm text-[#a14a86] placeholder-[#d088b5] focus:outline-none leading-6"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            aria-label="Message input"
           />
 
-          {/* Toolbar at bottom */}
-          <div className="flex justify-between items-center mt-2">
-            <div className="flex items-center gap-2 text-[#c71680] font-semibold text-sm">
-              <ModelSelector />
-
-              <button className="flex items-center gap-1 bg-white/50 px-3 py-1 rounded-full text-[#c71680] text-sm hover:bg-white">
-                <Globe className="w-4 h-4" />
-                <span>Search</span>
-              </button>
-
-              <button className="bg-white/50 hover:bg-white text-[#c71680] rounded-full p-1.5">
-                <Paperclip className="w-4 h-4" />
-              </button>
-            </div>
-
+          {/* Toolbar */}
+          <div className="-mb-px mt-2 flex flex-row-reverse justify-between items-center">
             <button
-              className="bg-[#c988b4] hover:bg-[#c073a8] text-white rounded-lg p-1.5 transition"
+              className="bg-[#a23b67] hover:bg-[#d56698] text-pink-50 rounded-lg p-2 transition h-9 w-9 flex items-center justify-center"
               aria-label="Send"
+              onClick={() => onSend(message)}
             >
-              <ChevronUp className="w-4 h-4" />
+              <ArrowUp className="w-5 h-5" />
             </button>
+
+            <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center mb-6">
+              <div className="flex items-center gap-2">
+                <ModelSelector />
+                <button
+                  className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border border-[#eddfed] text-[#501854] hover:bg-[#f4d6e7]"
+                  type="button"
+                >
+                  <Globe className="w-4 h-4" />
+                  <span className="hidden sm:inline">Search</span>
+                </button>
+                <button
+                  className="text-xs px-2 py-1.5 rounded-xl border border-[#eddfed] text-[#501854] hover:bg-[#f4d6e7]"
+                  type="button"
+                >
+                  <Paperclip className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

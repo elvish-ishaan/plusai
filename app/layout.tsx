@@ -19,8 +19,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body
+    <html lang="en" suppressHydrationWarning>
+        <body
         className={`${montserrat.variable} antialiased text-foreground min-h-screen bg-[radial-gradient(ellipse_at_center,var(--background)_20%,oklch(0.235_0.017_290)_100%)]`}
       >
         <ThemeProvider>{children}</ThemeProvider>

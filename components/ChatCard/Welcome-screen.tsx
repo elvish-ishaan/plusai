@@ -72,14 +72,15 @@ const categories = [
   },
 ];
 
+
+
 export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Show "create" prompts by default, but don't highlight the button
   const currentCategory = categories.find(
     (cat) => cat.id === (selectedCategory ?? "default")
   );
-  
+
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="w-full max-w-3xl space-y-8 px-4 sm:px-8">
@@ -88,7 +89,7 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
         </h2>
 
         {/* Category Buttons */}
-        <div className="flex  gap-4 flex-wrap">
+        <div className="flex gap-4 flex-wrap">
           {categories
             .filter((category) => category.id !== "default")
             .map((category) => {
@@ -104,7 +105,7 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
                     )
                   }
                   className={cn(
-                    "flex items-center gap-2 px-5 py-2 rounded-full border text-sm font-semibold cursor-pointer  shadow-sm transition-colors bg-[#f7e4f3] hover:bg-[#f1c4e6]",
+                    "flex items-center gap-2 px-5 py-2 rounded-full border text-sm font-semibold cursor-pointer shadow-sm transition-colors bg-[#f7e4f3] hover:bg-[#f1c4e6]",
                     isSelected
                       ? "bg-[#a44370] text-[#fdf3fa] border-transparent hover:bg-[#d56b9e]"
                       : "text-[#7a375b] border-[#f2d9e5]"
@@ -118,12 +119,12 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
         </div>
 
         {/* Prompt Suggestions */}
-        <div className="mx-auto space-y-1 text-[#7a375b] divide-y divide-[#f5e0f1]  divide-solid ">
+        <div className="mx-auto space-y-1 text-[#7a375b] divide-y divide-[#f5e0f1] divide-solid">
           {currentCategory?.prompts.map((prompt, index) => (
             <div key={index}>
               <button
                 onClick={() => onPromptSelect(prompt)}
-                className="w-full text-left text-[#77347c] p-2.5 hover:bg-[#f5dcf0] transition-colors  rounded-lg my-1 cursor-pointer"
+                className="w-full text-left text-[#77347c] p-2.5 hover:bg-[#f5dcf0] transition-colors rounded-lg my-1 cursor-pointer"
               >
                 {prompt}
               </button>

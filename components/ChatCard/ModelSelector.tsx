@@ -21,7 +21,7 @@ export default function ModelSelector() {
     <div className="relative inline-block text-left">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center gap-1 text-[#b4005c] font-semibold text-sm bg-white/10 border border-[#f4b5e8] px-3 py-1.5 rounded-full shadow-sm hover:bg-white/20"
+        className="flex items-center  gap-1 text-[#501854] font-normal text-sm    px-3 py-1.5 rounded-lg hover:bg-[#f4d6e7]"
       >
         {selectedModel}
         <ChevronDown className="w-4 h-4" />

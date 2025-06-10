@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import WelcomeScreen from "./Welcome-screen";
 import ChatInputBox from "./ChatInputBox";
 
@@ -8,22 +8,45 @@ export type Message = { sender: string; text: string };
 
 export default function ChatCard() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState<string>("");
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSend = async (message: string) => {
-    // Handle sending message here
+  const handlePromptSelect = (prompt: string) => {
+    setMessage(prompt);
+    inputRef.current?.focus();
+  };
+
+  const handleSend = async (text: string) => {
+    if (!text.trim()) return;
+    setMessages((prev) => [...prev, { sender: "user", text }]);
+    setMessage("");
+    // Optionally: Send message to backend/AI here
   };
 
   return (
     <div className="h-screen w-full bg-[#f9f3f9] flex flex-col rounded-tl-[2rem] border border-[#efbdeb] mt-3.5">
-      {/* Scrollable chat/message area */}
+      {/* Message Area */}
       <div className="flex-1 overflow-auto px-10 py-8">
-        <WelcomeScreen onPromptSelect={handleSend} />
-        {/* Future: Render messages here */}
+        {messages.length === 0 && !message ? (
+          <WelcomeScreen onPromptSelect={handlePromptSelect} />
+        ) : (
+          messages.map((msg, idx) => (
+            <div key={idx} className="mb-2 text-[#7a375b]">
+              <strong>{msg.sender}:</strong> {msg.text}
+            </div>
+          ))
+        )}
       </div>
 
-      {/* Input always at the bottom */}
-      <div className="px-6   border-[#efbdeb]">
-        <ChatInputBox />
+      {/* Input Area */}
+      <div className="px-6  border-[#efbdeb]">
+        <ChatInputBox
+          message={message}
+          setMessage={setMessage}
+          onSend={handleSend}
+          //@ts-ignore
+          inputRef={inputRef}
+        />
       </div>
     </div>
   );
