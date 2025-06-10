@@ -1,8 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Settings2, Moon } from "lucide-react";
 import WelcomeScreen from "./Welcome-screen";
 import ChatInputBox from "./ChatInputBox";
+import TopRightIconHolder from "./ToprightComps";
 
 export type Message = { sender: string; text: string };
 
@@ -20,11 +22,13 @@ export default function ChatCard() {
     if (!text.trim()) return;
     setMessages((prev) => [...prev, { sender: "user", text }]);
     setMessage("");
-    // Optionally: Send message to backend/AI here
   };
 
   return (
-    <div className="h-screen w-full bg-[#f9f3f9] flex flex-col rounded-tl-[2rem] border border-[#efbdeb] mt-3.5">
+    <div className="relative h-screen w-full bg-[#f9f3f9] flex flex-col border border-[#efbdeb] mt-3.5 rounded-xl overflow-hidden">
+      {/* Top-Right Icons with Downward Curve */}
+      <TopRightIconHolder />
+
       {/* Message Area */}
       <div className="flex-1 overflow-auto px-10 py-8">
         {messages.length === 0 && !message ? (
