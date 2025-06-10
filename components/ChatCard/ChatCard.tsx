@@ -1,14 +1,15 @@
-"use client";
-
 import { useRef, useState } from "react";
-import { Settings2, Moon } from "lucide-react";
 import WelcomeScreen from "./Welcome-screen";
 import ChatInputBox from "./ChatInputBox";
 import TopRightIconHolder from "./ToprightComps";
 
 export type Message = { sender: string; text: string };
 
-export default function ChatCard() {
+interface ChatCardProps {
+  isCollapsed: boolean;
+}
+
+export default function ChatCard({ isCollapsed }: ChatCardProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -25,30 +26,37 @@ export default function ChatCard() {
   };
 
   return (
-    <div className="relative h-screen w-full bg-[#f9f3f9] flex flex-col border border-[#efbdeb] mt-3.5 rounded-xl overflow-hidden">
-      {/* Top-Right Icons with Downward Curve */}
-      <TopRightIconHolder />
+    <div
+      className={`relative flex flex-col ${
+        isCollapsed
+          ? "w-screen h-screen bg-[#f9f3f9]"
+          : "h-screen w-full mt-3.5 rounded-xl border border-[#efbdeb] bg-[#f9f3f9] shadow-md"
+      } overflow-hidden`}
+    >
+      {/* Top-Right Icons */}
+      
+      <TopRightIconHolder  isCollapsed={isCollapsed}/>
 
-      {/* Message Area */}
-      <div className="flex-1 overflow-auto px-10 py-8">
+      {/* Chat Messages Area */}
+      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-3 scrollbar-hide">
         {messages.length === 0 && !message ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
           messages.map((msg, idx) => (
-            <div key={idx} className="mb-2 text-[#7a375b]">
+            <div key={idx} className="text-[#7a375b]">
               <strong>{msg.sender}:</strong> {msg.text}
             </div>
           ))
         )}
       </div>
 
-      {/* Input Area */}
-      <div className="px-6  border-[#efbdeb]">
+      {/* Input Box */}
+      <div className="px-6  border-[#efbdeb] bg-[#f9f3f9]">
         <ChatInputBox
           message={message}
           setMessage={setMessage}
           onSend={handleSend}
-          //@ts-ignore
+          // @ts-ignore
           inputRef={inputRef}
         />
       </div>
