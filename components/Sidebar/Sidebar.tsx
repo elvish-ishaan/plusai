@@ -11,6 +11,7 @@ import { format, isToday, isYesterday } from "date-fns";
 import { Pin, X } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
+import { signIn, signOut } from "next-auth/react";
 
 const dummyThreads = [
   { id: 1, title: "Chat with Alice", date: "2025-06-10T10:00:00Z" },
@@ -280,7 +281,8 @@ export default function Sidebar({
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0">
-                <p className="text-sm font-medium truncate">Piyush Zingade</p>
+                <Button onClick={() => { signIn() }}>Log In</Button>
+                <Button onClick={() => { signOut() }}>log out</Button>
                 <p className="text-xs text-[#a74576] truncate">Free</p>
               </div>
             </div>
