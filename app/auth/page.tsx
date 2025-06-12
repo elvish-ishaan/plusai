@@ -1,5 +1,6 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -39,7 +40,9 @@ export default function Page() {
 
       {/* Google Sign-In Button */}
       <div className="w-full max-w-sm">
-        <button className="flex items-center justify-center gap-3 w-full h-14 px-6 py-2 text-lg font-semibold text-white bg-[#a23b67] hover:bg-[#d56698] active:bg-[#a23b67] rounded-lg shadow transition-all hover:shadow-lg backdrop-blur-sm">
+        <button 
+          onClick={() => signIn()}
+          className="flex items-center justify-center gap-3 w-full h-14 px-6 py-2 text-lg font-semibold text-white bg-[#a23b67] hover:bg-[#d56698] active:bg-[#a23b67] rounded-lg shadow transition-all hover:shadow-lg backdrop-blur-sm">
           <Image src="/google.png" alt="Google" width={24} height={24} />
           Continue with Google
         </button>

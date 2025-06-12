@@ -8,21 +8,17 @@ import logo from "../../public/logo.png";
 import sidebar from "../../public/sidebar.png";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { format, isToday, isYesterday } from "date-fns";
-import { Pin, User, X } from "lucide-react";
+import { Pin, X } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
-import { signIn, signOut } from "next-auth/react";
+
 import UserInfo from "./UserInfo";
 import { Thread } from "@/types/auxtypes";
 
-<<<<<<< HEAD
-const groupByDate = (threads: Thread[]) => {
-  const groups: Record<string, Thread[]> = {};
-=======
+
 
 const groupByDate = (threads: Thread[]) => {
   const groups: Record<string, Thread[]> = {};   
->>>>>>> 4d77aeba9b599dc50e9b2a84381492da099b9a56
   threads.forEach((thread) => {
     const threadDate = new Date(thread?.createdAt);
     let label = format(threadDate, "PPP");
@@ -45,11 +41,11 @@ export default function Sidebar({
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   threads: Thread[];
 }) {
-<<<<<<< HEAD
+
   console.log(threads, "threads inisde sidebar..........");
-=======
+
   console.log(threads,'threads inisde sidebar..........')
->>>>>>> 4d77aeba9b599dc50e9b2a84381492da099b9a56
+
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const hasMounted = useRef(false);
@@ -281,37 +277,8 @@ export default function Sidebar({
             )}
           </nav>
 
-          {/* Bottom User Info */}
-          {/* <div className="p-4 border-[#e6c4de] mb-3">
-            <div className="flex items-center space-x-3 hover:bg-white px-2 py-3 rounded-lg cursor-pointer">
-              <Avatar>
-                <AvatarFallback className="bg-blue-600 text-white">
-                  P
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <Button
-                  onClick={() => {
-                    signIn();
-                  }}
-                >
-                  Log In
-                </Button>
-                <Button
-                  onClick={() => {
-                    signOut();
-                  }}
-                >
-                  log out
-                </Button>
-                <p className="text-xs text-[#a74576] truncate">Free</p>
-              </div>
-            </div>
-          </div> */}
-
           <UserInfo/>
         </>
       )}
     </motion.aside>
-  );
-}
+  )};
