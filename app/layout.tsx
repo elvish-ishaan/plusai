@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Montserrat } from "next/font/google";
+import AuthProvider from "@/AuthProvider";
 
 export const metadata: Metadata = {
   title: "T3 Chat",
@@ -22,7 +23,11 @@ export default function RootLayout({
         <body
         className={`${montserrat.variable} antialiased  min-h-screen bg-[radial-gradient(ellipse_at_center,var(--background)_20%,oklch(0.235_0.017_290)_100%)]`}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+           <AuthProvider>
+             {children}
+           </AuthProvider>
+          </ThemeProvider>
       </body>
     </html>
   );
