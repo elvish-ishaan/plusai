@@ -1,32 +1,61 @@
-"use client"
+"use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import WelcomeScreen from "./Welcome-screen";
 import ChatInputBox from "./ChatInputBox";
 import TopRightIconHolder from "./ToprightComps";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
+import ReactMarkdown from "react-markdown";
 
-export type Message = { sender: string; text: string };
+interface Thread {
+  id: string;
+  title: string;
+  date: string;
+}
 
 interface ChatCardProps {
   isCollapsed: boolean;
-  setthreads: React.Dispatch<React.SetStateAction<any[]>>;
+  setthreads?: React.Dispatch<React.SetStateAction<Thread[]>>;
+  threadId?: string;
 }
 
-export default function ChatCard({ isCollapsed, setthreads }: ChatCardProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-  const [messages, setMessages] = useState<Message[]>([]);
+export default function ChatCard({
+  isCollapsed,
+  setthreads,
+  threadId,
+}: ChatCardProps) {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const [chat, setchat] = useState<Chat[]>([]);
   const [message, setMessage] = useState<string>("");
-  const [provider, setProvider] = useState<string>('')
-  const [model, setModel] = useState<string>('gemini-2.0-flash')
+  const [provider, setProvider] = useState<string>("");
+  const [model, setModel] = useState<string>("gemini-2.0-flash");
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true)
+  const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const { data: session } = useSession();
-  console.log(session,'session')
-  //gen id on first render
-  const [currentThreadId, setCurrentThreadId] = useState<string | null>( () => uuid() )
+
+  const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
+
+  useEffect(() => {
+    if (!threadId) return;
+
+    const getThread = async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/chat/threads/${threadId}`);
+        console.log(res.data, "getting thread response");
+
+        if (res.data.success) {
+          setCurrentThreadId(threadId);
+          setchat(res.data.thread?.chats || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch thread:", err);
+      }
+    };
+
+    getThread();
+  }, [threadId]);
 
   const handlePromptSelect = (prompt: string) => {
     setMessage(prompt);
@@ -35,36 +64,47 @@ export default function ChatCard({ isCollapsed, setthreads }: ChatCardProps) {
 
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
-    setMessages((prev) => [...prev, { sender: "user", text }]);
+    setchat((prev) => [...prev, { id: uuid(), prompt: message, response: null }]);
     setMessage("");
-    
-    //calling api to send message
+
     const res = await axios.post(`${baseUrl}/chat`, {
       prompt: message,
-      prevPrompts: messages,
-      provider: provider,
-      model: model,
+      prevPrompts: chat,
+      provider,
+      model,
       threadId: currentThreadId,
       maxOutputTokens: 500,
       temperature: 0.5,
-      systemPrompt: 'you are help ful asistent.',
-      llmProvider: 'gemini'
-    })
-    if(res.data.success){
-      setMessages((prev) => [...prev, { sender: "ai", text: res.data.genResponse }]);
+      systemPrompt: "you are helpful assistant.",
+      llmProvider: "gemini",
+    });
+
+    if (res.data.success) {
+      setchat((prev) => [
+        ...prev,
+        { id: res.data.genResponse?.id, prompt: message, response: res.data.genResponse },
+      ]);
     }
-    
-    //get the title of conversation only on init prompt
-    if(isInitPrompt){
-      console.log('calling generate title')
-      const res = await axios.post(`${baseUrl}/chat/generate-title`, {
-        initPrompt: text,
-      })
-      console.log(res.data,'getting res form gent title')
-      if(res.data.success){
-        setIsInitPrompt(false)
-        //push the generated title to sidebar thread list
-        setthreads((prev) => [...prev, {id: currentThreadId, title: res.data.title, date: new Date().toLocaleDateString()}])
+
+    if (isInitPrompt) {
+      try {
+        const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
+          initPrompt: text,
+        });
+
+        if (titleRes.data.success) {
+          setIsInitPrompt(false);
+          setthreads?.((prev) => [
+            ...prev,
+            {
+              id: currentThreadId,
+              title: titleRes.data.title,
+              date: new Date().toLocaleDateString(),
+            },
+          ]);
+        }
+      } catch (err) {
+        console.error("Failed to generate title:", err);
       }
     }
   };
@@ -77,31 +117,28 @@ export default function ChatCard({ isCollapsed, setthreads }: ChatCardProps) {
           : "h-screen w-full mt-3.5 rounded-xl border border-[#efbdeb] bg-[#f9f3f9] shadow-md"
       } overflow-hidden`}
     >
-      {/* Top-Right Icons */}
-      
-      <TopRightIconHolder  isCollapsed={isCollapsed}/>
+      <TopRightIconHolder isCollapsed={isCollapsed} />
 
-      {/* Chat Messages Area */}
-      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-3 scrollbar-hide">
-        {messages.length === 0 && !message ? (
+      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-3 scrollbar-hide w-1/2 items-center justify-center">
+        {chat.length === 0 && !message ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
-          messages.map((msg, idx) => (
-            <div key={idx} className="text-[#7a375b]">
-              <strong>{msg.sender}:</strong> {msg.text}
+          chat.map((chat) => (
+            <div key={chat.id} className=" flex flex-col space-y-1 ">
+              <span className=" p-3 bg-[#7a375b] rounded-md self-end">{chat?.prompt}</span>
+              <ReactMarkdown>{chat?.response}</ReactMarkdown>
             </div>
           ))
         )}
       </div>
 
-      {/* Input Box */}
-      <div className="px-6  border-[#efbdeb] bg-[#f9f3f9]">
+      <div className="px-6 border-[#efbdeb] bg-[#f9f3f9]">
         <ChatInputBox
           message={message}
           setMessage={setMessage}
           onSend={handleSend}
           setmodel={setModel}
-          // @ts-ignore
+          //@ts-expect-error ref typing
           inputRef={inputRef}
         />
       </div>

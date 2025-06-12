@@ -11,8 +11,12 @@ interface Thread {
 //interface for chat
 interface Chat {
     prompt: string;
-    response: string;
-    provider: string;
-    model: string;
-    thread: Thread;
+    response: string | null;
+    provider?: string;
+    model?: string;
+    thread?: Thread;
+    createdAt?: Date;
+    id?: string;
+    updatedAt?: Date;
+    threadId?: string;
 }
