@@ -13,16 +13,11 @@ import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
 import { signIn, signOut } from "next-auth/react";
 
-const dummyThreads = [
-  { id: 1, title: "Chat with Alice", date: "2025-06-10T10:00:00Z" },
-  { id: 2, title: "Project Discussion", date: "2025-06-10T15:30:00Z" },
-  { id: 3, title: "Random Talk", date: "2025-06-10T09:00:00Z" },
-];
 
-const groupByDate = (threads: any[]) => {
-  const groups: Record<string, any[]> = {};
+const groupByDate = (threads: Thread[]) => {
+  const groups: Record<string, Thread[]> = {};   
   threads.forEach((thread) => {
-    const threadDate = new Date(thread.date);
+    const threadDate = new Date(thread?.createdAt);
     let label = format(threadDate, "PPP");
 
     if (isToday(threadDate)) label = "Today";
@@ -37,10 +32,13 @@ const groupByDate = (threads: any[]) => {
 export default function Sidebar({
   isCollapsed,
   setIsCollapsed,
+  threads,
 }: {
   isCollapsed: boolean;
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  threads: Thread[];
 }) {
+  console.log(threads,'threads inisde sidebar..........')
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const hasMounted = useRef(false);
@@ -61,7 +59,7 @@ export default function Sidebar({
   }, []);
 
   const filteredThreads = useMemo(() => {
-    return dummyThreads.filter((thread) =>
+    return threads?.filter((thread) =>
       thread.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm]);
@@ -208,7 +206,7 @@ export default function Sidebar({
                     </h4>
                   )}
                   <div className="space-y-0.5 mt-2">
-                    {threads.map((thread) => (
+                    {threads?.map((thread) => (
                       <motion.div
                         key={thread.id}
                         className="relative group"

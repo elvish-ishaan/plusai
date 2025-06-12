@@ -12,15 +12,17 @@ export type Message = { sender: string; text: string };
 
 interface ChatCardProps {
   isCollapsed: boolean;
+  setthreads: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-export default function ChatCard({ isCollapsed }: ChatCardProps) {
+export default function ChatCard({ isCollapsed, setthreads }: ChatCardProps) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
   const [provider, setProvider] = useState<string>('')
-  const [model, setModel] = useState<string>('')
+  const [model, setModel] = useState<string>('gemini-2.0-flash')
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true)
   const { data: session } = useSession();
   console.log(session,'session')
   //gen id on first render
@@ -35,12 +37,13 @@ export default function ChatCard({ isCollapsed }: ChatCardProps) {
     if (!text.trim()) return;
     setMessages((prev) => [...prev, { sender: "user", text }]);
     setMessage("");
+    
     //calling api to send message
     const res = await axios.post(`${baseUrl}/chat`, {
       prompt: message,
       prevPrompts: messages,
       provider: provider,
-      model: 'gemini-2.0-flash',
+      model: model,
       threadId: currentThreadId,
       maxOutputTokens: 500,
       temperature: 0.5,
@@ -49,6 +52,20 @@ export default function ChatCard({ isCollapsed }: ChatCardProps) {
     })
     if(res.data.success){
       setMessages((prev) => [...prev, { sender: "ai", text: res.data.genResponse }]);
+    }
+    
+    //get the title of conversation only on init prompt
+    if(isInitPrompt){
+      console.log('calling generate title')
+      const res = await axios.post(`${baseUrl}/chat/generate-title`, {
+        initPrompt: text,
+      })
+      console.log(res.data,'getting res form gent title')
+      if(res.data.success){
+        setIsInitPrompt(false)
+        //push the generated title to sidebar thread list
+        setthreads((prev) => [...prev, {id: currentThreadId, title: res.data.title, date: new Date().toLocaleDateString()}])
+      }
     }
   };
 
@@ -83,6 +100,7 @@ export default function ChatCard({ isCollapsed }: ChatCardProps) {
           message={message}
           setMessage={setMessage}
           onSend={handleSend}
+          setmodel={setModel}
           // @ts-ignore
           inputRef={inputRef}
         />
