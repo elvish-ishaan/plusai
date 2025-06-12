@@ -8,21 +8,17 @@ import logo from "../../public/logo.png";
 import sidebar from "../../public/sidebar.png";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { format, isToday, isYesterday } from "date-fns";
-import { Pin, X } from "lucide-react";
+import { Pin, User, X } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
 import { signIn, signOut } from "next-auth/react";
+import UserInfo from "./UserInfo";
+import { Thread } from "@/types/auxtypes";
 
-const dummyThreads = [
-  { id: 1, title: "Chat with Alice", date: "2025-06-10T10:00:00Z" },
-  { id: 2, title: "Project Discussion", date: "2025-06-10T15:30:00Z" },
-  { id: 3, title: "Random Talk", date: "2025-06-10T09:00:00Z" },
-];
-
-const groupByDate = (threads: any[]) => {
-  const groups: Record<string, any[]> = {};
+const groupByDate = (threads: Thread[]) => {
+  const groups: Record<string, Thread[]> = {};
   threads.forEach((thread) => {
-    const threadDate = new Date(thread.date);
+    const threadDate = new Date(thread?.createdAt);
     let label = format(threadDate, "PPP");
 
     if (isToday(threadDate)) label = "Today";
@@ -37,10 +33,13 @@ const groupByDate = (threads: any[]) => {
 export default function Sidebar({
   isCollapsed,
   setIsCollapsed,
+  threads,
 }: {
   isCollapsed: boolean;
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  threads: Thread[];
 }) {
+  console.log(threads, "threads inisde sidebar..........");
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const hasMounted = useRef(false);
@@ -61,7 +60,7 @@ export default function Sidebar({
   }, []);
 
   const filteredThreads = useMemo(() => {
-    return dummyThreads.filter((thread) =>
+    return threads?.filter((thread) =>
       thread.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm]);
@@ -208,7 +207,7 @@ export default function Sidebar({
                     </h4>
                   )}
                   <div className="space-y-0.5 mt-2">
-                    {threads.map((thread) => (
+                    {threads?.map((thread) => (
                       <motion.div
                         key={thread.id}
                         className="relative group"
@@ -273,7 +272,7 @@ export default function Sidebar({
           </nav>
 
           {/* Bottom User Info */}
-          <div className="p-4 border-[#e6c4de] mb-3">
+          {/* <div className="p-4 border-[#e6c4de] mb-3">
             <div className="flex items-center space-x-3 hover:bg-white px-2 py-3 rounded-lg cursor-pointer">
               <Avatar>
                 <AvatarFallback className="bg-blue-600 text-white">
@@ -281,12 +280,26 @@ export default function Sidebar({
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0">
-                <Button onClick={() => { signIn() }}>Log In</Button>
-                <Button onClick={() => { signOut() }}>log out</Button>
+                <Button
+                  onClick={() => {
+                    signIn();
+                  }}
+                >
+                  Log In
+                </Button>
+                <Button
+                  onClick={() => {
+                    signOut();
+                  }}
+                >
+                  log out
+                </Button>
                 <p className="text-xs text-[#a74576] truncate">Free</p>
               </div>
             </div>
-          </div>
+          </div> */}
+
+          <UserInfo/>
         </>
       )}
     </motion.aside>

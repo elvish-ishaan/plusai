@@ -7,6 +7,7 @@ import ModelSelector from "./ModelSelector";
 type Props = {
   message: string;
   setMessage: (val: string) => void;
+  setModel: React.Dispatch<React.SetStateAction<string>>;
   onSend: (val: string) => void;
   inputRef: React.RefObject<HTMLTextAreaElement>;
 };
@@ -14,6 +15,7 @@ type Props = {
 export default function ChatInputBox({
   message,
   setMessage,
+  setModel,
   onSend,
   inputRef,
 }: Props) {
@@ -29,7 +31,7 @@ export default function ChatInputBox({
   return (
     <div className="max-w-4xl mx-auto w-full px-4 pt-4 pb-2">
       <div
-        className="relative bg-[--chat-input-background] backdrop-blur-lg rounded-t-[20px] border border-white/70 border-b-0 p-2 pb-0 shadow-[0_80px_50px_rgba(0,0,0,0.1),0_50px_30px_rgba(0,0,0,0.07),0_30px_15px_rgba(0,0,0,0.06),0_15px_8px_rgba(0,0,0,0.04),0_6px_4px_rgba(0,0,0,0.04),0_2px_2px_rgba(0,0,0,0.02)] outline outline-8 outline-[hsl(var(--chat-input-gradient)/0.5)]"
+        className="relative bg-[--chat-input-background] backdrop-blur-lg rounded-t-[20px] border border-white/70 border-b-0 p-2 pb-0 shadow-[0_80px_50px_rgba(0,0,0,0.1),0_50px_30px_rgba(0,0,0,0.07),0_30px_15px_rgba(0,0,0,0.06),0_15px_8px_rgba(0,0,0,0.04),0_6px_4px_rgba(0,0,0,0.04),0_2px_2px_rgba(0,0,0,0.02)]  outline-8 outline-[hsl(var(--chat-input-gradient)/0.5)]"
         style={{
           //@ts-ignore
           "--chat-input-gradient": "322 70% 85%",
@@ -63,10 +65,10 @@ export default function ChatInputBox({
             >
               <ArrowUp className="w-5 h-5" />
             </button>
-              {/* Buttons  */}
+
             <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center mb-6">
               <div className="flex items-center gap-2">
-                <ModelSelector />
+                <ModelSelector setModel={setModel} />
                 <button
                   className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border border-[#eddfed] text-[#ac1668] hover:bg-[#f4d6e7]"
                   type="button"

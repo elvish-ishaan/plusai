@@ -82,9 +82,9 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
   );
 
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="w-full max-w-3xl space-y-8 px-4 sm:px-8">
-        <h2 className="text-3xl font-bold text-[#501854]">
+    <div className="flex h-full w-full justify-center items-center text-center px-4 mt-10">
+      <div className="w-full max-w-3xl space-y-8">
+        <h2 className="text-3xl font-bold text-start text-[#501854]">
           How can I help you, Piyush?
         </h2>
 

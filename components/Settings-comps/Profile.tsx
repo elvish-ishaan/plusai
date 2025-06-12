@@ -1,23 +1,27 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Profile() {
+  const { data: session } = useSession();
+
+  const userName = session?.user?.name ?? "Anonymous";
+  const userEmail = session?.user?.email ?? "No Email";
+
   return (
     <div className="space-y-6 px-4 py-6 w-full md:max-w-xs">
       {/* Avatar and User Info */}
       <div className="text-center">
         <Avatar className="w-32 h-32 mx-auto">
-          <AvatarImage src="" alt="Piyush Zingade" />
+          <AvatarImage src="" alt={userName} />
           <AvatarFallback className="text-4xl bg-blue-500 text-white">
-            P
+            {userName?.charAt(0).toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
 
-        <h1 className="mt-4 text-xl font-bold">Piyush Zingade</h1>
-        <p className="text-sm text-muted-foreground break-all">
-          piyushzingade@gmail.com
-        </p>
+        <h1 className="mt-4 text-xl font-bold">{userName}</h1>
+        <p className="text-sm text-muted-foreground break-all">{userEmail}</p>
         <span className="mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium bg-pink-100 text-[#77347c]">
           Free Plan
         </span>
