@@ -17,6 +17,7 @@ interface ChatCardProps {
 }
 
 export default function ChatCard({ isCollapsed, setthreads }: ChatCardProps) {
+<<<<<<< HEAD
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
@@ -24,6 +25,15 @@ export default function ChatCard({ isCollapsed, setthreads }: ChatCardProps) {
   const [model, setModel] = useState<string>("gemini-2.0-flash");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
+=======
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState<string>("");
+  const [provider, setProvider] = useState<string>('')
+  const [model, setModel] = useState<string>('gemini-2.0-flash')
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true)
+>>>>>>> 4d77aeba9b599dc50e9b2a84381492da099b9a56
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   console.log(session, "session");
@@ -42,6 +52,7 @@ export default function ChatCard({ isCollapsed, setthreads }: ChatCardProps) {
     if (!text.trim()) return;
     setMessages((prev) => [...prev, { sender: "user", text }]);
     setMessage("");
+<<<<<<< HEAD
     setLoading(true); // Start loading
 
     try {
@@ -85,6 +96,37 @@ export default function ChatCard({ isCollapsed, setthreads }: ChatCardProps) {
       console.error("AI response error", err);
     } finally {
       setLoading(false); // Stop loading
+=======
+    
+    //calling api to send message
+    const res = await axios.post(`${baseUrl}/chat`, {
+      prompt: message,
+      prevPrompts: messages,
+      provider: provider,
+      model: model,
+      threadId: currentThreadId,
+      maxOutputTokens: 500,
+      temperature: 0.5,
+      systemPrompt: 'you are help ful asistent.',
+      llmProvider: 'gemini'
+    })
+    if(res.data.success){
+      setMessages((prev) => [...prev, { sender: "ai", text: res.data.genResponse }]);
+>>>>>>> 4d77aeba9b599dc50e9b2a84381492da099b9a56
+    }
+    
+    //get the title of conversation only on init prompt
+    if(isInitPrompt){
+      console.log('calling generate title')
+      const res = await axios.post(`${baseUrl}/chat/generate-title`, {
+        initPrompt: text,
+      })
+      console.log(res.data,'getting res form gent title')
+      if(res.data.success){
+        setIsInitPrompt(false)
+        //push the generated title to sidebar thread list
+        setthreads((prev) => [...prev, {id: currentThreadId, title: res.data.title, date: new Date().toLocaleDateString()}])
+      }
     }
   };
 

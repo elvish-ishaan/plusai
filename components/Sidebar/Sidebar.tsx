@@ -15,8 +15,14 @@ import { signIn, signOut } from "next-auth/react";
 import UserInfo from "./UserInfo";
 import { Thread } from "@/types/auxtypes";
 
+<<<<<<< HEAD
 const groupByDate = (threads: Thread[]) => {
   const groups: Record<string, Thread[]> = {};
+=======
+
+const groupByDate = (threads: Thread[]) => {
+  const groups: Record<string, Thread[]> = {};   
+>>>>>>> 4d77aeba9b599dc50e9b2a84381492da099b9a56
   threads.forEach((thread) => {
     const threadDate = new Date(thread?.createdAt);
     let label = format(threadDate, "PPP");
@@ -39,7 +45,11 @@ export default function Sidebar({
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   threads: Thread[];
 }) {
+<<<<<<< HEAD
   console.log(threads, "threads inisde sidebar..........");
+=======
+  console.log(threads,'threads inisde sidebar..........')
+>>>>>>> 4d77aeba9b599dc50e9b2a84381492da099b9a56
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const hasMounted = useRef(false);
