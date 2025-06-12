@@ -9,8 +9,10 @@ export default function Home() {
 
   return (
     <div className="relative bg-[#f2e6f5] h-screen overflow-hidden flex">
+      <div className="">
+        <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      </div>
       {/* Sidebar */}
-      <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
       {/* Main Content */}
       <div className="flex-1 transition-all duration-300 h-screen">

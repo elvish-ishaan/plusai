@@ -63,7 +63,7 @@ export default function ChatInputBox({
             >
               <ArrowUp className="w-5 h-5" />
             </button>
-
+              {/* Buttons  */}
             <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center mb-6">
               <div className="flex items-center gap-2">
                 <ModelSelector />

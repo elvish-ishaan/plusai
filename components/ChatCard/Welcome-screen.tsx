@@ -13,7 +13,7 @@ const categories = [
   {
     id: "default",
     name: "Suggestions",
-    icon: Sparkles, // or any icon you prefer
+    icon: Sparkles, 
     selected: false,
     prompts: [
       "How does AI work?",
