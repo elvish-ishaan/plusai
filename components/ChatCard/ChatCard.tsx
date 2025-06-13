@@ -216,6 +216,11 @@ export default function ChatCard({
             )}
           </div>
         )}
+        {isLoading && (
+          <div className="text-[#7a375b] animate-pulse">
+            <strong>AI:</strong> Thinking...
+          </div>
+        )}
       </div>
 
       <div className="px-6 border-[#efbdeb] bg-[#f9f3f9]">

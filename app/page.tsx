@@ -12,6 +12,7 @@ export default function Home() {
   const searchParams = useSearchParams();
   const threadId = searchParams.get("thread");
 
+
   useEffect(() => {
     const fetchThreads = async () => {
       try {

@@ -10,6 +10,7 @@ type Props = {
   setModel: React.Dispatch<React.SetStateAction<string>>;
   onSend: (val: string) => void;
   inputRef: React.RefObject<HTMLTextAreaElement>;
+  isLoading: boolean;
 };
 
 export default function ChatInputBox({
@@ -18,6 +19,7 @@ export default function ChatInputBox({
   setModel,
   onSend,
   inputRef,
+  isLoading,
 }: Props) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -26,7 +28,7 @@ export default function ChatInputBox({
     }
   };
 
-  const isSendDisabled = message.trim() === "";
+  const isSendDisabled = message.trim() === "" || isLoading;
 
   return (
     <div className="max-w-4xl mx-auto w-full px-4 pt-4 pb-2">
@@ -43,11 +45,12 @@ export default function ChatInputBox({
             ref={inputRef}
             minRows={2}
             maxRows={10}
-            placeholder="Type your message here..."
+            placeholder={isLoading ? "Please wait..." : "Type your message here..."}
             className="w-full resize-none bg-transparent text-sm text-[#a14a86] placeholder-[#d088b5] focus:outline-none leading-6"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
+            disabled={isLoading}
             aria-label="Message input"
           />
 
@@ -68,7 +71,7 @@ export default function ChatInputBox({
 
             <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center mb-6">
               <div className="flex items-center gap-2">
-                <ModelSelector setModel={setModel} />
+                <ModelSelector setModel={setModel} disabled={isLoading} />
                 <button
                   className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border border-[#eddfed] text-[#ac1668] hover:bg-[#f4d6e7]"
                   type="button"

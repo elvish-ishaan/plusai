@@ -7,7 +7,7 @@ import logo from "../../public/logo.png";
 import sidebar from "../../public/sidebar.png";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { format, isToday, isYesterday } from "date-fns";
-import { Pin, X } from "lucide-react";
+import { Pin, X, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
 import UserInfo from "./UserInfo";
@@ -212,10 +212,13 @@ export default function Sidebar({
                     {threads?.map((thread) => (
                       <motion.div
                         key={thread.id}
-                        className="relative group"
+                        className={`relative group cursor-pointer ${
+                          selectedThreadId === thread.id ? 'bg-[#efcae3]' : ''
+                        }`}
                         initial="rest"
                         animate="rest"
                         whileHover="hover"
+                        onClick={() => handleThreadClick(thread.id)}
                       >
                         <div className="relative flex justify-between items-center rounded-md px-2 py-1 overflow-hidden truncate">
                           <motion.div
@@ -238,7 +241,6 @@ export default function Sidebar({
                               )}
                             </Link>
                           </div>
-
                           {!isCollapsed && (
                             <motion.div
                               variants={{
@@ -270,8 +272,8 @@ export default function Sidebar({
               ))
             )}
           </nav>
-
           <UserInfo />
+
         </>
       )}
 
