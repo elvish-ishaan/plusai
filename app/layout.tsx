@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-// Import fonts normally if you want, but don't use their `.variable` in body class directly if unstable
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Montserrat } from "next/font/google";
@@ -22,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
         <body
-        className={`${montserrat.variable} antialiased text-foreground min-h-screen bg-[radial-gradient(ellipse_at_center,var(--background)_20%,oklch(0.235_0.017_290)_100%)]`}
+        className={`${montserrat.variable} antialiased  min-h-screen bg-[radial-gradient(ellipse_at_center,var(--background)_20%,oklch(0.235_0.017_290)_100%)]`}
       >
         <ThemeProvider>
            <AuthProvider>

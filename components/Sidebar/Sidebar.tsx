@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import logo from "../../public/logo.png";
@@ -11,7 +10,9 @@ import { format, isToday, isYesterday } from "date-fns";
 import { Pin, X } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
-import { signIn, signOut } from "next-auth/react";
+import UserInfo from "./UserInfo";
+
+
 
 
 const groupByDate = (threads: Thread[]) => {
@@ -271,23 +272,8 @@ export default function Sidebar({
             )}
           </nav>
 
-          {/* Bottom User Info */}
-          <div className="p-4 border-[#e6c4de] mb-3">
-            <div className="flex items-center space-x-3 hover:bg-white px-2 py-3 rounded-lg cursor-pointer">
-              <Avatar>
-                <AvatarFallback className="bg-blue-600 text-white">
-                  P
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <Button onClick={() => { signIn() }}>Log In</Button>
-                <Button onClick={() => { signOut() }}>log out</Button>
-                <p className="text-xs text-[#a74576] truncate">Free</p>
-              </div>
-            </div>
-          </div>
+          <UserInfo/>
         </>
       )}
     </motion.aside>
-  );
-}
+  )};

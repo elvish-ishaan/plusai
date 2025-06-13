@@ -13,7 +13,11 @@ const models = [
   { name: "DeepSeek R1 (Llama Distilled)", active: false },
 ];
 
-export default function ModelSelector({setModel}: {setModel: React.Dispatch<React.SetStateAction<string>>}) {
+export default function ModelSelector({
+  setModel,
+}: {
+  setModel: React.Dispatch<React.SetStateAction<string>>;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState("Gemini 2.5 Flash");
 
@@ -62,8 +66,8 @@ export default function ModelSelector({setModel}: {setModel: React.Dispatch<Reac
                         setModel(model.name);
                         setSelectedModel(model.name);
                         setIsOpen(false);
-                        }
-                      }}
+                      }
+                    }}
                     className={cn(
                       "flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm",
                       model.active

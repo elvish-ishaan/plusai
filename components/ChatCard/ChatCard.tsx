@@ -62,6 +62,7 @@ export default function ChatCard({
     inputRef.current?.focus();
   };
 
+
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
     setchat((prev) => [...prev, { id: uuid(), prompt: message, response: null }]);
@@ -112,10 +113,10 @@ export default function ChatCard({
 
   return (
     <div
-      className={`relative flex flex-col ${
+      className={`relative flex flex-col  ${
         isCollapsed
-          ? "w-screen h-screen bg-[#f9f3f9]"
-          : "h-screen w-full mt-3.5 rounded-xl border border-[#efbdeb] bg-[#f9f3f9] shadow-md"
+          ? "w-screen h-screen  bg-[#f9f3f9] "
+          : "h-screen w-full md:mt-3.5 md:rounded-xl md:border border-[#efbdeb] bg-[#f9f3f9] shadow-md"
       } overflow-hidden`}
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />

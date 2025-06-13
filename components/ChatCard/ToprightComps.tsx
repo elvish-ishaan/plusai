@@ -2,6 +2,7 @@
 
 
 import { Settings, Sun, Moon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function TopRightIconHolder({
@@ -10,6 +11,7 @@ export default function TopRightIconHolder({
   isCollapsed: boolean;
 }) {
   const [isDark, setIsDark] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const html = document.documentElement;
@@ -46,14 +48,15 @@ export default function TopRightIconHolder({
         }`}
       >
         <button
-          className="flex items-center justify-center w-8 h-8 rounded-md text-[#ac1668] hover:text-[#501854] hover:bg-[#f0cde4] transition"
+          className="flex items-center justify-center w-8 h-8 rounded-md text-[#ac1668] hover:text-[#501854] hover:bg-[#f0cde4] transition cursor-pointer"
           aria-label="Settings"
+          onClick={()=>{router.push("/settings/account")}}
         >
           <Settings className="w-5 h-5" />
         </button>
         <button
           onClick={toggleTheme}
-          className="flex items-center justify-center w-8 h-8 rounded-md text-[#ac1668] hover:text-[#501854] hover:bg-[#f0cde4] transition"
+          className="flex items-center justify-center w-8 h-8 rounded-md text-[#ac1668] hover:text-[#501854] hover:bg-[#f0cde4] transition cursor-pointer"
           aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
           {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
