@@ -31,7 +31,7 @@ export default function ChatInputBox({
   return (
     <div className="max-w-4xl mx-auto w-full px-4 pt-4 pb-2">
       <div
-        className="relative bg-[--chat-input-background] backdrop-blur-lg rounded-t-[20px] border border-white/70 border-b-0 p-2 pb-0 shadow-[0_80px_50px_rgba(0,0,0,0.1),0_50px_30px_rgba(0,0,0,0.07),0_30px_15px_rgba(0,0,0,0.06),0_15px_8px_rgba(0,0,0,0.04),0_6px_4px_rgba(0,0,0,0.04),0_2px_2px_rgba(0,0,0,0.02)] outline outline-8 outline-[hsl(var(--chat-input-gradient)/0.5)]"
+        className="relative bg-[--chat-input-background] backdrop-blur-lg rounded-t-[20px] border border-white/70 border-b-0 p-2 pb-0 shadow-[0_80px_50px_rgba(0,0,0,0.1),0_50px_30px_rgba(0,0,0,0.07),0_30px_15px_rgba(0,0,0,0.06),0_15px_8px_rgba(0,0,0,0.04),0_6px_4px_rgba(0,0,0,0.04),0_2px_2px_rgba(0,0,0,0.02)]  outline-8 outline-[hsl(var(--chat-input-gradient)/0.5)]"
         style={{
           //@ts-ignore
           "--chat-input-gradient": "322 70% 85%",
