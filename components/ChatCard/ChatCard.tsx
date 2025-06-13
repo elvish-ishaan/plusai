@@ -1,64 +1,77 @@
-"use client"
+"use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import WelcomeScreen from "./Welcome-screen";
 import ChatInputBox from "./ChatInputBox";
 import TopRightIconHolder from "./ToprightComps";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
-
-export type Message = { sender: string; text: string };
+import ReactMarkdown from "react-markdown";
 
 interface ChatCardProps {
   isCollapsed: boolean;
-  setthreads: React.Dispatch<React.SetStateAction<any[]>>;
-  selectedThreadId: string | null;
+  setthreads?: React.Dispatch<React.SetStateAction<Thread[]>>;
+  threadId?: string;
 }
 
-export default function ChatCard({ isCollapsed, setthreads, selectedThreadId }: ChatCardProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const [messages, setMessages] = useState<Message[]>([]);
+export default function ChatCard({
+  isCollapsed,
+  setthreads,
+  threadId,
+}: ChatCardProps) {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const [chat, setchat] = useState<Chat[]>([]);
   const [message, setMessage] = useState<string>("");
-  const [provider, setProvider] = useState<string>('');
-  const [model, setModel] = useState<string>('gemini-2.0-flash');
+  const [provider, setProvider] = useState<string>("");
+  const [model, setModel] = useState<string>("gemini-2.0-flash");
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const { data: session } = useSession();
-  const [currentThreadId, setCurrentThreadId] = useState<string | null>(() => uuid());
 
-  // Load messages when thread is selected
+  // Generate UUID for new threads
+  const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
+
+  // Load thread data when threadId changes
   useEffect(() => {
-    const loadMessages = async () => {
-      if (!selectedThreadId) {
-        setMessages([]);
-        setCurrentThreadId(uuid());
-        setIsInitPrompt(true);
-        return;
-      }
+    if (!threadId) {
+      setchat([]);
+      setCurrentThreadId(uuid());
+      setIsInitPrompt(true);
+      return;
+    }
 
+    const getThread = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`${baseUrl}/api/chat/threads/${selectedThreadId}/messages`);
-        if (response.data.success) {
-          const formattedMessages = response.data.messages.map((msg: any) => ({
-            sender: msg.sender,
-            text: msg.text
-          }));
-          setMessages(formattedMessages);
-          setCurrentThreadId(selectedThreadId);
+        const res = await axios.get(`${baseUrl}/chat/threads/${threadId}`);
+        
+        if (res.data.success) {
+          setCurrentThreadId(threadId);
+          setchat(res.data.thread?.chats || []);
           setIsInitPrompt(false);
         }
-      } catch (error) {
-        console.error('Error loading messages:', error);
+      } catch (err) {
+        console.error("Failed to fetch thread:", err);
+        setchat([{
+          id: uuid(),
+          prompt: "Error loading conversation",
+          response: "Failed to load the conversation. Please try again.",
+          provider: "system",
+          model: "system",
+          thread: threadId,
+          userId: session?.user?.id || "unknown-user",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadMessages();
-  }, [selectedThreadId, baseUrl]);
+    getThread();
+  }, [threadId, baseUrl, session?.user?.id]);
 
   const handlePromptSelect = (prompt: string) => {
     setMessage(prompt);
@@ -69,46 +82,95 @@ export default function ChatCard({ isCollapsed, setthreads, selectedThreadId }: 
     if (!text.trim()) return;
     
     setIsLoading(true);
-    setMessages((prev) => [...prev, { sender: "user", text }]);
-    setMessage("");
-    
-    try {
-      const res = await axios.post(`${baseUrl}/chat`, {
+    // Create temporary chat entry while waiting for response
+    const tempChatId = uuid();
+    setchat((prev) => [
+      ...prev,
+      {
+        id: tempChatId,
         prompt: text,
-        prevPrompts: messages,
-        provider: provider,
-        model: model,
+        response: "",
+        provider: "gemini",
+        model,
+        thread: currentThreadId,
+        userId: session?.user?.id || "unknown-user",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+    
+    setMessage("");
+
+    try {
+      const body = {
+        prompt: text,
+        prevPrompts: chat,
+        model,
         threadId: currentThreadId,
         maxOutputTokens: 500,
         temperature: 0.5,
-        systemPrompt: 'you are helpful assistant.',
-        llmProvider: 'gemini'
-      });
-
-      if (res.data.success) {
-        setMessages((prev) => [...prev, { sender: "ai", text: res.data.genResponse }]);
-      }
+        systemPrompt: "you are helpful assistant.",
+        llmProvider: "gemini",
+      };
       
-      if (isInitPrompt) {
-        const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
-          initPrompt: text,
+      const res = await axios.post(`${baseUrl}/chat`, body);
+      console.log(res.data,'getting res')
+      if (res.data.success) {
+        // Remove temp entry and add real response
+        setchat((prev) => {
+          const filtered = prev.filter(c => c.id !== tempChatId);
+          return [...filtered, res.data.genResponse];
         });
         
-        if (titleRes.data.success) {
-          setIsInitPrompt(false);
-          setthreads((prev) => [...prev, {
-            id: currentThreadId,
-            title: titleRes.data.title,
-            date: new Date().toLocaleDateString()
-          }]);
+        // Set thread ID if this is a new thread and we get one back from API
+        if (res.data.genResponse?.thread?.id) {
+          setCurrentThreadId(res.data.genResponse.thread.id);
         }
       }
-    } catch (error) {
-      console.error('Error sending message:', error);
-      setMessages((prev) => [...prev, { 
-        sender: "ai", 
-        text: "Sorry, there was an error processing your message. Please try again." 
-      }]);
+
+      // Handle title generation for first prompt
+      if (isInitPrompt) {
+        try {
+          const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
+            initPrompt: text,
+          });
+
+          if (titleRes.data.success) {
+            setIsInitPrompt(false);
+            setthreads?.((prev) => [
+              ...prev,
+              {
+                id: res.data.genResponse?.thread?.id || currentThreadId,
+                title: titleRes.data.title,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                userId: session?.user?.id || "",
+              },
+            ]);
+          }
+        } catch (err) {
+          console.error("Failed to generate title:", err);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to send message:", err);
+      // Remove temp entry on error
+      setchat((prev) => prev.filter(c => c.id !== tempChatId));
+      // Add error message
+      setchat((prev) => [
+        ...prev,
+        {
+          id: uuid(),
+          prompt: "Error",
+          response: "Failed to send message. Please try again.",
+          provider: "system",
+          model: "system",
+          thread: currentThreadId,
+          userId: session?.user?.id || "unknown-user",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -119,23 +181,40 @@ export default function ChatCard({ isCollapsed, setthreads, selectedThreadId }: 
       className={`relative flex flex-col ${
         isCollapsed
           ? "w-screen h-screen bg-[#f9f3f9]"
-          : "h-screen w-full mt-3.5 rounded-xl border border-[#efbdeb] bg-[#f9f3f9] shadow-md"
+          : "h-screen w-full md:mt-3.5 md:rounded-xl md:border border-[#efbdeb] bg-[#f9f3f9] shadow-md"
       } overflow-hidden`}
     >
-      {/* Top-Right Icons */}
-      
-      <TopRightIconHolder  isCollapsed={isCollapsed}/>
+      <TopRightIconHolder isCollapsed={isCollapsed} />
 
-      {/* Chat Messages Area */}
       <div className="flex-1 overflow-y-auto px-8 py-6 space-y-3 scrollbar-hide">
-        {messages.length === 0 && !message && !isLoading ? (
+        {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
-          messages.map((msg, idx) => (
-            <div key={idx} className="text-[#7a375b]">
-              <strong>{msg.sender}:</strong> {msg.text}
-            </div>
-          ))
+          <div className="max-w-4xl mx-auto">
+            {chat?.map((chatItem) => (
+              <div key={chatItem.id} className="flex flex-col space-y-4 mb-6">
+                <div className="flex justify-end">
+                  <span className="p-3 bg-[#7a375b] text-white rounded-lg max-w-xs md:max-w-md lg:max-w-lg">
+                    {chatItem.prompt}
+                  </span>
+                </div>
+                {chatItem.response && (
+                  <div className="flex justify-start">
+                    <div className="p-3 bg-white rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
+                      <ReactMarkdown>{chatItem.response}</ReactMarkdown>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="p-3 bg-white rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-2xl animate-pulse">
+                  <p className="text-sm">Thinking...</p>
+                </div>
+              </div>
+            )}
+          </div>
         )}
         {isLoading && (
           <div className="text-[#7a375b] animate-pulse">
@@ -144,8 +223,7 @@ export default function ChatCard({ isCollapsed, setthreads, selectedThreadId }: 
         )}
       </div>
 
-      {/* Input Box */}
-      <div className="px-6  border-[#efbdeb] bg-[#f9f3f9]">
+      <div className="px-6 border-[#efbdeb] bg-[#f9f3f9]">
         <ChatInputBox
           message={message}
           setMessage={setMessage}

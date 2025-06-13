@@ -3,7 +3,7 @@ import prisma from "@/prisma/prismaClient";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-
+//get threads
 export async function GET() {
     const session = await getServerSession(authOptions);
 
@@ -23,44 +23,36 @@ export async function GET() {
     }
 }
 
-export async function DELETE(req: Request) {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-        return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
-
-    const { searchParams } = new URL(req.url);
-    const threadId = searchParams.get('threadId');
-
-    if (!threadId) {
-        return NextResponse.json({ success: false, message: "Thread ID is required" }, { status: 400 });
-    }
-
+//delete threadS
+export async function DELETE(request: Request) {
     try {
-        // Delete all chats associated with the thread first
-        await prisma.chat.deleteMany({
-            where: {
-                threadId: threadId
-            }
-        });
-
-        // Then delete the thread
+      const session = await getServerSession(authOptions);
+    if(!session){ 
+        return NextResponse.json({
+            success: false,
+            message: "unauthenticated user",
+        },{status: 401});
+    }
+    const { threadId } = await request.json();
+    try {
         await prisma.thread.delete({
             where: {
                 id: threadId,
-                userId: session.user.id
-            }
+            },
         });
-
         return NextResponse.json({
             success: true,
-            message: "Thread deleted successfully"
+            message: "Thread deleted successfully",
         });
     } catch (error) {
-        console.error('Error deleting thread:', error);
-        return NextResponse.json({ 
-            success: false, 
-            message: "Failed to delete thread" 
-        }, { status: 500 });
+        console.log(error as string, 'error in deleting thread from db');
     }
-}
+    } catch (error) {
+      console.log(error as string, 'error in deleting thread');
+      return NextResponse.json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+} 
+

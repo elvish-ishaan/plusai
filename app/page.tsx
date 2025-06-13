@@ -4,11 +4,14 @@ import ChatCard from "@/components/ChatCard/ChatCard";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [threads, setThreads] = useState<Thread[]>([]);
-  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const threadId = searchParams.get("thread");
+
 
   useEffect(() => {
     const fetchThreads = async () => {
@@ -18,7 +21,7 @@ export default function Home() {
           setThreads(res.data.threads);
         }
       } catch (error) {
-        console.error('Error fetching threads:', error);
+        console.error("Failed to fetch threads:", error);
       }
     };
     fetchThreads();
@@ -34,19 +37,18 @@ export default function Home() {
       {/* Sidebar */}
       <Sidebar 
         threads={threads} 
-        isCollapsed={isCollapsed} 
-        setIsCollapsed={setIsCollapsed}
         setThreads={setThreads}
-        onThreadSelect={setSelectedThreadId}
-        selectedThreadId={selectedThreadId}
+        isCollapsed={isCollapsed} 
+        setIsCollapsed={setIsCollapsed} 
       />
 
       {/* Main Content */}
       <div className="flex-1 transition-all duration-300 h-screen">
+        {/* ChatCard */}
         <ChatCard 
           isCollapsed={isCollapsed} 
           setthreads={setThreads}
-          selectedThreadId={selectedThreadId}
+          threadId={threadId || undefined}
         />
       </div>
     </div>

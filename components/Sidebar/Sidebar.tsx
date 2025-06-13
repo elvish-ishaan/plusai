@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import logo from "../../public/logo.png";
@@ -11,9 +10,9 @@ import { format, isToday, isYesterday } from "date-fns";
 import { Pin, X, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
-import { signIn, signOut } from "next-auth/react";
+import UserInfo from "./UserInfo";
 import axios from "axios";
-
+import { useRouter } from "next/navigation";
 
 const groupByDate = (threads: Thread[]) => {
   const groups: Record<string, Thread[]> = {};   
@@ -35,22 +34,17 @@ export default function Sidebar({
   setIsCollapsed,
   threads,
   setThreads,
-  onThreadSelect,
-  selectedThreadId,
 }: {
   isCollapsed: boolean;
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   threads: Thread[];
   setThreads: React.Dispatch<React.SetStateAction<Thread[]>>;
-  onThreadSelect: (threadId: string) => void;
-  selectedThreadId: string | null;
 }) {
-  console.log(threads,'threads inisde sidebar..........')
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [threadToDelete, setThreadToDelete] = useState<string | null>(null);
   const hasMounted = useRef(false);
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const router = useRouter();
 
   useEffect(() => {
     hasMounted.current = true;
@@ -71,7 +65,7 @@ export default function Sidebar({
     return threads?.filter((thread) =>
       thread.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm]);
+  }, [searchTerm, threads]);
 
   const grouped = useMemo(
     () => groupByDate(filteredThreads),
@@ -80,28 +74,26 @@ export default function Sidebar({
 
   const handleDelete = async () => {
     if (!threadToDelete) return;
-    
+
     try {
-      const response = await axios.delete(`${baseUrl}/api/chat/threads?threadId=${threadToDelete}`);
+      const response = await axios.delete("/api/chat/threads", {
+        data: { threadId: threadToDelete }
+      });
+
       if (response.data.success) {
-        setThreads(prev => prev.filter(thread => thread.id !== threadToDelete));
-        if (selectedThreadId === threadToDelete) {
-          onThreadSelect(null);
-        }
+        setThreads((prev) => prev.filter((thread) => thread.id !== threadToDelete));
+        router.push("/"); // Redirect to home after deletion
       }
     } catch (error) {
-      console.error('Error deleting thread:', error);
+      console.error("Failed to delete thread:", error);
+    } finally {
+      setShowModal(false);
+      setThreadToDelete(null);
     }
-    setShowModal(false);
-    setThreadToDelete(null);
-  };
-
-  const handleThreadClick = (threadId: string) => {
-    onThreadSelect(threadId);
   };
 
   const handleNewChat = () => {
-    onThreadSelect(null);
+    router.push("/");
   };
 
   return (
@@ -162,33 +154,11 @@ export default function Sidebar({
           </div>
         </div>
       ) : (
-        // Expanded sidebar view
         <>
-          {/* Top controls and logo */}
-          <div className="px-3 py-3 flex flex-col gap-3 mt-3">
-            <div className="relative flex items-center justify-between">
-              <button
-                onClick={() => setIsCollapsed(true)}
-                className="p-1 text-[#a74576] hover:bg-[#f0cde4] rounded-md"
-                aria-label="Collapse sidebar"
-              >
-                <Image
-                  src={sidebar}
-                  alt="Sidebar Icon"
-                  width={20}
-                  height={20}
-                  style={{
-                    filter:
-                      "brightness(0.2) saturate(100%) invert(18%) sepia(51%) saturate(3635%) hue-rotate(304deg) brightness(90%) contrast(94%)",
-                  }}
-                />
-              </button>
-              <Link
-                href="/"
-                className="flex items-center justify-center flex-grow"
-              >
-                <Image src={logo} alt="T3.chat" height={18} />
-              </Link>
+          <div className="p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Image src={logo} alt="Logo" width={32} height={32} />
+              <h1 className="text-lg font-semibold text-[#a74576]">T3Plus</h1>
             </div>
 
             <Button 
@@ -199,7 +169,7 @@ export default function Sidebar({
             </Button>
 
             {/* Search box */}
-            <div className="text-sm font-normal">
+            <div className="text-sm font-normal mt-4">
               <div className="flex items-center gap-3 text-[#a74576] border-b border-[#efbdeb] px-1 py-2 focus-within:ring-2 focus-within:ring-[#a74576] transition">
                 <svg
                   className="w-4 h-4 text-[#ac1668]"
@@ -250,12 +220,26 @@ export default function Sidebar({
                         whileHover="hover"
                         onClick={() => handleThreadClick(thread.id)}
                       >
-                        <div className="flex items-center justify-between p-2 rounded-lg hover:bg-[#efcae3]">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <MessageSquare className="w-4 h-4 text-[#7a375b] flex-shrink-0" />
-                            <span className="text-sm text-[#7a375b] truncate">
-                              {thread.title}
-                            </span>
+                        <div className="relative flex justify-between items-center rounded-md px-2 py-1 overflow-hidden truncate">
+                          <motion.div
+                            className="absolute inset-0 bg-white z-0"
+                            variants={{
+                              rest: { x: "100%" },
+                              hover: { x: "0%" },
+                            }}
+                            transition={{ duration: 0.1, ease: "easeInOut" }}
+                          />
+
+                          <div className="relative z-10 flex items-center truncate text-[#ac1668]">
+                            <Link href={`/chat/${thread.id}`}>
+                              {!isCollapsed ? (
+                                <span className="text-sm font-medium">
+                                  {thread.title}
+                                </span>
+                              ) : (
+                                <Pin className="w-4 h-4" />
+                              )}
+                            </Link>
                           </div>
                           {!isCollapsed && (
                             <motion.div
@@ -269,15 +253,14 @@ export default function Sidebar({
                               <span className="p-1 hover:bg-pink-300 rounded-md">
                                 <Pin className="w-4 h-4 cursor-pointer" />
                               </span>
-                              <span 
-                                className="p-1 hover:bg-pink-300 rounded-md"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setThreadToDelete(thread.id);
-                                  setShowModal(true);
-                                }}
-                              >
-                                <X className="w-4 h-4 cursor-pointer" />
+                              <span className="p-1 hover:bg-pink-300 rounded-md">
+                                <X
+                                  className="w-4 h-4 cursor-pointer"
+                                  onClick={() => {
+                                    setThreadToDelete(thread.id);
+                                    setShowModal(true);
+                                  }}
+                                />
                               </span>
                             </motion.div>
                           )}
@@ -289,34 +272,20 @@ export default function Sidebar({
               ))
             )}
           </nav>
+          <UserInfo />
 
-          {/* Bottom User Info */}
-          <div className="p-4 border-[#e6c4de] mb-3">
-            <div className="flex items-center space-x-3 hover:bg-white px-2 py-3 rounded-lg cursor-pointer">
-              <Avatar>
-                <AvatarFallback className="bg-blue-600 text-white">
-                  P
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <Button onClick={() => { signIn() }}>Log In</Button>
-                <Button onClick={() => { signOut() }}>log out</Button>
-                <p className="text-xs text-[#a74576] truncate">Free</p>
-              </div>
-            </div>
-          </div>
-
-          <DeleteModal
-            isOpen={showModal}
-            onClose={() => {
-              setShowModal(false);
-              setThreadToDelete(null);
-            }}
-            onDelete={handleDelete}
-            threadTitle={threads.find(t => t.id === threadToDelete)?.title || ''}
-          />
         </>
       )}
+
+      <DeleteModal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setThreadToDelete(null);
+        }}
+        onDelete={handleDelete}
+        threadTitle={threads.find(t => t.id === threadToDelete)?.title || ""}
+      />
     </motion.aside>
   );
 }
