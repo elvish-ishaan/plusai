@@ -11,9 +11,8 @@ import { Pin, X } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
 import UserInfo from "./UserInfo";
-
-
-
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const groupByDate = (threads: Thread[]) => {
   const groups: Record<string, Thread[]> = {};   
@@ -34,14 +33,18 @@ export default function Sidebar({
   isCollapsed,
   setIsCollapsed,
   threads,
+  setThreads,
 }: {
   isCollapsed: boolean;
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   threads: Thread[];
+  setThreads: React.Dispatch<React.SetStateAction<Thread[]>>;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [threadToDelete, setThreadToDelete] = useState<string | null>(null);
   const hasMounted = useRef(false);
+  const router = useRouter();
 
   useEffect(() => {
     hasMounted.current = true;
@@ -59,21 +62,38 @@ export default function Sidebar({
   }, []);
 
   const filteredThreads = useMemo(() => {
-  return threads?.filter((thread) =>
-    thread.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-}, [searchTerm, threads]);
+    return threads?.filter((thread) =>
+      thread.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, threads]);
 
-
-  //used to chache the filter function here
   const grouped = useMemo(
     () => groupByDate(filteredThreads),
     [filteredThreads]
   );
 
-  const handleDelete = () => {
-    setShowModal(false);
-    // Implement delete logic here
+  const handleDelete = async () => {
+    if (!threadToDelete) return;
+
+    try {
+      const response = await axios.delete("/api/chat/threads", {
+        data: { threadId: threadToDelete }
+      });
+
+      if (response.data.success) {
+        setThreads((prev) => prev.filter((thread) => thread.id !== threadToDelete));
+        router.push("/"); // Redirect to home after deletion
+      }
+    } catch (error) {
+      console.error("Failed to delete thread:", error);
+    } finally {
+      setShowModal(false);
+      setThreadToDelete(null);
+    }
+  };
+
+  const handleNewChat = () => {
+    router.push("/");
   };
 
   return (
@@ -134,41 +154,22 @@ export default function Sidebar({
           </div>
         </div>
       ) : (
-        // Expanded sidebar view
         <>
-          {/* Top controls and logo */}
-          <div className="px-3 py-3 flex flex-col gap-3 mt-3">
-            <div className="relative flex items-center justify-between">
-              <button
-                onClick={() => setIsCollapsed(true)}
-                className="p-1 text-[#a74576] hover:bg-[#f0cde4] rounded-md"
-                aria-label="Collapse sidebar"
-              >
-                <Image
-                  src={sidebar}
-                  alt="Sidebar Icon"
-                  width={20}
-                  height={20}
-                  style={{
-                    filter:
-                      "brightness(0.2) saturate(100%) invert(18%) sepia(51%) saturate(3635%) hue-rotate(304deg) brightness(90%) contrast(94%)",
-                  }}
-                />
-              </button>
-              <Link
-                href="/"
-                className="flex items-center justify-center flex-grow"
-              >
-                <Image src={logo} alt="T3.chat" height={18} />
-              </Link>
+          <div className="p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Image src={logo} alt="Logo" width={32} height={32} />
+              <h1 className="text-lg font-semibold text-[#a74576]">T3Plus</h1>
             </div>
 
-            <Button className="w-full mt-2 bg-[#a23b67] hover:bg-[#d56a9d] text-white font-bold py-2 border border-[#8f3c66] rounded-lg shadow text-sm">
+            <Button 
+              onClick={handleNewChat}
+              className="w-full mt-2 bg-[#a23b67] hover:bg-[#d56a9d] text-white font-bold py-2 border border-[#8f3c66] rounded-lg shadow text-sm"
+            >
               New Chat
             </Button>
 
             {/* Search box */}
-            <div className="text-sm font-normal">
+            <div className="text-sm font-normal mt-4">
               <div className="flex items-center gap-3 text-[#a74576] border-b border-[#efbdeb] px-1 py-2 focus-within:ring-2 focus-within:ring-[#a74576] transition">
                 <svg
                   className="w-4 h-4 text-[#ac1668]"
@@ -253,14 +254,12 @@ export default function Sidebar({
                               <span className="p-1 hover:bg-pink-300 rounded-md">
                                 <X
                                   className="w-4 h-4 cursor-pointer"
-                                  onClick={() => setShowModal(true)}
+                                  onClick={() => {
+                                    setThreadToDelete(thread.id);
+                                    setShowModal(true);
+                                  }}
                                 />
                               </span>
-                              <DeleteModal
-                                isOpen={showModal}
-                                onClose={() => setShowModal(false)}
-                                onDelete={handleDelete}
-                              />
                             </motion.div>
                           )}
                         </div>
@@ -272,8 +271,19 @@ export default function Sidebar({
             )}
           </nav>
 
-          <UserInfo/>
+          <UserInfo />
         </>
       )}
+
+      <DeleteModal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setThreadToDelete(null);
+        }}
+        onDelete={handleDelete}
+        threadTitle={threads.find(t => t.id === threadToDelete)?.title || ""}
+      />
     </motion.aside>
-  )};
+  );
+}

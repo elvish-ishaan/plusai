@@ -9,7 +9,6 @@ import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 
-
 interface ChatCardProps {
   isCollapsed: boolean;
   setthreads?: React.Dispatch<React.SetStateAction<Thread[]>>;
@@ -26,32 +25,53 @@ export default function ChatCard({
   const [message, setMessage] = useState<string>("");
   const [provider, setProvider] = useState<string>("");
   const [model, setModel] = useState<string>("gemini-2.0-flash");
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const { data: session } = useSession();
 
-  // Generate UUID for new threads, but keep as string since API expects string UUID
+  // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
 
+  // Load thread data when threadId changes
   useEffect(() => {
-    if (!threadId) return;
+    if (!threadId) {
+      setchat([]);
+      setCurrentThreadId(uuid());
+      setIsInitPrompt(true);
+      return;
+    }
 
     const getThread = async () => {
       try {
-        const res = await axios.get(`${baseUrl}/chat/threads/${threadId}`);
-        console.log(res.data, "getting thread response");
-
+        setIsLoading(true);
+        const res = await axios.get(`${baseUrl}/api/chat/threads/${threadId}`);
+        
         if (res.data.success) {
           setCurrentThreadId(threadId);
           setchat(res.data.thread?.chats || []);
+          setIsInitPrompt(false);
         }
       } catch (err) {
         console.error("Failed to fetch thread:", err);
+        setchat([{
+          id: uuid(),
+          prompt: "Error loading conversation",
+          response: "Failed to load the conversation. Please try again.",
+          provider: "system",
+          model: "system",
+          thread: threadId,
+          userId: session?.user?.id || "unknown-user",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     getThread();
-  }, [threadId]);
+  }, [threadId, baseUrl, session?.user?.id]);
 
   const handlePromptSelect = (prompt: string) => {
     setMessage(prompt);
@@ -61,23 +81,23 @@ export default function ChatCard({
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
     
+    setIsLoading(true);
     // Create temporary chat entry while waiting for response
     const tempChatId = uuid();
     setchat((prev) => [
-  ...prev,
-  {
-    id: tempChatId,
-    prompt: text,
-    response: "",
-    provider: "gemini",
-    model,
-    thread: currentThreadId,  
-    userId: session?.user?.id || "unknown-user",
-    createdAt: new Date(),   
-    updatedAt: new Date(),
-  },
-]);
-
+      ...prev,
+      {
+        id: tempChatId,
+        prompt: text,
+        response: "",
+        provider: "gemini",
+        model,
+        thread: currentThreadId,
+        userId: session?.user?.id || "unknown-user",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
     
     setMessage("");
 
@@ -93,9 +113,7 @@ export default function ChatCard({
         llmProvider: "gemini",
       };
       
-      console.log(body, 'body sending.........');
-      const res = await axios.post(`${baseUrl}/chat`, body);
-      console.log(res.data,'getting data from backend')
+      const res = await axios.post(`${baseUrl}/api/chat`, body);
 
       if (res.data.success) {
         // Remove temp entry and add real response
@@ -113,7 +131,7 @@ export default function ChatCard({
       // Handle title generation for first prompt
       if (isInitPrompt) {
         try {
-          const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
+          const titleRes = await axios.post(`${baseUrl}/api/chat/generate-title`, {
             initPrompt: text,
           });
 
@@ -138,23 +156,38 @@ export default function ChatCard({
       console.error("Failed to send message:", err);
       // Remove temp entry on error
       setchat((prev) => prev.filter(c => c.id !== tempChatId));
+      // Add error message
+      setchat((prev) => [
+        ...prev,
+        {
+          id: uuid(),
+          prompt: "Error",
+          response: "Failed to send message. Please try again.",
+          provider: "system",
+          model: "system",
+          thread: currentThreadId,
+          userId: session?.user?.id || "unknown-user",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  useEffect(() => { console.log(chat,'getting new chats.........')}, [chat]);
-
   return (
     <div
-      className={`relative flex flex-col  ${
+      className={`relative flex flex-col ${
         isCollapsed
-          ? "w-screen h-screen  bg-[#f9f3f9] "
+          ? "w-screen h-screen bg-[#f9f3f9]"
           : "h-screen w-full md:mt-3.5 md:rounded-xl md:border border-[#efbdeb] bg-[#f9f3f9] shadow-md"
       } overflow-hidden`}
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
 
       <div className="flex-1 overflow-y-auto px-8 py-6 space-y-3 scrollbar-hide">
-        {chat.length === 0 && !message ? (
+        {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
           <div className="max-w-4xl mx-auto">
@@ -174,6 +207,13 @@ export default function ChatCard({
                 )}
               </div>
             ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="p-3 bg-white rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-2xl animate-pulse">
+                  <p className="text-sm">Thinking...</p>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -184,8 +224,8 @@ export default function ChatCard({
           setMessage={setMessage}
           onSend={handleSend}
           setmodel={setModel}
-          //@ts-expect-error ref typing
           inputRef={inputRef}
+          isLoading={isLoading}
         />
       </div>
     </div>
