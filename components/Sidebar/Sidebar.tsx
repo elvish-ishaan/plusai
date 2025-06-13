@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import logo from "../../public/logo.png";
@@ -11,9 +10,8 @@ import { format, isToday, isYesterday } from "date-fns";
 import { Pin, X } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
-
 import UserInfo from "./UserInfo";
-import { Thread } from "@/types/auxtypes";
+
 
 
 
@@ -41,11 +39,6 @@ export default function Sidebar({
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   threads: Thread[];
 }) {
-
-  console.log(threads, "threads inisde sidebar..........");
-
-  console.log(threads,'threads inisde sidebar..........')
-
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const hasMounted = useRef(false);
@@ -66,11 +59,13 @@ export default function Sidebar({
   }, []);
 
   const filteredThreads = useMemo(() => {
-    return threads?.filter((thread) =>
-      thread.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm]);
+  return threads?.filter((thread) =>
+    thread.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+}, [searchTerm, threads]);
 
+
+  //used to chache the filter function here
   const grouped = useMemo(
     () => groupByDate(filteredThreads),
     [filteredThreads]
@@ -232,7 +227,7 @@ export default function Sidebar({
                           />
 
                           <div className="relative z-10 flex items-center truncate text-[#ac1668]">
-                            <Link href={`/thread/${thread.id}`}>
+                            <Link href={`/chat/${thread.id}`}>
                               {!isCollapsed ? (
                                 <span className="text-sm font-medium">
                                   {thread.title}

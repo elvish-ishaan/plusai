@@ -1,6 +1,5 @@
 import React from "react";
 import WelcomeScreen from "./Welcome-screen";
-import { MessageProps } from "@/types/auxtypes";
 import ChatLoader from "../Loaders/ChatLoader";
 
 

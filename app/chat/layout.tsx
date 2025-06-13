@@ -5,7 +5,7 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function Home() {
+export default function Layout({children}: {children: React.ReactNode}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [threads, setThreads] = useState<Thread[]>([]);
 
@@ -21,7 +21,6 @@ export default function Home() {
   useEffect(() => {
     console.log(threads, 'threads');
   }, [threads]);
-
   return (
     <div className="relative bg-[#f2e6f5] h-screen overflow-hidden flex">
       {/* Sidebar */}
@@ -29,8 +28,8 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 transition-all duration-300 h-screen">
-        {/* ChatCard */}
-          <ChatCard isCollapsed={isCollapsed} setthreads={setThreads} />
+        {children}
+        <ChatCard isCollapsed={isCollapsed} setthreads={setThreads} />
       </div>
     </div>
   );

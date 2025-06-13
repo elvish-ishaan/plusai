@@ -9,21 +9,9 @@ interface Thread {
 
 //interface for chat
 interface Chat {
-  prompt: string;
-  response: string;
-  provider: string;
-  model: string;
-  thread: Thread;
+    prompt: string;
+    response: string;
+    provider: string;
+    model: string;
+    thread: Thread;
 }
-
-
-interface MessageProps {
-  messages: Message[];
-  message: string;
-  onPromptSelect: (prompt: string) => void;
-  loading: boolean;
-}
-export type Message = {
-  text: string;
-  sender: string;
-};
