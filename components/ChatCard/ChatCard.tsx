@@ -9,11 +9,6 @@ import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 
-interface Thread {
-  id: string;
-  title: string;
-  date: string;
-}
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -35,6 +30,7 @@ export default function ChatCard({
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const { data: session } = useSession();
 
+  // Generate UUID for new threads, but keep as string since API expects string UUID
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
 
   useEffect(() => {
@@ -62,54 +58,90 @@ export default function ChatCard({
     inputRef.current?.focus();
   };
 
-
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
-    setchat((prev) => [...prev, { id: uuid(), prompt: message, response: null }]);
+    
+    // Create temporary chat entry while waiting for response
+    const tempChatId = uuid();
+    setchat((prev) => [
+  ...prev,
+  {
+    id: tempChatId,
+    prompt: text,
+    response: "",
+    provider: "gemini",
+    model,
+    thread: currentThreadId,  
+    userId: session?.user?.id || "unknown-user",
+    createdAt: new Date(),   
+    updatedAt: new Date(),
+  },
+]);
+
+    
     setMessage("");
 
-    const body = {
-      prompt: message,
-      prevPrompts: chat,
-      model,
-      threadId: currentThreadId,
-      maxOutputTokens: 500,
-      temperature: 0.5,
-      systemPrompt: "you are helpful assistant.",
-      llmProvider: "gemini",
-    };
-    console.log(body, 'body sending.........');
-    const res = await axios.post(`${baseUrl}/chat`, body);
+    try {
+      const body = {
+        prompt: text,
+        prevPrompts: chat,
+        model,
+        threadId: currentThreadId,
+        maxOutputTokens: 500,
+        temperature: 0.5,
+        systemPrompt: "you are helpful assistant.",
+        llmProvider: "gemini",
+      };
+      
+      console.log(body, 'body sending.........');
+      const res = await axios.post(`${baseUrl}/chat`, body);
+      console.log(res.data,'getting data from backend')
 
-    if (res.data.success) {
-      setchat((prev) => [
-        ...prev,
-        { id: res.data.genResponse?.id, prompt: message, response: res.data.genResponse },
-      ]);
-    }
-
-    if (isInitPrompt) {
-      try {
-        const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
-          initPrompt: text,
+      if (res.data.success) {
+        // Remove temp entry and add real response
+        setchat((prev) => {
+          const filtered = prev.filter(c => c.id !== tempChatId);
+          return [...filtered, res.data.genResponse];
         });
-
-        if (titleRes.data.success) {
-          setIsInitPrompt(false);
-          setthreads?.((prev) => [
-            ...prev,
-            {
-              id: currentThreadId,
-              title: titleRes.data.title,
-              date: new Date().toLocaleDateString(),
-            },
-          ]);
+        
+        // Set thread ID if this is a new thread and we get one back from API
+        if (res.data.genResponse?.thread?.id) {
+          setCurrentThreadId(res.data.genResponse.thread.id);
         }
-      } catch (err) {
-        console.error("Failed to generate title:", err);
       }
+
+      // Handle title generation for first prompt
+      if (isInitPrompt) {
+        try {
+          const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
+            initPrompt: text,
+          });
+
+          if (titleRes.data.success) {
+            setIsInitPrompt(false);
+            setthreads?.((prev) => [
+              ...prev,
+              {
+                id: res.data.genResponse?.thread?.id || currentThreadId,
+                title: titleRes.data.title,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                userId: session?.user?.id || "",
+              },
+            ]);
+          }
+        } catch (err) {
+          console.error("Failed to generate title:", err);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to send message:", err);
+      // Remove temp entry on error
+      setchat((prev) => prev.filter(c => c.id !== tempChatId));
     }
   };
+
+  useEffect(() => { console.log(chat,'getting new chats.........')}, [chat]);
 
   return (
     <div
@@ -121,16 +153,28 @@ export default function ChatCard({
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
 
-      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-3 scrollbar-hide w-1/2 items-center justify-center">
+      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-3 scrollbar-hide">
         {chat.length === 0 && !message ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
-          chat.map((chat) => (
-            <div key={chat.id} className=" flex flex-col space-y-1 ">
-              <span className=" p-3 bg-[#7a375b] rounded-md self-end">{chat?.prompt}</span>
-              <ReactMarkdown>{chat?.response}</ReactMarkdown>
-            </div>
-          ))
+          <div className="max-w-4xl mx-auto">
+            {chat?.map((chatItem) => (
+              <div key={chatItem.id} className="flex flex-col space-y-4 mb-6">
+                <div className="flex justify-end">
+                  <span className="p-3 bg-[#7a375b] text-white rounded-lg max-w-xs md:max-w-md lg:max-w-lg">
+                    {chatItem.prompt}
+                  </span>
+                </div>
+                {chatItem.response && (
+                  <div className="flex justify-start">
+                    <div className="p-3 bg-white rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
+                      <ReactMarkdown>{chatItem.response}</ReactMarkdown>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         )}
       </div>
 

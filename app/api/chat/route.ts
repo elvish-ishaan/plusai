@@ -6,16 +6,21 @@ import { NextResponse } from "next/server";
 import { z } from "zod/v4";
 
 export async function POST(req: Request) {
+  const zodSchema = z.object({
+  createdAt: z.date(),
+  id: z.string(),
+  model: z.string(),
+  prompt: z.string(),
+  provider: z.string(),
+  response: z.string(),
+  thread: z.uuidv4(),
+  updatedAt: z.date(),
+  userId: z.string(),
+});
     //adding zod validation
     const requestSchema = z.object({
         prompt: z.string(),
-        prevPrompts: z.array(
-            z.object({
-              id: z.uuidv4().nullable(),
-              prompt: z.string(),
-              response: z.string().nullable(),
-        })
-        ),
+        prevPrompts: z.array(zodSchema).nullable(),
         temperature: z.number(),
         model: z.string(),
         systemPrompt: z.string(),
@@ -30,16 +35,18 @@ export async function POST(req: Request) {
         return new Response("Invalid model", { status: 400 });
     }
     let finalPrompt;
-    if(prevPrompts.length > 0 && prevPrompts[0].text !== ''){
+    if(prevPrompts){
+      if(prevPrompts.length > 0 && prevPrompts[0].prompt !== ''){
         finalPrompt = `
         previous conversation:
-        ${prevPrompts.map((prompt) => prompt.text).join('\n')}
+        ${prevPrompts.map((prompt) => prompt.prompt).join('\n')}
         
         current conversation:
         ${prompt}
         `;
     }else{
         finalPrompt = prompt;
+    }
     }
 
     const llmRes = await client.generate( finalPrompt, temperature, maxOutputTokens, model, systemPrompt);
@@ -103,7 +110,7 @@ export async function POST(req: Request) {
         return NextResponse.json({
           success: true,
           message: "Chat created successfully",
-          genResponse: chat.response,
+          genResponse: chat,
         });
     }
     }
