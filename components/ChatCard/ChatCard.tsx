@@ -67,17 +67,18 @@ export default function ChatCard({
     setchat((prev) => [...prev, { id: uuid(), prompt: message, response: null }]);
     setMessage("");
 
-    const res = await axios.post(`${baseUrl}/chat`, {
+    const body = {
       prompt: message,
       prevPrompts: chat,
-      provider,
       model,
       threadId: currentThreadId,
       maxOutputTokens: 500,
       temperature: 0.5,
       systemPrompt: "you are helpful assistant.",
       llmProvider: "gemini",
-    });
+    };
+    console.log(body, 'body sending.........');
+    const res = await axios.post(`${baseUrl}/chat`, body);
 
     if (res.data.success) {
       setchat((prev) => [

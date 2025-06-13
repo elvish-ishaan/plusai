@@ -11,8 +11,9 @@ export async function POST(req: Request) {
         prompt: z.string(),
         prevPrompts: z.array(
             z.object({
-            sender: z.string(),
-            text: z.string()
+              id: z.uuidv4().nullable(),
+              prompt: z.string(),
+              response: z.string().nullable(),
         })
         ),
         temperature: z.number(),
