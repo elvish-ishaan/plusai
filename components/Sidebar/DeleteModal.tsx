@@ -7,12 +7,14 @@ interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onDelete: () => void;
+  threadTitle: string;
 }
 
 export default function DeleteModal({
   isOpen,
   onClose,
   onDelete,
+  threadTitle,
 }: DeleteModalProps) {
   // Disable background scroll and interactions
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function DeleteModal({
       <div className="bg-[#f9f3f9] rounded-lg shadow-xl p-6 w-[500px]">
         <h2 className="text-lg font-semibold text-[#501854]">Delete Thread</h2>
         <p className="mt-2 text-[#ac1668]">
-          Are you sure you want to delete <strong>{""}</strong>? This action
+          Are you sure you want to delete <strong>{threadTitle}</strong>? This action
           cannot be undone.
         </p>
 

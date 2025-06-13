@@ -8,10 +8,11 @@ import logo from "../../public/logo.png";
 import sidebar from "../../public/sidebar.png";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { format, isToday, isYesterday } from "date-fns";
-import { Pin, X } from "lucide-react";
+import { Pin, X, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
 import { signIn, signOut } from "next-auth/react";
+import axios from "axios";
 
 
 const groupByDate = (threads: Thread[]) => {
@@ -33,15 +34,23 @@ export default function Sidebar({
   isCollapsed,
   setIsCollapsed,
   threads,
+  setThreads,
+  onThreadSelect,
+  selectedThreadId,
 }: {
   isCollapsed: boolean;
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   threads: Thread[];
+  setThreads: React.Dispatch<React.SetStateAction<Thread[]>>;
+  onThreadSelect: (threadId: string) => void;
+  selectedThreadId: string | null;
 }) {
   console.log(threads,'threads inisde sidebar..........')
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [threadToDelete, setThreadToDelete] = useState<string | null>(null);
   const hasMounted = useRef(false);
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   useEffect(() => {
     hasMounted.current = true;
@@ -69,9 +78,30 @@ export default function Sidebar({
     [filteredThreads]
   );
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    if (!threadToDelete) return;
+    
+    try {
+      const response = await axios.delete(`${baseUrl}/api/chat/threads?threadId=${threadToDelete}`);
+      if (response.data.success) {
+        setThreads(prev => prev.filter(thread => thread.id !== threadToDelete));
+        if (selectedThreadId === threadToDelete) {
+          onThreadSelect(null);
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting thread:', error);
+    }
     setShowModal(false);
-    // Implement delete logic here
+    setThreadToDelete(null);
+  };
+
+  const handleThreadClick = (threadId: string) => {
+    onThreadSelect(threadId);
+  };
+
+  const handleNewChat = () => {
+    onThreadSelect(null);
   };
 
   return (
@@ -161,7 +191,10 @@ export default function Sidebar({
               </Link>
             </div>
 
-            <Button className="w-full mt-2 bg-[#a23b67] hover:bg-[#d56a9d] text-white font-bold py-2 border border-[#8f3c66] rounded-lg shadow text-sm">
+            <Button 
+              onClick={handleNewChat}
+              className="w-full mt-2 bg-[#a23b67] hover:bg-[#d56a9d] text-white font-bold py-2 border border-[#8f3c66] rounded-lg shadow text-sm"
+            >
               New Chat
             </Button>
 
@@ -209,33 +242,21 @@ export default function Sidebar({
                     {threads?.map((thread) => (
                       <motion.div
                         key={thread.id}
-                        className="relative group"
+                        className={`relative group cursor-pointer ${
+                          selectedThreadId === thread.id ? 'bg-[#efcae3]' : ''
+                        }`}
                         initial="rest"
                         animate="rest"
                         whileHover="hover"
+                        onClick={() => handleThreadClick(thread.id)}
                       >
-                        <div className="relative flex justify-between items-center rounded-md px-2 py-1 overflow-hidden truncate">
-                          <motion.div
-                            className="absolute inset-0 bg-white z-0"
-                            variants={{
-                              rest: { x: "100%" },
-                              hover: { x: "0%" },
-                            }}
-                            transition={{ duration: 0.1, ease: "easeInOut" }}
-                          />
-
-                          <div className="relative z-10 flex items-center truncate text-[#ac1668]">
-                            <Link href={`/thread/${thread.id}`}>
-                              {!isCollapsed ? (
-                                <span className="text-sm font-medium">
-                                  {thread.title}
-                                </span>
-                              ) : (
-                                <Pin className="w-4 h-4" />
-                              )}
-                            </Link>
+                        <div className="flex items-center justify-between p-2 rounded-lg hover:bg-[#efcae3]">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <MessageSquare className="w-4 h-4 text-[#7a375b] flex-shrink-0" />
+                            <span className="text-sm text-[#7a375b] truncate">
+                              {thread.title}
+                            </span>
                           </div>
-
                           {!isCollapsed && (
                             <motion.div
                               variants={{
@@ -248,17 +269,16 @@ export default function Sidebar({
                               <span className="p-1 hover:bg-pink-300 rounded-md">
                                 <Pin className="w-4 h-4 cursor-pointer" />
                               </span>
-                              <span className="p-1 hover:bg-pink-300 rounded-md">
-                                <X
-                                  className="w-4 h-4 cursor-pointer"
-                                  onClick={() => setShowModal(true)}
-                                />
+                              <span 
+                                className="p-1 hover:bg-pink-300 rounded-md"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setThreadToDelete(thread.id);
+                                  setShowModal(true);
+                                }}
+                              >
+                                <X className="w-4 h-4 cursor-pointer" />
                               </span>
-                              <DeleteModal
-                                isOpen={showModal}
-                                onClose={() => setShowModal(false)}
-                                onDelete={handleDelete}
-                              />
                             </motion.div>
                           )}
                         </div>
@@ -285,6 +305,16 @@ export default function Sidebar({
               </div>
             </div>
           </div>
+
+          <DeleteModal
+            isOpen={showModal}
+            onClose={() => {
+              setShowModal(false);
+              setThreadToDelete(null);
+            }}
+            onDelete={handleDelete}
+            threadTitle={threads.find(t => t.id === threadToDelete)?.title || ''}
+          />
         </>
       )}
     </motion.aside>
