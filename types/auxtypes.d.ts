@@ -1,6 +1,5 @@
 
 
-
 interface Thread {
   id: string; 
   title: string;
@@ -19,4 +18,16 @@ interface Chat {
   id: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+interface Message {
+  sender: "user" | "ai" | "system";
+  text: string;
+}
+
+interface MessageProps {
+  messages: Message[];
+  message: string;
+  onPromptSelect: (prompt: string) => void;
+  loading: boolean;
 }
