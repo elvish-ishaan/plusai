@@ -7,15 +7,15 @@ import { z } from "zod/v4";
 
 export async function POST(req: Request) {
   const zodSchema = z.object({
-  createdAt: z.date(),
+  createdAt: z.string(), // Accept ISO string
   id: z.string(),
   model: z.string(),
   prompt: z.string(),
   provider: z.string(),
   response: z.string(),
-  thread: z.uuidv4(),
-  updatedAt: z.date(),
-  userId: z.string(),
+  thread: z.string().optional(), // Accept string or undefined
+  updatedAt: z.string(), // Accept ISO string
+  userId: z.string().optional(), // Accept string or undefined
 });
     //adding zod validation
     const requestSchema = z.object({
