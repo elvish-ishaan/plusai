@@ -5,7 +5,7 @@ import React from "react";
 
 export default function PostPage() {
   const params = useParams();
-  const id = params?.id;
+  const id = params.id;
 
   return <div>Post ID: {id}</div>;
 }

@@ -34,19 +34,16 @@ export async function POST(req: Request) {
     if (!client) {
         return new Response("Invalid model", { status: 400 });
     }
-    let finalPrompt;
-    if(prevPrompts){
-      if(prevPrompts.length > 0 && prevPrompts[0].prompt !== ''){
-        finalPrompt = `
-        previous conversation:
-        ${prevPrompts.map((prompt) => prompt.prompt).join('\n')}
-        
-        current conversation:
-        ${prompt}
-        `;
-    }else{
-        finalPrompt = prompt;
-    }
+    let finalPrompt: string = prompt;
+
+    if (prevPrompts && prevPrompts.length > 0 && prevPrompts[0].prompt !== '') {
+      finalPrompt = `
+    previous conversation:
+    ${prevPrompts.map((prompt) => prompt.prompt).join('\n')}
+    
+    current conversation:
+    ${prompt}
+      `;
     }
 
     const llmRes = await client.generate( finalPrompt, temperature, maxOutputTokens, model, systemPrompt);
