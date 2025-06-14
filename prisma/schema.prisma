@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -28,7 +24,7 @@ model Thread {
   id        String   @id @default(uuid())
   userId    String
   title     String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   chats     Chat[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -43,5 +39,5 @@ model Chat {
   model     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  thread    Thread   @relation(fields: [threadId], references: [id])
+  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
 }

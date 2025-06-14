@@ -27,10 +27,8 @@ export default function Home() {
     fetchThreads();
   }, []);
   
-  //console threds whenever thread array changes
-  useEffect(() => {
-    console.log(threads, 'threads');
-  }, [threads]);
+  //log threads to console
+  useEffect(() => { console.log(threads, 'threads in page') }, [threads]);
 
   return (
     <div className="relative bg-[#f2e6f5] h-screen overflow-hidden flex">

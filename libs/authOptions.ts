@@ -27,12 +27,14 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }): Promise<Session> {
+      console.log(session, 'session in authOptions');
       const existingUser = await prisma.user.findUnique({
         where: {
           email: token.email as string,
         },
       });
-
+      console.log(existingUser, 'existing user in authOptions');
+      // If user does not exist, create a new user
       if (!existingUser) {
         const newUser = await prisma.user.create({
           data: {
