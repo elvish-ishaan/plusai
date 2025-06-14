@@ -13,13 +13,22 @@ export async function GET() {
       where: {
         userId: session?.user.id as string,
       },
+      orderBy: {
+        createdAt: 'desc',
+      }
     });
+    if (!response) {
+        return NextResponse.json({
+            success: false,
+            message: "No threads found",
+        }, { status: 404 });
+    }
     return NextResponse.json({
         success: true,
         threads: response,
     });
     } catch (error) {
-        console.log(error as string, 'error in getting threads from db');
+        console.log(error, 'error in getting threads from db');
     }
 }
 
@@ -35,17 +44,23 @@ export async function DELETE(request: Request) {
     }
     const { threadId } = await request.json();
     try {
-        await prisma.thread.delete({
+        const deletedThread = await prisma.thread.delete({
             where: {
+                userId: session?.user.id as string,
                 id: threadId,
             },
         });
+        console.log("Thread deleted successfully:", deletedThread);
         return NextResponse.json({
             success: true,
             message: "Thread deleted successfully",
         });
     } catch (error) {
         console.log(error as string, 'error in deleting thread from db');
+        return NextResponse.json({
+            success: false,
+            message: "Error deleting thread",
+        }, { status: 404 });
     }
     } catch (error) {
       console.log(error as string, 'error in deleting thread');

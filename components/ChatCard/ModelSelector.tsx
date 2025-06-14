@@ -6,11 +6,11 @@ import { cn } from "@/libs/utils";
 
 const models = [
   { name: "Gemini 2.5 Flash", active: true },
-  { name: "Gemini 2.5 Pro", active: false },
-  { name: "GPT ImageGen", active: false },
-  { name: "o4-mini", active: false },
-  { name: "Claude 4 Sonnet", active: false },
-  { name: "DeepSeek R1 (Llama Distilled)", active: false },
+  { name: "Gemini 2.5 Pro", active: true },
+  { name: "GPT ImageGen", active: true },
+  { name: "o4-mini", active: true },
+  { name: "Claude 4 Sonnet", active: true },
+  { name: "DeepSeek R1 (Llama Distilled)", active: true },
 ];
 
 export default function ModelSelector({

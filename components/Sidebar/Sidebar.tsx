@@ -8,7 +8,7 @@ import darklogo from "../../public/darklogo.png";
 import sidebar from "../../public/sidebar.png";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { format, isToday, isYesterday } from "date-fns";
-import { Pin, X, MessageSquare } from "lucide-react";
+import { Pin, X } from "lucide-react";
 import { motion } from "framer-motion";
 import DeleteModal from "./DeleteModal";
 import UserInfo from "./UserInfo";
@@ -45,7 +45,14 @@ export default function Sidebar({
   const [showModal, setShowModal] = useState(false);
   const [threadToDelete, setThreadToDelete] = useState<string | null>(null);
   const hasMounted = useRef(false);
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null); // <-- Add this line
+
   const router = useRouter();
+
+  const handleThreadClick = (threadId: string) => {
+    setSelectedThreadId(threadId);
+    router.push(`/chat/${threadId}`);
+  };
 
   useEffect(() => {
     hasMounted.current = true;
@@ -80,6 +87,7 @@ export default function Sidebar({
       const response = await axios.delete("/api/chat/threads", {
         data: { threadId: threadToDelete }
       });
+      console.log("Delete response:", response.data);
 
       if (response.data.success) {
         setThreads((prev) => prev.filter((thread) => thread.id !== threadToDelete));
@@ -281,7 +289,7 @@ export default function Sidebar({
                                 hover: { x: 0, opacity: 1 },
                               }}
                               transition={{ duration: 0.1, ease: "easeInOut" }}
-                              className="relative z-10 flex gap-1 text-[#7a375b]"
+                              className="relative z-10 flex gap-1 text-foreground"
                             >
                               <span className="p-1 hover:bg-pink-300 rounded-md">
                                 <Pin className="w-4 h-4 cursor-pointer" />

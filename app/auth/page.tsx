@@ -51,15 +51,14 @@ export default function Page() {
       </h1>
 
       <div className="mb-8 text-center text-[#a74576]">
-        <p>Sign in below (we'll increase your message limits if you do 😉)</p>
+        <p>Sign in below (we&apos;ll increase your message limits if you do 😉)</p>
       </div>
 
       {/* Google Sign-In Button */}
       <div className="w-full max-w-sm">
-        <button
-          onClick={() => signIn("google", { callbackUrl: "/" })}
-          className="flex items-center cursor-pointer justify-center gap-3 w-full h-14 px-6 py-2 text-lg font-semibold text-white bg-[#a23b67] hover:bg-[#d56698] active:bg-[#a23b67] rounded-lg shadow transition-all hover:shadow-lg backdrop-blur-sm"
-        >
+        <button 
+          onClick={() => signIn()}
+          className="flex items-center justify-center gap-3 w-full h-14 px-6 py-2 text-lg font-semibold text-white bg-[#a23b67] hover:bg-[#d56698] active:bg-[#a23b67] rounded-lg shadow transition-all hover:shadow-lg backdrop-blur-sm">
           <Image src="/google.png" alt="Google" width={24} height={24} />
           Continue with Google
         </button>

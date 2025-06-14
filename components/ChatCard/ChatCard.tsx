@@ -46,7 +46,6 @@ export default function ChatCard({
       try {
         setIsLoading(true);
         const res = await axios.get(`${baseUrl}/chat/threads/${threadId}`);
-        
         if (res.data.success) {
           setCurrentThreadId(threadId);
           setchat(res.data.thread?.chats || []);
@@ -114,7 +113,6 @@ export default function ChatCard({
       };
       
       const res = await axios.post(`${baseUrl}/chat`, body);
-      console.log(res.data,'getting res')
       if (res.data.success) {
         // Remove temp entry and add real response
         setchat((prev) => {
@@ -134,19 +132,26 @@ export default function ChatCard({
           const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
             initPrompt: text,
           });
+          console.log(titleRes.data, 'titleRes.data');
 
           if (titleRes.data.success) {
             setIsInitPrompt(false);
-            setthreads?.((prev) => [
-              ...prev,
-              {
-                id: res.data.genResponse?.thread?.id || currentThreadId,
-                title: titleRes.data.title,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                userId: session?.user?.id || "",
-              },
-            ]);
+            // Use the backend thread ID if available
+            const newThreadId = res.data.genResponse?.thread?.id || currentThreadId;
+            setthreads?.((prev) => {
+              // Only add if not already present
+              if (prev.some(t => t.id === newThreadId)) return prev;
+              return [
+                ...prev,
+                {
+                  id: newThreadId,
+                  title: titleRes.data.title,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                  userId: session?.user?.id || "",
+                },
+              ];
+            });
           }
         } catch (err) {
           console.error("Failed to generate title:", err);
@@ -229,7 +234,6 @@ export default function ChatCard({
           setMessage={setMessage}
           onSend={handleSend}
           setmodel={setModel}
-          //@ts-ignore
           inputRef={inputRef}
           isLoading={isLoading}
         />
