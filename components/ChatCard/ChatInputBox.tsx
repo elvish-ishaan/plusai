@@ -7,6 +7,7 @@
   type Props = {
     message: string;
     setMessage: (val: string) => void;
+    model: string;
     setModel: React.Dispatch<React.SetStateAction<string>>;
     onSend: (val: string) => void;
     inputRef: React.RefObject<HTMLTextAreaElement>;
@@ -16,6 +17,7 @@
   export default function ChatInputBox({
     message,
     setMessage,
+    model,
     setModel,
     onSend,
     inputRef,
@@ -73,7 +75,7 @@
 
               <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center mb-6">
                 <div className="flex items-center gap-2">
-                  <ModelSelector setModel={setModel}  />
+                  <ModelSelector setModel={setModel} selectedModel={model} />
                   <button
                     className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border border-[#eddfed] dark:border-[#39323f] text-[#ac1668] dark:text-[#f9f8fb] hover:bg-[#f4d6e7] dark:hover:bg-[#322c38]"
                     type="button"

@@ -9,6 +9,16 @@ import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 
+type Model = {
+  name: string;
+  active: boolean;
+};
+
+interface ModelSelectorProps {
+  models: Model[];
+  selectedModel: string;
+  setModel: (model: string) => void;
+}
 interface ChatCardProps {
   isCollapsed: boolean;
   setthreads?: React.Dispatch<React.SetStateAction<Thread[]>>;
@@ -233,7 +243,9 @@ export default function ChatCard({
           message={message}
           setMessage={setMessage}
           onSend={handleSend}
-          setmodel={setModel}
+          setModel={setModel}
+          model={model} 
+          //@ts-ignore
           inputRef={inputRef}
           isLoading={isLoading}
         />

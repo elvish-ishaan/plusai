@@ -19,7 +19,7 @@ export async function GET(
     const thread = await prisma.thread.findFirst({
       where: {
         id: threadId,
-        userId: session.user.id
+        userId: session.user.id 
       }
     });
 

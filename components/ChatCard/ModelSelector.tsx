@@ -15,17 +15,18 @@ const models = [
 
 export default function ModelSelector({
   setModel,
+  selectedModel,
 }: {
   setModel: React.Dispatch<React.SetStateAction<string>>;
+  selectedModel: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("Gemini 2.5 Flash");
 
   return (
     <div className="relative inline-block text-left">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center  gap-1 text-[#ac1668] dark:text-[#f9f8fb] font-normal text-sm  px-3 py-1.5 rounded-lg hover:bg-[#f4d6e7 dark:hover:bg-[#322c38]"
+        className="flex items-center gap-1 text-[#ac1668] dark:text-[#f9f8fb] font-normal text-sm px-3 py-1.5 rounded-lg hover:bg-[#f4d6e7] dark:hover:bg-[#322c38]"
       >
         {selectedModel}
         <ChevronDown className="w-4 h-4" />
@@ -58,26 +59,25 @@ export default function ModelSelector({
               </div>
 
               <div className="flex flex-col gap-1 max-h-48 overflow-y-auto">
-                {models.map((model) => (
+                {models.map((modelItem) => (
                   <button
-                    key={model.name}
+                    key={modelItem.name}
                     onClick={() => {
-                      if (model.active) {
-                        setModel(model.name);
-                        setSelectedModel(model.name);
+                      if (modelItem.active) {
+                        setModel(modelItem.name);
                         setIsOpen(false);
                       }
                     }}
                     className={cn(
                       "flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm",
-                      model.active
+                      modelItem.active
                         ? "hover:bg-pink-100 text-pink-900"
                         : "text-pink-300 cursor-not-allowed"
                     )}
-                    disabled={!model.active}
+                    disabled={!modelItem.active}
                   >
-                    <span>{model.name}</span>
-                    {!model.active && <Lock className="w-4 h-4" />}
+                    <span>{modelItem.name}</span>
+                    {!modelItem.active && <Lock className="w-4 h-4" />}
                   </button>
                 ))}
               </div>
@@ -88,3 +88,4 @@ export default function ModelSelector({
     </div>
   );
 }
+
