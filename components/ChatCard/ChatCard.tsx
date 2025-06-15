@@ -9,6 +9,12 @@ import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 
+type Model = {
+  name: string;
+  active: boolean;
+  provider: string;
+};
+
 interface ChatCardProps {
   isCollapsed: boolean;
   setthreads?: React.Dispatch<React.SetStateAction<Thread[]>>;
@@ -23,8 +29,8 @@ export default function ChatCard({
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const [chat, setchat] = useState<Chat[]>([]);
   const [message, setMessage] = useState<string>("");
-  const [provider, setProvider] = useState<string>("");
-  const [model, setModel] = useState<string>("gemini-2.0-flash");
+  const [provider, setProvider] = useState<string>("gemini");
+  const [model, setModel] = useState<string>("Gemini-2.0-flash");
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
@@ -185,17 +191,17 @@ export default function ChatCard({
     <div
       className={`relative flex flex-col ${
         isCollapsed
-          ? "w-screen h-screen bg-[#f9f3f9]"
-          : "h-screen w-full md:mt-3.5 md:rounded-xl md:border border-[#efbdeb] bg-[#f9f3f9] shadow-md"
+          ? "w-screen h-screen bg-[#f9f3f9] dark:bg-[#211c26]"
+          : "h-screen w-full md:mt-3.5 md:rounded-xl md:border dark:bg-[#221d27] border-[#efbdeb] dark:border-[#322028]  bg-[#f9f3f9] shadow-md"
       } overflow-hidden`}
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
 
-      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-3 scrollbar-hide">
+      <div className="flex-1  px-8 py-6 space-y-3 scrollbar-hide">
         {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto overflow-y-auto">
             {chat?.map((chatItem) => (
               <div key={chatItem.id} className="flex flex-col space-y-4 mb-6">
                 <div className="flex justify-end">
@@ -228,13 +234,14 @@ export default function ChatCard({
         )}
       </div>
 
-      <div className="px-6 border-[#efbdeb] bg-[#f9f3f9]">
+      <div className="px-6 border-[#efbdeb] bg-[#f9f3f9] dark:bg-[#221d27] ">
         <ChatInputBox
           message={message}
           setMessage={setMessage}
           onSend={handleSend}
-          setmodel={setModel}
-          //@ts-expect-error fix it
+          setModel={setModel}
+          model={model} 
+          //@ts-ignore
           inputRef={inputRef}
           isLoading={isLoading}
         />

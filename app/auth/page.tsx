@@ -3,19 +3,35 @@ import { ArrowLeft } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Page() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await signIn("google", { callbackUrl: "/" });
+    } catch (err) {
+      console.log(err, "err in signing with google");
+      setError("Failed to sign in with Google.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center p-8 bg-[#f2e2f5]">
+    <div className="relative flex min-h-screen flex-col items-center justify-center p-8 bg-[#f2e2f5] ">
       {/* Background Gradient & Noise */}
 
       {/* Back Button */}
       <div className="absolute left-4 top-4">
         <button
           onClick={() => router.push("/")}
-          className="flex items-center h-9 px-4 py-2 gap-2 rounded-md text-sm font-medium text-[#501854] hover:bg-[#f0cee5] transition-colors"
+          className="flex items-center cursor-pointer h-9 px-4 py-2 gap-2 rounded-md text-sm font-medium text-[#501854] hover:bg-[#f0cee5] transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Chat
@@ -41,7 +57,7 @@ export default function Page() {
       {/* Google Sign-In Button */}
       <div className="w-full max-w-sm">
         <button 
-          onClick={() => signIn("google", { callbackUrl: "/", redirect: false })}
+          onClick={() => signIn()}
           className="flex items-center justify-center gap-3 w-full h-14 px-6 py-2 text-lg font-semibold text-white bg-[#a23b67] hover:bg-[#d56698] active:bg-[#a23b67] rounded-lg shadow transition-all hover:shadow-lg backdrop-blur-sm">
           <Image src="/google.png" alt="Google" width={24} height={24} />
           Continue with Google

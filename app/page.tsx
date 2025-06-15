@@ -31,20 +31,22 @@ export default function Home() {
   useEffect(() => { console.log(threads, 'threads in page') }, [threads]);
 
   return (
-    <div className="relative bg-[#f2e6f5] h-screen overflow-hidden flex">
+    <div className="relative bg-[#f2e6f5] dark:bg-[#1d131a] h-screen overflow-hidden flex">
       {/* Sidebar */}
-      <Sidebar 
-        threads={threads} 
-        setThreads={setThreads}
-        isCollapsed={isCollapsed} 
-        setIsCollapsed={setIsCollapsed} 
-      />
+      <div className="hidden md:block ">
+        <Sidebar
+          threads={threads}
+          setThreads={setThreads}
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+        />
+      </div>
 
       {/* Main Content */}
       <div className="flex-1 transition-all duration-300 h-screen">
         {/* ChatCard */}
-        <ChatCard 
-          isCollapsed={isCollapsed} 
+        <ChatCard
+          isCollapsed={isCollapsed}
           setthreads={setThreads}
           threadId={threadId || undefined}
         />
