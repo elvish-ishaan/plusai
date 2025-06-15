@@ -12,13 +12,9 @@ import ReactMarkdown from "react-markdown";
 type Model = {
   name: string;
   active: boolean;
+  provider: string;
 };
 
-interface ModelSelectorProps {
-  models: Model[];
-  selectedModel: string;
-  setModel: (model: string) => void;
-}
 interface ChatCardProps {
   isCollapsed: boolean;
   setthreads?: React.Dispatch<React.SetStateAction<Thread[]>>;
@@ -33,8 +29,8 @@ export default function ChatCard({
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const [chat, setchat] = useState<Chat[]>([]);
   const [message, setMessage] = useState<string>("");
-  const [provider, setProvider] = useState<string>("");
-  const [model, setModel] = useState<string>("gemini-2.0-flash");
+  const [provider, setProvider] = useState<string>("gemini");
+  const [model, setModel] = useState<string>("Gemini-2.0-flash");
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);

@@ -36,7 +36,7 @@ export default function DeleteModal({
         <h2 className="text-lg font-semibold text-[#501854] dark:text-[#ffffff]">
           Delete Thread
         </h2>
-        <p className="mt-2 text-[#ac1668] dark:text-[#ffffff]">
+        <p className="mt-2 text-[#ac1668] dark:text-[#e7d0dd]">
           Are you sure you want to delete <strong>{threadTitle}</strong>? This
           action cannot be undone.
         </p>

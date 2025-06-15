@@ -62,10 +62,10 @@
             <div className="-mb-px mt-2 flex flex-row-reverse justify-between items-center">
               <button
                 disabled={isSendDisabled}
-                className={`rounded-lg p-2 transition h-9 w-9 flex items-center justify-center cursor-pointer ${
+                className={`rounded-lg p-2 transition h-9 w-9 flex items-center justify-center  ${
                   isSendDisabled
-                    ? "bg-[#e4b9cb] text-white cursor-not-allowed dark:bg-[#3a2134] dark:text-[#8d818b] dark:border-[#7c2e51] "
-                    : "bg-[#a23b67] hover:bg-[#d56698] text-pink-50 dark:bg-[#4b1f39] dark:border-[#7c2e51] dark:hover:bg-[#7d1d48]"
+                    ? "bg-[#e4b9cb] text-white dark:bg-[#3a2134] dark:text-[#8d818b] dark:border-[#7c2e51] cursor-not-allowed "
+                    : "bg-[#a23b67] hover:bg-[#d56698] text-pink-50 dark:bg-[#4b1f39] dark:border-[#7c2e51] dark:hover:bg-[#7d1d48] cursor-pointer"
                 }`}
                 aria-label="Send"
                 onClick={() => onSend(message)}

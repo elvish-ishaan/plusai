@@ -15,7 +15,7 @@ export default function UserInfo() {
   if (status === "authenticated" && session?.user) {
     return (
       <div className="p-4 border-[#e6c4de] mb-3">
-        <div className="flex items-center space-x-3 hover:bg-white px-2 py-3 rounded-lg cursor-pointer">
+        <div className="flex items-center space-x-3 hover:bg-white dark:hover:bg-[#261922] px-2 py-3 rounded-lg cursor-pointer">
           <Avatar>
             <AvatarFallback className="bg-blue-600 text-white">
               {session.user.email?.charAt(0).toUpperCase() || "U"}
@@ -41,7 +41,7 @@ export default function UserInfo() {
 
   // If not authenticated
   return (
-    <div className="p-4 border-[#e6c4de] dark:hover:bg-[#261922] m-3 rounded-lg cursor-pointer">
+    <div className="p-4 border-[#e6c4de] hover:bg-white dark:hover:bg-[#261922] m-3 rounded-lg cursor-pointer">
       <button
         onClick={() => signIn()}
         className="flex items-center text-[#a74576] text-md font-medium gap-2 cursor-pointer ml-2"
