@@ -8,15 +8,12 @@
   }
 }
 
-/* In globals.css or a style tag */
-textarea::-webkit-scrollbar {
-  display: none;
-}
+/* in globals.css or a relevant file */
 
-textarea {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-} 
+/* In globals.css or a style tag */
+
+
+
 body {
   background: var(--background);
   color: var(--foreground);

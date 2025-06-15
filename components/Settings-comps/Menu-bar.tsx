@@ -33,7 +33,7 @@ export default function Menubar() {
     <div
       role="tablist"
       aria-orientation="horizontal"
-      className="inline-flex h-9 items-center gap-1 rounded-lg bg-[#f2cbe9] p-1 text-[#77347c] no-scrollbar w-full md:w-fit overflow-auto"
+      className="inline-flex h-9 items-center gap-1 rounded-lg bg-[#f2cbe9] dark:bg-[#302836] p-1 dark:text-white text-[#77347c] no-scrollbar w-full md:w-fit overflow-auto"
     >
       {MenuItems.map((item) => (
         <button
@@ -47,8 +47,8 @@ export default function Menubar() {
             disabled:pointer-events-none disabled:opacity-50 cursor-pointer
             ${
               active === item.value
-                ? "bg-[#f2e1f4] text-[#77347c] shadow"
-                : "hover:bg-[#f5ddef]"
+                ? "bg-[#f2e1f4] text-[#77347c] shadow dark:bg-[#21141e] dark:text-white"
+                : "hover:bg-[#f5ddef] dark:hover:bg-[#2c222e]"
             }`}
         >
           {item.name}

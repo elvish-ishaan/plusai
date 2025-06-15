@@ -28,10 +28,10 @@ export default function Profile() {
       </div>
 
       {/* Message Usage */}
-      <div className="space-y-4 rounded-lg bg-white p-4 shadow-sm">
+      <div className="space-y-4 rounded-lg bg-white dark:bg-[#0b080b] p-4 shadow-sm">
         <div className="flex flex-row justify-between">
           <span className="text-sm font-semibold">Message Usage</span>
-          <span className="text-xs text-pink-700">
+          <span className="text-xs text-pink-700 dark:text-white">
             Resets tomorrow at 5:30 AM
           </span>
         </div>
@@ -40,7 +40,7 @@ export default function Profile() {
             <h3 className="text-sm font-medium">Standard</h3>
             <span className="text-sm text-pink-700">0/20</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-pink-100">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-pink-100 dark:bg-[#362d3d] ">
             <div
               className="h-full rounded-full bg-pink-500"
               style={{ width: "0%" }}
@@ -51,7 +51,7 @@ export default function Profile() {
       </div>
 
       {/* Keyboard Shortcuts */}
-      <div className="space-y-4 rounded-lg bg-white p-4 shadow-sm">
+      <div className="space-y-4 rounded-lg bg-white dark:bg-[#0b080b] p-4 shadow-sm">
         <span className="text-sm font-semibold">Keyboard Shortcuts</span>
         <div className="space-y-3">
           {[
@@ -65,7 +65,7 @@ export default function Profile() {
                 {keys.map((key) => (
                   <kbd
                     key={key}
-                    className="rounded bg-[#f1cbe9] px-2 py-1 text-sm text-[#77347c]"
+                    className="rounded bg-[#f1cbe9] dark:bg-[#21141e] dark:text-white px-2 py-1 text-sm text-[#77347c]"
                   >
                     {key}
                   </kbd>
