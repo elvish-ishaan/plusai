@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
-import { signIn, signOut, useSession } from "next-auth/react";
+import {  signOut, useSession } from "next-auth/react";
 import { ArrowLeftFromLine, LogOut } from "lucide-react";
 import Image from "next/image"; // ✅ Don't forget this import
 

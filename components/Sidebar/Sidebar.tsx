@@ -14,7 +14,6 @@ import DeleteModal from "./DeleteModal";
 import UserInfo from "./UserInfo";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Input } from "../ui/input";
 import { useTheme } from "next-themes";
 
 const groupByDate = (threads: Thread[]) => {
@@ -222,7 +221,7 @@ export default function Sidebar({
 
             {/* Search box */}
             <div className="text-sm font-normal">
-              <div className="flex items-center gap-3 text-[#a74576] border-b border-[#efbdeb] px-1 py-2  transition">
+              <div className="flex items-center gap-3 text-[#a74576] border-b border-[#efbdeb] dark:border-[#322028] px-1 py-2  transition">
                 <svg
                   className="w-4 h-4 text-[#ac1668] dark:text-[#e7d0dd]"
                   fill="none"

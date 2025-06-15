@@ -6,8 +6,9 @@ export class GoogleClient {
     private gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY as string });
     async generate(
       prompt: string,
-      maxOutputTokens: number,
-      temperature: number,
+      // {Error} : The value is never used 
+      // maxOutputTokens: number,
+      // temperature: number,
       model: string
     ) {
         try {

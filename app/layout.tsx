@@ -4,7 +4,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Montserrat } from "next/font/google";
 import AuthProvider from "@/AuthProvider";
-import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "T3 Chat",
