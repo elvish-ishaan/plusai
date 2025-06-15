@@ -26,9 +26,6 @@ export default function Home() {
     };
     fetchThreads();
   }, []);
-  
-  //log threads to console
-  useEffect(() => { console.log(threads, 'threads in page') }, [threads]);
 
   return (
     <div className="relative bg-[#f2e6f5] dark:bg-[#1d131a] h-screen overflow-hidden flex">

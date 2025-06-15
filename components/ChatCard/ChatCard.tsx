@@ -89,7 +89,7 @@ export default function ChatCard({
         id: tempChatId,
         prompt: text,
         response: "",
-        provider: "gemini",
+        provider: provider || "gemini",
         model,
         thread: currentThreadId,
         userId: session?.user?.id || "unknown-user",
@@ -109,7 +109,7 @@ export default function ChatCard({
         maxOutputTokens: 500,
         temperature: 0.5,
         systemPrompt: "you are helpful assistant.",
-        llmProvider: "gemini",
+        llmProvider: provider || "gemini",
       };
       
       const res = await axios.post(`${baseUrl}/chat`, body);
@@ -232,13 +232,10 @@ export default function ChatCard({
         <ChatInputBox
           message={message}
           setMessage={setMessage}
+          setProvider={setProvider}
           onSend={handleSend}
           setmodel={setModel}
-<<<<<<< HEAD
-          //@ts-expect-error fix it
-=======
-          //@ts-ignore
->>>>>>> b7438234ba8e5f3c2cd64560e4504b2aefd20a2e
+          //@ts-expect-error fix here 
           inputRef={inputRef}
           isLoading={isLoading}
         />

@@ -205,7 +205,7 @@ export default function Sidebar({
               </Link>
             </div>
 
-            <Button className="w-full mt-2 bg-[#a23b67] hover:bg-[#d56a9d] dark:bg-[#3b1127] dark:hover:bg-[#791840] text-white font-bold py-2 border border-[#8f3c66] rounded-lg shadow text-sm">
+            <Button onClick={handleNewChat} className="w-full mt-2 bg-[#a23b67] hover:bg-[#d56a9d] dark:bg-[#3b1127] dark:hover:bg-[#791840] text-white font-bold py-2 border border-[#8f3c66] rounded-lg shadow text-sm">
               New Chat
             </Button>
 

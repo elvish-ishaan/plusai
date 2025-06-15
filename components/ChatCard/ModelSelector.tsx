@@ -5,18 +5,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/libs/utils";
 
 const models = [
-  { name: "Gemini 2.5 Flash", active: true },
-  { name: "Gemini 2.5 Pro", active: false },
-  { name: "GPT ImageGen", active: false },
-  { name: "o4-mini", active: false },
-  { name: "Claude 4 Sonnet", active: false },
-  { name: "DeepSeek R1 (Llama Distilled)", active: false },
+  { name: "Gemini 2.5 Flash", active: true, family: "gemini" },
+  { name: "Gemini 2.5 Pro", active: false, family: "gemini" },
+  { name: "GPT ImageGen", active: false , family: "gpt" },
+  { name: "o4-mini", active: false, family: "openai" },
+  { name: "Claude 4 Sonnet", active: false, family: "claude" },
+  { name: "DeepSeek R1 (Llama Distilled)", active: false, family: "deepseek" },
 ];
 
 export default function ModelSelector({
   setModel,
+  setProvider,
 }: {
   setModel: React.Dispatch<React.SetStateAction<string>>;
+  setProvider: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState("Gemini 2.5 Flash");
@@ -64,6 +66,7 @@ export default function ModelSelector({
                     onClick={() => {
                       if (model.active) {
                         setModel(model.name);
+                        setProvider(model.family);
                         setSelectedModel(model.name);
                         setIsOpen(false);
                       }

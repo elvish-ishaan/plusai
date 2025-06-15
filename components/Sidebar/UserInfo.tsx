@@ -1,15 +1,9 @@
 import React from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-<<<<<<< HEAD
-import { Button } from "../ui/button";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { ArrowLeftFromLine, LogOut } from "lucide-react";
-=======
 import { useSession } from "next-auth/react";
 import {  LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
->>>>>>> b7438234ba8e5f3c2cd64560e4504b2aefd20a2e
 
 export default function UserInfo() {
   const { data: session, status } = useSession();
@@ -34,28 +28,6 @@ export default function UserInfo() {
             </span>
             <p className="text-xs text-[#a74576]">Free</p>
           </div>
-<<<<<<< HEAD
-        ) : (
-          <button
-            onClick={() => signIn()}
-            className="flex items-center text-[#a74576] text-md font-medium gap-2 cursor-pointer ml-2"
-          >
-            <Image
-              src="/login.png" // use a pink-tinted version of login.png
-              alt="Login Icon"
-              width={18}
-              height={18}
-            />
-            <LogOut className="w-4 h-4  text-[#a74576]" />
-            <span className="pl-4"> Login</span>
-          </button>
-        )}
-      </div>
-      <Button onClick={() => signOut()} className="w-full mt-2 bg-[#a74576] hover:bg-[#d56698] text-white">
-        <ArrowLeftFromLine className="w-4 h-4 mr-2" />
-        Logout
-      </Button>
-=======
         </div>
       </div>
     );
@@ -70,7 +42,6 @@ export default function UserInfo() {
         <LogOut className="w-4 h-4 text-[#a74576] dark:text-[#e7d0dd]" />
         <span className="pl-4">Login</span>
       </button>
->>>>>>> b7438234ba8e5f3c2cd64560e4504b2aefd20a2e
     </div>
   );
 }
