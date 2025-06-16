@@ -18,13 +18,23 @@ export default function Layout({children}: {children: React.ReactNode}) {
   }, [])
   
   return (
-    <div className="relative bg-[#f2e6f5] h-screen overflow-hidden flex">
+    <div className="relative bg-[#f2e6f5] dark:bg-[#1d131a] h-screen overflow-hidden flex">
       {/* Sidebar */}
-      <Sidebar threads={threads} setThreads={setThreads} isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      <div className="hidden md:block">
+        <Sidebar
+          threads={threads}
+          setThreads={setThreads}
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+        />
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 transition-all duration-300 h-screen">
-        {children}
+      <div
+        className={`flex-1 transition-all duration-300 h-screen ${
+          !isCollapsed ? "md:mt-1" : ""
+        }`}
+      >
         <ChatCard isCollapsed={isCollapsed} setthreads={setThreads} />
       </div>
     </div>
