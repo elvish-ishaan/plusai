@@ -2,21 +2,22 @@ import React from "react";
 import WelcomeScreen from "./Welcome-screen";
 import ChatLoader from "../Loaders/ChatLoader";
 
-
 export default function ChatMessageArea({
   messages,
   message,
   onPromptSelect,
   loading,
 }: MessageProps) {
+  const hasMessages = messages.length > 0 || message;
+
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6 scrollbar-hide mt-10">
-      {messages.length === 0 && !message ? (
+    <div className="flex-1 flex flex-col mt-10 px-4 py-6">
+      {!hasMessages ? (
         <div className="max-w-[800px] mx-auto">
           <WelcomeScreen onPromptSelect={onPromptSelect} />
         </div>
       ) : (
-        <div className="space-y-3 max-w-[800px] mx-auto">
+        <div className="max-w-[800px] mx-auto flex-1 overflow-y-auto pr-2 custom-scroll space-y-3">
           {messages.map((msg, idx) => (
             <div
               key={idx}
