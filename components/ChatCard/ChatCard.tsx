@@ -32,6 +32,7 @@ export default function ChatCard({
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
+  const [isWebSearchEnabled, setIsWebSearchEnabled] = useState<boolean>(false);
   const { data: session } = useSession();
   
   //for prompt animation 
@@ -244,7 +245,7 @@ export default function ChatCard({
           onSend={handleSend}
           setModel={setModel}
           model={model}
-          //@ts-ignore
+          //@ts-expect-error fix it 
           inputRef={inputRef}
           isLoading={isLoading}
         />
