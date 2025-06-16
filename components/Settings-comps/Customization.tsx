@@ -28,7 +28,7 @@ export default function Customization() {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-12 text-white">
+    <div className=" space-y-5 text-[#501854] dark:text-white">
       {/* Customize T3 Chat Section */}
       <section className="space-y-6">
         <h2 className="text-xl font-bold">Customize T3 Chat</h2>
@@ -39,7 +39,7 @@ export default function Customization() {
             <Input
               maxLength={50}
               placeholder="Enter your name"
-              className="mt-1"
+              className="mt-1 border border-[#e7c1dc]  "
             />
           </div>
 
@@ -60,7 +60,7 @@ export default function Customization() {
               onChange={(e) => setTraitInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && addTrait(traitInput)}
               placeholder="Type a trait and press Enter or Tab..."
-              className="mt-1"
+              className="mt-1 border-[#e7c1dc] "
             />
             <div className="flex flex-wrap gap-2 mt-2">
               {traits.map((trait) => (
@@ -81,7 +81,7 @@ export default function Customization() {
             <Textarea
               placeholder="Interests, values, or preferences to keep in mind"
               maxLength={3000}
-              className="mt-1"
+              className="mt-1 border-[#e7c1dc] "
             />
           </div>
 
@@ -95,62 +95,107 @@ export default function Customization() {
       </section>
 
       {/* Visual Options Section */}
-      <section className="space-y-6">
+      <section className="space-y-6 text-[#77347c] dark:text-white">
         <h2 className="text-xl font-bold">Visual Options</h2>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <span>Boring Theme</span>
-            <Switch />
-          </div>
+          {[
+            {
+              title: "Boring Theme",
+              desc: "If you think the pink is too much, turn this on to tone it down.",
+            },
+            {
+              title: "Hide Personal Information",
+              desc: "Hides your name and email from the UI.",
+            },
+            {
+              title: "Disable Thematic Breaks",
+              desc: "Hides horizontal lines in chat messages. (Some browsers have trouble rendering these, turn off if you have bugs with duplicated lines)",
+            },
+            {
+              title: "Stats for Nerds",
+              desc: "Enables more insights into message stats including tokens per second, time to first token, and estimated tokens in the message.",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="flex items-start justify-between gap-4"
+            >
+              <div className="flex-1">
+                <p className="font-medium">{item.title}</p>
+                <p className="text-sm text-[#ac1668] dark:text-[#e7d0dd]">
+                  {item.desc}
+                </p>
+              </div>
+              <Switch />
+            </div>
+          ))}
+        </div>
 
-          <div className="flex items-center justify-between">
-            <span>Hide Personal Information</span>
-            <Switch />
-          </div>
+        {/* Font selection and preview (unchanged, from earlier) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          <div className="space-y-4">
+            <div>
+              <p className="font-medium">Main Text Font</p>
+              <p className="text-sm text-[#ac1668] dark:text-[#e7d0dd]">
+                Used in general text throughout the app.
+              </p>
+              <select className="bg-[#f5ddef] border border-[#e7c1dc]  dark:bg-[#1e1b20] p-2 rounded-md w-full mt-1 text-[#77347c] dark:text-white">
+                <option>System Font</option>
+                <option>Sans-serif</option>
+                <option>Serif</option>
+              </select>
+            </div>
 
-          <div className="flex items-center justify-between">
-            <span>Disable Thematic Breaks</span>
-            <Switch />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <span>Stats for Nerds</span>
-            <Switch />
-          </div>
-
-          <div>
-            <p className="font-medium">Main Text Font</p>
-            <select className="bg-[#1e1b20] p-2 rounded-md w-full mt-1">
-              <option>System Font</option>
-              <option>Sans-serif</option>
-              <option>Serif</option>
-            </select>
-          </div>
-
-          <div>
-            <p className="font-medium">Code Font</p>
-            <select className="bg-[#1e1b20] p-2 rounded-md w-full mt-1">
-              <option>Select font</option>
-              <option>Monospace</option>
-              <option>Fira Code</option>
-            </select>
+            <div>
+              <p className="font-medium">Code Font</p>
+              <p className="text-sm text-[#ac1668] dark:text-[#e7d0dd]">
+                Used in code blocks and inline code in chat messages.
+              </p>
+              <select className="bg-[#f5ddef] border border-[#e7c1dc]  dark:bg-[#1e1b20] p-2 rounded-md w-full mt-1 text-[#77347c] dark:text-white">
+                <option>Select font</option>
+                <option>Monospace</option>
+                <option>Fira Code</option>
+              </select>
+            </div>
           </div>
 
           <div>
             <p className="font-medium">Fonts Preview</p>
-            <div className="bg-[#2d2530] p-4 rounded-md text-sm">
-              <p className="mb-2">
-                Can you write me a simple hello world program?
-              </p>
-              <div className="bg-[#3a2e3f] p-2 rounded text-xs font-mono">
-                <p className="text-purple-400">
-                  function <span className="text-pink-400">greet</span>(
-                  <span className="text-cyan-400">name: string</span>) {"{"}
+            <div className="border border-dashed border-[#e9c7e2]  dark:border-[#302029]  rounded-md p-4 text-sm bg-[#f0ddf4] dark:bg-[#2d2530]">
+              <div className="mb-2 bg-[#f5d0ea] dark:bg-[#362d3d] p-2 rounded">
+                <p className="text-[#77347c] dark:text-white">
+                  Can you write me a simple hello world program?
                 </p>
-                <p className="ml-4">console.log(`Hello, ${"{name}"}`);</p>
-                <p>{"}"}</p>
-                <p className="text-pink-300">return true;</p>
+              </div>
+              <p className="mb-1">Sure, here you go:</p>
+              <div className="bg-white dark:bg-[#3a2e3f] rounded font-mono text-xs">
+                <div className="bg-[#f1c4e6] dark:bg-[#362d3d] dark:text-white text-[#77347c] pl-2 text-sm  font-normal w-full inline-block rounded-t p-1">
+                  typescript
+                </div>
+                <pre className="pt-2 text-sm p-2 bg-white dark:bg-[#17141c]">
+                  <span className="text-purple-600 dark:text-purple-400">
+                    function{" "}
+                  </span>
+                  <span className="text-pink-600 dark:text-pink-400">
+                    greet
+                  </span>
+                  (
+                  <span className="text-cyan-600 dark:text-cyan-400">
+                    name: string
+                  </span>
+                  ) {"{"}
+                  <br />
+                  <span className="ml-4 text-[#77347c] dark:text-white">
+                    console.log(`Hello, $&#123;name&#125;`);
+                  </span>
+                  <br />
+                  {"}"}
+                  <br />
+                  <span className="text-pink-600 dark:text-pink-300">
+                    return true;
+                  </span>
+                </pre>
               </div>
             </div>
           </div>

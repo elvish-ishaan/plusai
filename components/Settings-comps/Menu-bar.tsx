@@ -33,7 +33,7 @@ export default function Menubar() {
     <div
       role="tablist"
       aria-orientation="horizontal"
-      className="inline-flex h-9 items-center gap-1 rounded-lg bg-[#f2cbe9] dark:bg-[#302836] p-1 dark:text-white text-[#77347c] no-scrollbar w-full md:w-fit overflow-auto"
+      className="inline-flex h-10 items-center gap-1 rounded-lg bg-[#f2cbe9] dark:bg-[#302836] p-1 dark:text-white text-[#77347c] no-scrollbar w-full md:w-fit overflow-auto"
     >
       {MenuItems.map((item) => (
         <button

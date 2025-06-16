@@ -5,8 +5,11 @@ import { Button } from "@/components/ui/button";
 
 export default function Account() {
   return (
-    <section className="mt-10 rounded-xl bg-[#f2cbe9] dark:bg-[#1c131b] px-6 py-8 shadow-lg text-[#77347c] dark:text-white">
-      <h2 className="text-2xl font-bold mb-6">Upgrade to Pro</h2>
+    <section className=" dark:bg-[#1c131b]  text-[#77347c] dark:text-white pr-10">
+      <div className="text-2xl font-bold mb-6 flex justify-between items-center">
+        <p> Upgrade to Pro</p>
+        <p>$8/month</p>
+      </div>
 
       {/* Pro Cards */}
       <div className="grid md:grid-cols-3 gap-4 text-sm font-medium mb-6">
@@ -46,7 +49,7 @@ export default function Account() {
 
       {/* Upgrade button */}
       <div className="flex justify-start mb-2">
-        <Button className="bg-[#a74576] text-white hover:bg-[#912f62]">
+        <Button className="bg-[#a74576] text-white hover:bg-[#912f62] cursor-pointer">
           Upgrade Now
         </Button>
       </div>
@@ -64,7 +67,7 @@ export default function Account() {
         <p className="text-sm mb-3">
           Permanently delete your account and all associated data.
         </p>
-        <Button variant="destructive">Delete Account</Button>
+        <Button variant="destructive" className="cursor-pointer">Delete Account</Button>
       </div>
     </section>
   );

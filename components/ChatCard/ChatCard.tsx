@@ -8,6 +8,10 @@ import axios from "axios";
 import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
+import ChatLoader from "../Loaders/ChatLoader"
+import PromptBubble from "./PromptBubble";
+
+
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -23,12 +27,15 @@ export default function ChatCard({
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const [chat, setchat] = useState<Chat[]>([]);
   const [message, setMessage] = useState<string>("");
-  const [provider, setProvider] = useState<string>("");
-  const [model, setModel] = useState<string>("gemini-2.0-flash");
+  const [provider, setProvider] = useState<string>("gemini");
+  const [model, setModel] = useState<string>("Gemini-2.0-flash");
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const { data: session } = useSession();
+  
+  //for prompt animation 
+  
 
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
@@ -46,7 +53,6 @@ export default function ChatCard({
       try {
         setIsLoading(true);
         const res = await axios.get(`${baseUrl}/chat/threads/${threadId}`);
-        
         if (res.data.success) {
           setCurrentThreadId(threadId);
           setchat(res.data.thread?.chats || []);
@@ -114,7 +120,6 @@ export default function ChatCard({
       };
       
       const res = await axios.post(`${baseUrl}/chat`, body);
-      console.log(res.data,'getting res')
       if (res.data.success) {
         // Remove temp entry and add real response
         setchat((prev) => {
@@ -134,19 +139,26 @@ export default function ChatCard({
           const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
             initPrompt: text,
           });
+          console.log(titleRes.data, 'titleRes.data');
 
           if (titleRes.data.success) {
             setIsInitPrompt(false);
-            setthreads?.((prev) => [
-              ...prev,
-              {
-                id: res.data.genResponse?.thread?.id || currentThreadId,
-                title: titleRes.data.title,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                userId: session?.user?.id || "",
-              },
-            ]);
+            // Use the backend thread ID if available
+            const newThreadId = res.data.genResponse?.thread?.id || currentThreadId;
+            setthreads?.((prev) => {
+              // Only add if not already present
+              if (prev.some(t => t.id === newThreadId)) return prev;
+              return [
+                ...prev,
+                {
+                  id: newThreadId,
+                  title: titleRes.data.title,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                  userId: session?.user?.id || "",
+                },
+              ];
+            });
           }
         } catch (err) {
           console.error("Failed to generate title:", err);
@@ -192,15 +204,16 @@ export default function ChatCard({
         ) : (
           <div className="max-w-4xl mx-auto overflow-y-auto">
             {chat?.map((chatItem) => (
-              <div key={chatItem.id} className="flex flex-col space-y-4 mb-6">
+              <div
+                key={chatItem.id}
+                className="flex flex-col space-y-4 mb-3 mt-8"
+              >
                 <div className="flex justify-end">
-                  <span className="p-3 bg-[#7a375b] text-white rounded-lg max-w-xs md:max-w-md lg:max-w-lg">
-                    {chatItem.prompt}
-                  </span>
+                  <PromptBubble prompt={chatItem.prompt} />
                 </div>
                 {chatItem.response && (
-                  <div className="flex justify-start">
-                    <div className="p-3 bg-white rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
+                  <div className="flex justify-start ">
+                    <div className="p-3  max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
                       <ReactMarkdown>{chatItem.response}</ReactMarkdown>
                     </div>
                   </div>
@@ -209,26 +222,24 @@ export default function ChatCard({
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="p-3 bg-white rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-2xl animate-pulse">
-                  <p className="text-sm">Thinking...</p>
+                <div className="p-3 animate-pulse">
+                  <ChatLoader />
                 </div>
               </div>
             )}
           </div>
         )}
-        {isLoading && (
-          <div className="text-[#7a375b] animate-pulse">
-            <strong>AI:</strong> Thinking...
-          </div>
-        )}
       </div>
+
+      {/* <ChatMessageArea messages={chat} message={message} onPromptSelect={handlePromptSelect} loading={isLoading} /> */}
 
       <div className="px-6 border-[#efbdeb] bg-[#f9f3f9] dark:bg-[#221d27] ">
         <ChatInputBox
           message={message}
           setMessage={setMessage}
           onSend={handleSend}
-          setmodel={setModel}
+          setModel={setModel}
+          model={model}
           //@ts-ignore
           inputRef={inputRef}
           isLoading={isLoading}
