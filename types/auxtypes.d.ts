@@ -31,3 +31,14 @@ interface MessageProps {
   onPromptSelect: (prompt: string) => void;
   loading: boolean;
 }
+
+interface attachmentMetaData {
+  id: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  url: string;
+  threadId: string;
+  createdAt: Date;
+  userid: string;
+}

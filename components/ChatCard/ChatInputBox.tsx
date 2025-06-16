@@ -46,7 +46,7 @@ import { uploadToS3 } from "@/app/actions/uploads";
        //call the acion to upload the file
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('threadId', currentThreadId || '')
+        formData.append('threadId', currentThreadId as unknown as string)
         console.log('uploading file to s3');
         const fileUrl = await uploadToS3(formData);
         if( fileUrl.success) {

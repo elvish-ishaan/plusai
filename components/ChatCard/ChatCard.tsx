@@ -43,6 +43,7 @@ export default function ChatCard({
   const [fileUrl, setFileUrl] = useState<string | null>(null);
 
 
+
   // Load thread data when threadId changes
   useEffect(() => {
     if (!threadId) {
@@ -216,12 +217,12 @@ export default function ChatCard({
                 className="flex flex-col space-y-4 mb-3 mt-8"
               >
                 <div className="flex justify-end">
-                  <PromptBubble prompt={chatItem.prompt} />
+                  <PromptBubble prompt={chatItem?.prompt} />
                 </div>
-                {chatItem.response && (
+                {chatItem?.response && (
                   <div className="flex justify-start ">
                     <div className="p-3  max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
-                      <ReactMarkdown>{chatItem.response}</ReactMarkdown>
+                      <ReactMarkdown>{chatItem?.response}</ReactMarkdown>
                     </div>
                   </div>
                 )}
