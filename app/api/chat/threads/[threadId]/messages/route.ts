@@ -19,6 +19,8 @@ export async function GET(
     const thread = await prisma.thread.findFirst({
       where: {
         id: threadId,
+
+        //{Error} : Type Error: Property 'id' does not exist on type 'string | undefined'.ts(2339)
         userId: session.user.id 
       }
     });

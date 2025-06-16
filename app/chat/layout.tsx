@@ -24,7 +24,7 @@ export default function Layout({children}: {children: React.ReactNode}) {
   return (
     <div className="relative bg-[#f2e6f5] h-screen overflow-hidden flex">
       {/* Sidebar */}
-      <Sidebar threads={threads} isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      <Sidebar threads={threads} setThreads={setThreads} isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
       {/* Main Content */}
       <div className="flex-1 transition-all duration-300 h-screen">

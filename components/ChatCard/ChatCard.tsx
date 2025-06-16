@@ -8,6 +8,9 @@ import axios from "axios";
 import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
+import ChatLoader from "../Loaders/ChatLoader"
+import PromptBubble from "./PromptBubble";
+
 
 
 interface ChatCardProps {
@@ -30,7 +33,9 @@ export default function ChatCard({
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const { data: session } = useSession();
-  const [isWebSearchEnabled, setIsWebSearchEnabled] = useState<boolean>(false);
+  
+  //for prompt animation 
+  
 
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
@@ -201,15 +206,16 @@ export default function ChatCard({
         ) : (
           <div className="max-w-4xl mx-auto overflow-y-auto">
             {chat?.map((chatItem) => (
-              <div key={chatItem.id} className="flex flex-col space-y-4 mb-6">
+              <div
+                key={chatItem.id}
+                className="flex flex-col space-y-4 mb-3 mt-8"
+              >
                 <div className="flex justify-end">
-                  <span className="p-3 bg-[#7a375b] text-white rounded-lg max-w-xs md:max-w-md lg:max-w-lg">
-                    {chatItem.prompt}
-                  </span>
+                  <PromptBubble prompt={chatItem.prompt} />
                 </div>
                 {chatItem.response && (
-                  <div className="flex justify-start">
-                    <div className="p-3 bg-white rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
+                  <div className="flex justify-start ">
+                    <div className="p-3  max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
                       <ReactMarkdown>{chatItem.response}</ReactMarkdown>
                     </div>
                   </div>
@@ -218,19 +224,16 @@ export default function ChatCard({
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="p-3 bg-white rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-2xl animate-pulse">
-                  <p className="text-sm">Thinking...</p>
+                <div className="p-3 animate-pulse">
+                  <ChatLoader />
                 </div>
               </div>
             )}
           </div>
         )}
-        {isLoading && (
-          <div className="text-[#7a375b] animate-pulse">
-            <strong>AI:</strong> Thinking...
-          </div>
-        )}
       </div>
+
+      {/* <ChatMessageArea messages={chat} message={message} onPromptSelect={handlePromptSelect} loading={isLoading} /> */}
 
       <div className="px-6 border-[#efbdeb] bg-[#f9f3f9] dark:bg-[#221d27] ">
         <ChatInputBox
@@ -240,8 +243,8 @@ export default function ChatCard({
           setIsWebSearchEnabled={setIsWebSearchEnabled}
           onSend={handleSend}
           setModel={setModel}
-          model={model} 
-          //@ts-expect-error fix it
+          model={model}
+          //@ts-ignore
           inputRef={inputRef}
           isLoading={isLoading}
         />
