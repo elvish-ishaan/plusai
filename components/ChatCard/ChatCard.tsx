@@ -26,14 +26,12 @@ export default function ChatCard({
   const [chat, setchat] = useState<Chat[]>([]);
   const [message, setMessage] = useState<string>("");
   const [provider, setProvider] = useState<string>("gemini");
-  const [model, setModel] = useState<string>("Gemini-2.0-flash");
+  const [model, setModel] = useState<string>("gemini-2.0-flash");
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const [isWebSearchEnabled, setIsWebSearchEnabled] = useState<boolean>(false);
   const { data: session } = useSession();
-
-  //for prompt animation
 
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
@@ -195,6 +193,10 @@ export default function ChatCard({
       setIsLoading(false);
     }
   };
+  
+  useEffect(() => {
+    console.log(isWebSearchEnabled, 'isWebSearchEnabled');
+  }, [isWebSearchEnabled]);
 
   return (
     <div
@@ -206,7 +208,7 @@ export default function ChatCard({
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
 
-      <div className="flex-1  px-8 py-6 space-y-3 scrollbar-hide">
+      <div className="flex-1  px-8 py-6 space-y-3 scrollbar-hide overflow-y-scroll">
         {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
@@ -250,6 +252,7 @@ export default function ChatCard({
           //@ts-ignore
           setProvider={setProvider}
           setIsWebSearchEnabled={setIsWebSearchEnabled}
+          iswebsearchenabled={isWebSearchEnabled}
           onSend={handleSend}
           setModel={setModel}
           model={model}

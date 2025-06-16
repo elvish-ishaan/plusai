@@ -3,7 +3,6 @@
   import { Globe, Paperclip, ArrowUp } from "lucide-react";
   import TextareaAutosize from "react-textarea-autosize";
   import ModelSelector from "./ModelSelector";
-import { Input } from "../ui/input";
 import { useState } from "react";
 import { uploadToS3 } from "@/app/actions/uploads";
 
@@ -12,23 +11,23 @@ import { uploadToS3 } from "@/app/actions/uploads";
     setMessage: (val: string) => void;
     model: string;
     setIsWebSearchEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+    iswebSearchEnabled: boolean;
     setModel: React.Dispatch<React.SetStateAction<string>>;
     setFileUrl: React.Dispatch<React.SetStateAction<string | null>>;
     onSend: (val: string) => void;
     // inputRef: React.RefObject<HTMLTextAreaElement>;
     isLoading: boolean;
-    currentThreadId?: string;
   };
 
   export default function ChatInputBox({
     message,
     setMessage,
     setIsWebSearchEnabled,
+    iswebSearchEnabled,
     model,
     setModel,
     setFileUrl,
     onSend,
-    currentThreadId,
     isLoading,
   }: Props) {
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -50,15 +49,11 @@ import { uploadToS3 } from "@/app/actions/uploads";
        //call the acion to upload the file
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('threadId', currentThreadId as unknown as string)
         console.log('uploading file to s3');
         const fileUrl = await uploadToS3(formData);
         if( fileUrl.success) {
           setFileUrl(fileUrl.url || null);
-        console.log(fileUrl, 'file url in chat input box');
-        if (fileUrl) {
-          console.log('error in uploading file to s3');
-      }
+          console.log(fileUrl.url, 'file url in chat input box');
     };
   }
 }
@@ -114,11 +109,14 @@ import { uploadToS3 } from "@/app/actions/uploads";
                 {/* Search Button */}
                 <button
                   type="button"
-                  onClick={() => setSelectedTool("search")}
+                  onClick={() => {
+                    setSelectedTool("search")
+                    setIsWebSearchEnabled((prev) => !prev);
+                  }}
                   className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border cursor-pointer
                 border-[#eddfed] dark:border-[#39323f]
                   ${
-                    selectedTool === "search"
+                    iswebSearchEnabled
                       ? "bg-[#f4d6e7] dark:bg-[#322c38]"
                       : "hover:bg-[#f4d6e7] dark:hover:bg-[#322c38]"
                    }  text-[#ac1668] dark:text-[#f9f8fb]`}

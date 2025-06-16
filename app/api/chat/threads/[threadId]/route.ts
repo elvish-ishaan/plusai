@@ -14,9 +14,10 @@ export async function GET(request: Request, { params }: { params: { threadId: st
     }
 
     try {
+        const threadId = await params.threadId
         const thread = await prisma.thread.findUnique({
         where: {
-            id: await params.threadId,
+            id: threadId
         },
         include: {
             chats: true

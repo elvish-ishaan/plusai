@@ -17,10 +17,6 @@ export default function Layout({children}: {children: React.ReactNode}) {
     fetchThreads();
   }, [])
   
-  //console threds whenever thread array changes
-  useEffect(() => {
-    console.log(threads, 'threads');
-  }, [threads]);
   return (
     <div className="relative bg-[#f2e6f5] h-screen overflow-hidden flex">
       {/* Sidebar */}

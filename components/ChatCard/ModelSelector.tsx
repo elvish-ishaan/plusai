@@ -24,7 +24,6 @@ const models = [
     active: true,
     provider: "GPT",
   },
-  { title: "Gemini 2.5 Flash", name: "o4-mini", active: true, provider: "o4" },
   {
     title: "Claude 4 Sonnet",
     name: "claude 4 sonnet",
@@ -100,7 +99,7 @@ export default function ModelSelector({
                     key={modelItem.name}
                     onClick={() => {
                       if (modelItem.active) {
-                        setModel(modelItem.name);
+                        setModel(modelItem.name.toLocaleLowerCase());
                         setIsOpen(false);
                       }
                     }}
