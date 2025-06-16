@@ -8,17 +8,23 @@ export class GoogleClient {
       prompt: string,
       maxOutputTokens: number,
       temperature: number,
-      model: string
+      model: string,
+      isWebSearchEnabled: boolean,
     ) {
+      // Conditionally define the tools array
+      const toolsToUse = isWebSearchEnabled ? [{ googleSearch: {} }] : [];
+      //construct the options for the gemini api
+      const options = {
+        model: model,
+        contents: prompt,
+        config: {
+          tools: toolsToUse,
+        },
+      };
+      
         try {
-          const res = await this.gemini.models.generateContent({
-          model: model ,
-          contents: prompt,
-          // config: {
-          //   // maxOutputTokens: maxOutputTokens,
-          //   temperature: temperature,
-          // },
-        });
+          console.log(options, 'options in gemini client');
+          const res = await this.gemini.models.generateContent(options);
         return {
         text: res.text as string,
         usage: {

@@ -8,6 +8,7 @@
     message: string;
     setMessage: (val: string) => void;
     model: string;
+    setIsWebSearchEnabled: React.Dispatch<React.SetStateAction<boolean>>;
     setModel: React.Dispatch<React.SetStateAction<string>>;
     onSend: (val: string) => void;
     inputRef: React.RefObject<HTMLTextAreaElement>;
@@ -17,6 +18,7 @@
   export default function ChatInputBox({
     message,
     setMessage,
+    setIsWebSearchEnabled,
     model,
     setModel,
     onSend,
@@ -37,14 +39,14 @@
         <div
           className="relative bg-[rgba(255,255,255,0.7)] dark:bg-[#25202b] backdrop-blur-lg rounded-t-[20px] border border-[#d9b4cc] dark:border-[#403040] border-b-0 p-2 pb-0 shadow-[0_80px_50px_rgba(0,0,0,0.1),0_50px_30px_rgba(0,0,0,0.07),0_30px_15px_rgba(0,0,0,0.06),0_15px_8px_rgba(0,0,0,0.04),0_6px_4px_rgba(0,0,0,0.04),0_2px_2px_rgba(0,0,0,0.02)] outline outline-1 outline-[rgba(207,155,205,0.4)] dark:outline-[rgba(172,114,190,0.3)]"
           style={{
-            //@ts-ignore
+            //@ts-expect-error fix 
             "--chat-input-gradient": "322 70% 85%",
             "--chat-input-background": "rgba(255, 255, 255, 0.7)",
           }}
         >
           <div className="flex flex-col gap-2 rounded-t-xl px-3 pt-3">
             <TextareaAutosize
-              ref={inputRef}
+              // ref={inputRef}
               minRows={2}
               maxRows={10}
               placeholder={
@@ -77,6 +79,7 @@
                 <div className="flex items-center gap-2">
                   <ModelSelector setModel={setModel} selectedModel={model} />
                   <button
+                    onClick={() => setIsWebSearchEnabled((prev: boolean) => !prev)}
                     className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border border-[#eddfed] dark:border-[#39323f] text-[#ac1668] dark:text-[#f9f8fb] hover:bg-[#f4d6e7] dark:hover:bg-[#322c38]"
                     type="button"
                   >

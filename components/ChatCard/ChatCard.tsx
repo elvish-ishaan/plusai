@@ -9,11 +9,6 @@ import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 
-type Model = {
-  name: string;
-  active: boolean;
-  provider: string;
-};
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -32,9 +27,10 @@ export default function ChatCard({
   const [provider, setProvider] = useState<string>("gemini");
   const [model, setModel] = useState<string>("Gemini-2.0-flash");
   const [isLoading, setIsLoading] = useState(false);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const { data: session } = useSession();
+  const [isWebSearchEnabled, setIsWebSearchEnabled] = useState<boolean>(false);
 
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
@@ -112,11 +108,13 @@ export default function ChatCard({
         prevPrompts: chat,
         model,
         threadId: currentThreadId,
+        isWebSearchEnabled,
         maxOutputTokens: 500,
         temperature: 0.5,
         systemPrompt: "you are helpful assistant.",
         llmProvider: provider || "gemini",
       };
+      console.log(body, 'body in handleSend');
       
       const res = await axios.post(`${baseUrl}/chat`, body);
       if (res.data.success) {
@@ -239,10 +237,11 @@ export default function ChatCard({
           message={message}
           setMessage={setMessage}
           setProvider={setProvider}
+          setIsWebSearchEnabled={setIsWebSearchEnabled}
           onSend={handleSend}
           setModel={setModel}
           model={model} 
-          //@ts-ignore
+          //@ts-expect-error fix it
           inputRef={inputRef}
           isLoading={isLoading}
         />

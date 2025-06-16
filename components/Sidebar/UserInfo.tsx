@@ -1,10 +1,9 @@
 import React from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { ArrowLeftFromLine, LogOut } from "lucide-react";
-import Image from "next/image"; // ✅ Don't forget this import
+import { useRouter } from "next/navigation";
 
 export default function UserInfo() {
   const { data: session, status } = useSession();
@@ -43,7 +42,7 @@ export default function UserInfo() {
   return (
     <div className="p-4 border-[#e6c4de] hover:bg-white dark:hover:bg-[#261922] m-3 rounded-lg cursor-pointer">
       <button
-        onClick={() => signIn()}
+        onClick={() => router.push("/auth")}
         className="flex items-center text-[#a74576] text-md font-medium gap-2 cursor-pointer ml-2"
       >
         <LogOut className="w-4 h-4 text-[#a74576]" />

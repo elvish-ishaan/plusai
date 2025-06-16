@@ -5,7 +5,15 @@ import { NextResponse } from "next/server";
 
 //get threads
 export async function GET() {
+
     const session = await getServerSession(authOptions);
+    console.log(session, 'session in get threads api');
+    if (!session) {
+        return NextResponse.json({
+            success: false,
+            message: "unauthenticated user",
+        }, { status: 401 });
+    }
 
     //get threads from db
     try {
@@ -17,6 +25,7 @@ export async function GET() {
         createdAt: 'desc',
       }
     });
+    console.log("threads from db", response);
     if (!response) {
         return NextResponse.json({
             success: false,

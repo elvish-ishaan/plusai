@@ -23,12 +23,13 @@ export async function POST(req: Request) {
         prevPrompts: z.array(zodSchema).nullable(),
         temperature: z.number(),
         model: z.string(),
+        isWebSearchEnabled: z.boolean(),
         systemPrompt: z.string(),
         maxOutputTokens: z.number(),
         llmProvider: z.string(),
         threadId: z.uuidv4(),
     });
-    const { prompt, temperature, model, maxOutputTokens, systemPrompt, threadId, llmProvider, prevPrompts } = requestSchema.parse(await req.json()); 
+    const { prompt, isWebSearchEnabled, temperature, model, maxOutputTokens, threadId, llmProvider, prevPrompts } = requestSchema.parse(await req.json()); 
     //generate diff client on the basis of provider
     const client = initClient('gemini');
     if (!client) {
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
       `;
     }
 
-    const llmRes = await client.generate( finalPrompt, temperature, maxOutputTokens, model, systemPrompt);
+    const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled );
 
     const session = await getServerSession(authOptions);
 

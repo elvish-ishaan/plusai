@@ -5,18 +5,25 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [threads, setThreads] = useState<Thread[]>([]);
   const searchParams = useSearchParams();
-  const threadId = searchParams.get("thread");
+  const threadId = searchParams.get("thread")
+  const {data: session } =  useSession();
+  console.log(session, 'session in home page');
 
 
   useEffect(() => {
     const fetchThreads = async () => {
       try {
         const res = await axios.get("/api/chat/threads");
+        if (!res.data.success) {
+          console.error("Failed to fetch threads:", res.data.message);
+          return;
+          }
         if (res.data.success) {
           setThreads(res.data.threads);
         }
