@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod/v4";
 
 export async function POST(req: Request) {
-  const zodSchema = z.object({
+  const prevPromSchema = z.object({
   createdAt: z.string(), // Accept ISO string
   id: z.string(),
   model: z.string(),
@@ -20,15 +20,17 @@ export async function POST(req: Request) {
     //adding zod validation
     const requestSchema = z.object({
         prompt: z.string(),
-        prevPrompts: z.array(zodSchema).nullable(),
+        prevPrompts: z.array(prevPromSchema).nullable(),
         temperature: z.number(),
         model: z.string(),
+        attachmentUrl: z.string().nullable(),
+        isWebSearchEnabled: z.boolean(),
         systemPrompt: z.string(),
         maxOutputTokens: z.number(),
         llmProvider: z.string(),
         threadId: z.uuidv4(),
     });
-    const { prompt, temperature, model, maxOutputTokens, systemPrompt, threadId, llmProvider, prevPrompts } = requestSchema.parse(await req.json()); 
+    const { prompt, isWebSearchEnabled, attachmentUrl, temperature, model, maxOutputTokens, threadId, llmProvider, prevPrompts } = requestSchema.parse(await req.json()); 
     //generate diff client on the basis of provider
     const client = initClient('gemini');
     if (!client) {
@@ -46,7 +48,7 @@ export async function POST(req: Request) {
       `;
     }
 
-    const llmRes = await client.generate( finalPrompt, temperature, maxOutputTokens, model, systemPrompt);
+    const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
 
     const session = await getServerSession(authOptions);
 
@@ -89,8 +91,8 @@ export async function POST(req: Request) {
      },
         });
         console.log(chat, 'chat');
-   
-        // Add thread to user (if not already present – this line assumes threads relation is `user: User @relation(fields: [userId], references: [id])`)
+  
+       // Connect the chat to the user
         await prisma.user.update({
      where: {
        id: session.user.id as string,

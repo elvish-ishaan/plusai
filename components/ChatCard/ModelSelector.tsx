@@ -3,14 +3,40 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronDown, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/libs/utils";
+import { Input } from "../ui/input";
 
 const models = [
-  { name: "Gemini 2.5 Flash", active: true, provider: "gemini" },
-  { name: "Gemini 2.5 Pro", active: true, provider: "gemini" },
-  { name: "GPT ImageGen", active: true, provider: "GPT" },
-  { name: "o4-mini", active: true, provider: "o4" },
-  { name: "Claude 4 Sonnet", active: true, provider: "claude" },
-  { name: "DeepSeek R1 (Llama Distilled)", active: true, provider: "deepseek" },
+  {
+    title: "Gemini 2.5 Flash",
+    name: "gemini-2.0-flash",
+    active: true,
+    provider: "gemini",
+  },
+  {
+    title: "Gemini 2.5 Pro",
+    name: "gemini-2.5-pro",
+    active: true,
+    provider: "gemini",
+  },
+  {
+    title: "GPT ImageGen",
+    name: "gpt imageGen",
+    active: true,
+    provider: "GPT",
+  },
+  { title: "Gemini 2.5 Flash", name: "o4-mini", active: true, provider: "o4" },
+  {
+    title: "Claude 4 Sonnet",
+    name: "claude 4 sonnet",
+    active: true,
+    provider: "claude",
+  },
+  {
+    title: "DeepSeek R1 (Llama Distilled)",
+    name: "deepSeek R1 (Llama Distilled)",
+    active: true,
+    provider: "deepseek",
+  },
 ];
 
 export default function ModelSelector({
@@ -23,7 +49,6 @@ export default function ModelSelector({
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // ⛔️ Close on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -54,7 +79,7 @@ export default function ModelSelector({
             className="absolute bottom-full mb-3 z-50 w-72 bg-white dark:bg-[#1f1a23] rounded-xl shadow-lg border border-pink-200 dark:border-[#3a2937] overflow-hidden"
           >
             <div className="px-3 py-2">
-              <input
+              <Input
                 placeholder="Search models..."
                 className="w-full px-3 py-1.5 text-sm border border-pink-300 dark:border-[#4d3a47] rounded-lg outline-none placeholder:text-pink-400 bg-white dark:bg-[#2d2531] text-[#77347c] dark:text-[#f4cbe5]"
               />
@@ -87,7 +112,7 @@ export default function ModelSelector({
                     )}
                     disabled={!modelItem.active}
                   >
-                    <span>{modelItem.name}</span>
+                    <span>{modelItem.title}</span>
                     {!modelItem.active && <Lock className="w-4 h-4" />}
                   </button>
                 ))}

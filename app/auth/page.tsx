@@ -14,7 +14,9 @@ export default function Page() {
     setLoading(true);
     setError(null);
     try {
+      setLoading(true)
       await signIn("google", { callbackUrl: "/" });
+      setLoading(false);
     } catch (err) {
       console.log(err, "err in signing with google");
       setError("Failed to sign in with Google.");
@@ -73,6 +75,9 @@ export default function Page() {
           <Image src="/google.png" alt="Google" width={24} height={24} />
           Continue with Google
         </button>
+        {error && (
+          <p className="mt-4 text-red-500 text-sm text-center">{error}</p>
+        )}
       </div>
 
       {/* Terms */}

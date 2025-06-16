@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Sparkles, Newspaper, Code, GraduationCap } from "lucide-react";
 import { cn } from "@/libs/utils";
 
-
 interface WelcomeScreenProps {
   onPromptSelect: (prompt: string) => void;
 }
@@ -13,7 +12,7 @@ const categories = [
   {
     id: "default",
     name: "Suggestions",
-    icon: Sparkles, 
+    icon: Sparkles,
     selected: false,
     prompts: [
       "How does AI work?",
@@ -71,8 +70,6 @@ const categories = [
     ],
   },
 ];
-
-
 
 export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
