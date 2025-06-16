@@ -8,10 +8,8 @@ import axios from "axios";
 import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
-import ChatLoader from "../Loaders/ChatLoader"
+import ChatLoader from "../Loaders/ChatLoader";
 import PromptBubble from "./PromptBubble";
-
-
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -30,15 +28,16 @@ export default function ChatCard({
   const [provider, setProvider] = useState<string>("gemini");
   const [model, setModel] = useState<string>("Gemini-2.0-flash");
   const [isLoading, setIsLoading] = useState(false);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
+  const [isWebSearchEnabled, setIsWebSearchEnabled] = useState<boolean>(false);
   const { data: session } = useSession();
-  
-  //for prompt animation 
-  
+
+  //for prompt animation
 
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
 
   // Load thread data when threadId changes
   useEffect(() => {
@@ -60,17 +59,19 @@ export default function ChatCard({
         }
       } catch (err) {
         console.error("Failed to fetch thread:", err);
-        setchat([{
-          id: uuid(),
-          prompt: "Error loading conversation",
-          response: "Failed to load the conversation. Please try again.",
-          provider: "system",
-          model: "system",
-          thread: threadId,
-          userId: session?.user?.id || "unknown-user",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }]);
+        setchat([
+          {
+            id: uuid(),
+            prompt: "Error loading conversation",
+            response: "Failed to load the conversation. Please try again.",
+            provider: "system",
+            model: "system",
+            thread: threadId,
+            userId: session?.user?.id || "unknown-user",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ]);
       } finally {
         setIsLoading(false);
       }
@@ -86,7 +87,7 @@ export default function ChatCard({
 
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
-    
+
     setIsLoading(true);
     // Create temporary chat entry while waiting for response
     const tempChatId = uuid();
@@ -96,15 +97,16 @@ export default function ChatCard({
         id: tempChatId,
         prompt: text,
         response: "",
-        provider: "gemini",
+        provider: provider || "gemini",
         model,
+        attachmentUrl: fileUrl || null,
         thread: currentThreadId,
         userId: session?.user?.id || "unknown-user",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
     ]);
-    
+
     setMessage("");
 
     try {
@@ -113,20 +115,23 @@ export default function ChatCard({
         prevPrompts: chat,
         model,
         threadId: currentThreadId,
+        attachmentUrl: fileUrl || null,
+        isWebSearchEnabled,
         maxOutputTokens: 500,
         temperature: 0.5,
         systemPrompt: "you are helpful assistant.",
-        llmProvider: "gemini",
+        llmProvider: provider || "gemini",
       };
-      
+      console.log(body, "body in handleSend");
+
       const res = await axios.post(`${baseUrl}/chat`, body);
       if (res.data.success) {
         // Remove temp entry and add real response
         setchat((prev) => {
-          const filtered = prev.filter(c => c.id !== tempChatId);
+          const filtered = prev.filter((c) => c.id !== tempChatId);
           return [...filtered, res.data.genResponse];
         });
-        
+
         // Set thread ID if this is a new thread and we get one back from API
         if (res.data.genResponse?.thread?.id) {
           setCurrentThreadId(res.data.genResponse.thread.id);
@@ -139,15 +144,16 @@ export default function ChatCard({
           const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
             initPrompt: text,
           });
-          console.log(titleRes.data, 'titleRes.data');
+          console.log(titleRes.data, "titleRes.data");
 
           if (titleRes.data.success) {
             setIsInitPrompt(false);
             // Use the backend thread ID if available
-            const newThreadId = res.data.genResponse?.thread?.id || currentThreadId;
+            const newThreadId =
+              res.data.genResponse?.thread?.id || currentThreadId;
             setthreads?.((prev) => {
               // Only add if not already present
-              if (prev.some(t => t.id === newThreadId)) return prev;
+              if (prev.some((t) => t.id === newThreadId)) return prev;
               return [
                 ...prev,
                 {
@@ -167,7 +173,7 @@ export default function ChatCard({
     } catch (err) {
       console.error("Failed to send message:", err);
       // Remove temp entry on error
-      setchat((prev) => prev.filter(c => c.id !== tempChatId));
+      setchat((prev) => prev.filter((c) => c.id !== tempChatId));
       // Add error message
       setchat((prev) => [
         ...prev,
@@ -198,11 +204,11 @@ export default function ChatCard({
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
 
-      <div className="flex-1 px-8 py-6 space-y-3">
+      <div className="flex-1  px-8 py-6 space-y-3 scrollbar-hide">
         {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
-          <div className="max-w-4xl mx-auto overflow-y-auto max-h-[calc(100vh-200px)] pr-2 custom-scroll">
+          <div className="max-w-4xl mx-auto overflow-y-auto">
             {chat?.map((chatItem) => (
               <div
                 key={chatItem.id}
@@ -212,15 +218,14 @@ export default function ChatCard({
                   <PromptBubble prompt={chatItem.prompt} />
                 </div>
                 {chatItem.response && (
-                  <div className="flex justify-start">
-                    <div className="p-3 max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
+                  <div className="flex justify-start ">
+                    <div className="p-3  max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
                       <ReactMarkdown>{chatItem.response}</ReactMarkdown>
                     </div>
                   </div>
                 )}
               </div>
             ))}
-
             {isLoading && (
               <div className="flex justify-start">
                 <div className="p-3 animate-pulse">
@@ -237,12 +242,15 @@ export default function ChatCard({
       <div className="px-6 border-[#efbdeb] bg-[#f9f3f9] dark:bg-[#221d27] ">
         <ChatInputBox
           message={message}
+          setFileUrl={setFileUrl}
+          currentThreadId={currentThreadId}
           setMessage={setMessage}
+          //@ts-ignore
+          setProvider={setProvider}
+          setIsWebSearchEnabled={setIsWebSearchEnabled}
           onSend={handleSend}
           setModel={setModel}
           model={model}
-          //@ts-ignore
-          inputRef={inputRef}
           isLoading={isLoading}
         />
       </div>

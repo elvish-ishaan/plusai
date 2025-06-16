@@ -46,7 +46,7 @@ export default function Sidebar({
   const [showModal, setShowModal] = useState(false);
   const [threadToDelete, setThreadToDelete] = useState<string | null>(null);
   const hasMounted = useRef(false);
-  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null); // <-- Add this line
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -181,7 +181,7 @@ export default function Sidebar({
                 className="p-1 text-[#a74576] hover:bg-[#f0cde4] dark:text-white dark:hover:bg-[#2b222c] rounded-md"
                 aria-label="Collapse sidebar"
               >
-                <Image
+                {/* <Image
                   src={sidebar}
                   alt="Sidebar Icon"
                   width={24}
@@ -189,7 +189,7 @@ export default function Sidebar({
                   style={{
                     filter: theme === "dark" ? darkFilter : lightFilter,
                   }}
-                />
+                /> */}
               </button>
               <Link
                 href="/"
