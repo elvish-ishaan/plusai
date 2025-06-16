@@ -26,6 +26,7 @@ model Thread {
   title     String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   chats     Chat[]
+  attachments AttachmentMetaData[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -37,6 +38,18 @@ model Chat {
   response  String
   provider  String
   model     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+}
+
+model AttachmentMetaData {
+  id        String   @id @default(uuid())
+  fileName  String
+  fileType  String
+  fileSize  Int
+  url       String
+  threadId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)

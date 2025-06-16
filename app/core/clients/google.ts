@@ -10,21 +10,40 @@ export class GoogleClient {
       temperature: number,
       model: string,
       isWebSearchEnabled: boolean,
+      attachmentUrl: string | null = null
     ) {
       // Conditionally define the tools array
       const toolsToUse = isWebSearchEnabled ? [{ googleSearch: {} }] : [];
+      const CustomContents = []
+      if (attachmentUrl) {
+         const response = await fetch(attachmentUrl || '');
+          // Get the array buffer of the PDF data
+           const pdfArrayBuffer = await response.arrayBuffer();
+          // Convert ArrayBuffer to Buffer
+          const pdfBuffer = Buffer.from(pdfArrayBuffer);
+      // If attachmentUrl is provided, include it in the prompt
+        CustomContents.push(
+          { text: prompt },
+          {
+              inlineData: {
+                  mimeType: 'application/pdf',
+                  data: pdfBuffer.toString("base64")
+              }
+          }
+        )
+      }
       //construct the options for the gemini api
       const options = {
         model: model,
-        contents: prompt,
+        contents: CustomContents.length > 0 ? CustomContents : prompt,
         config: {
           tools: toolsToUse,
         },
       };
       
         try {
-          console.log(options, 'options in gemini client');
           const res = await this.gemini.models.generateContent(options);
+          console.log(res.text,'getting res')
         return {
         text: res.text as string,
         usage: {

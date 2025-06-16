@@ -1,8 +1,10 @@
   "use client";
 
-  import { Globe, Paperclip, ArrowUp } from "lucide-react";
-  import TextareaAutosize from "react-textarea-autosize";
-  import ModelSelector from "./ModelSelector";
+import { Globe, ArrowUp } from "lucide-react";
+import TextareaAutosize from "react-textarea-autosize";
+import ModelSelector from "./ModelSelector";
+import { Input } from "../ui/input";
+import { uploadToS3 } from "@/app/actions/uploads";
 
   type Props = {
     message: string;
@@ -10,9 +12,11 @@
     model: string;
     setIsWebSearchEnabled: React.Dispatch<React.SetStateAction<boolean>>;
     setModel: React.Dispatch<React.SetStateAction<string>>;
+    setFileUrl: React.Dispatch<React.SetStateAction<string | null>>;
     onSend: (val: string) => void;
     inputRef: React.RefObject<HTMLTextAreaElement>;
     isLoading: boolean;
+    currentThreadId?: string;
   };
 
   export default function ChatInputBox({
@@ -21,7 +25,9 @@
     setIsWebSearchEnabled,
     model,
     setModel,
+    setFileUrl,
     onSend,
+    currentThreadId,
     inputRef,
     isLoading,
   }: Props) {
@@ -33,6 +39,25 @@
     };
 
     const isSendDisabled = message.trim() === "" || isLoading;
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+       //call the acion to upload the file
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('threadId', currentThreadId || '')
+        console.log('uploading file to s3');
+        const fileUrl = await uploadToS3(formData);
+        if( fileUrl.success) {
+          setFileUrl(fileUrl.url || null);
+        console.log(fileUrl, 'file url in chat input box');
+        if (fileUrl) {
+          console.log('error in uploading file to s3');
+      }
+    };
+  }
+}
 
     return (
       <div className="max-w-4xl mx-auto w-full px-4 pt-4 pb-2">
@@ -86,12 +111,7 @@
                     <Globe className="w-4 h-4" />
                     <span className="hidden sm:inline">Search</span>
                   </button>
-                  <button
-                    className="text-xs px-2 py-1.5 rounded-xl border border-[#eddfed] dark:border-[#39323f] text-[#ac1668] hover:bg-[#f4d6e7] dark:text-[#f9f8fb] dark:hover:bg-[#322c38]"
-                    type="button"
-                  >
-                    <Paperclip className="w-4 h-4" />
-                  </button>
+                  <Input type="file" name="file" onChange={handleFileUpload} />
                 </div>
               </div>
             </div>

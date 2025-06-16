@@ -40,6 +40,8 @@ export default function ChatCard({
 
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+
 
   // Load thread data when threadId changes
   useEffect(() => {
@@ -99,6 +101,7 @@ export default function ChatCard({
         response: "",
         provider: provider || "gemini",
         model,
+        attachmentUrl: fileUrl || null,
         thread: currentThreadId,
         userId: session?.user?.id || "unknown-user",
         createdAt: new Date(),
@@ -114,6 +117,7 @@ export default function ChatCard({
         prevPrompts: chat,
         model,
         threadId: currentThreadId,
+        attachmentUrl: fileUrl || null,
         isWebSearchEnabled,
         maxOutputTokens: 500,
         temperature: 0.5,
@@ -239,6 +243,8 @@ export default function ChatCard({
       <div className="px-6 border-[#efbdeb] bg-[#f9f3f9] dark:bg-[#221d27] ">
         <ChatInputBox
           message={message}
+          setFileUrl={setFileUrl}
+          currentThreadId={currentThreadId}
           setMessage={setMessage}
           setProvider={setProvider}
           setIsWebSearchEnabled={setIsWebSearchEnabled}
