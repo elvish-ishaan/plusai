@@ -5,12 +5,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/libs/utils";
 
 const models = [
-  { name: "Gemini 2.5 Flash", active: true, provider: "gemini" },
-  { name: "Gemini 2.5 Pro", active: true, provider: "gemini" },
-  { name: "GPT ImageGen", active: true, provider: "GPT" },
-  { name: "o4-mini", active: true, provider: "o4" },
-  { name: "Claude 4 Sonnet", active: true, provider: "claude" },
-  { name: "DeepSeek R1 (Llama Distilled)", active: true, provider: "deepseek" },
+  {
+    title: "Gemini 2.0 flash",
+    name: "gemini-2.0-flash",
+    active: true,
+    provider: "gemini",
+  },
+  {
+    title: "Gemini 2.5 Pro",
+    name: "gemini 2.5 pro",
+    active: true,
+    provider: "gemini",
+  },
+  { title: "GPT ImageGen", name: "gpt imageGen", active: true, provider: "GPT" },
+  { title: "o4-mini", name: "o4-mini", active: true, provider: "o4" },
+  { title: "Claude 4 Sonnet", name: "claude 4 Sonnet", active: true, provider: "claude" },
+  { title: "DeepSeek R1 (Llama Distilled)", name: "deepSeek R1 (Llama Distilled)", active: true, provider: "deepseek" },
 ];
 
 export default function ModelSelector({
@@ -23,7 +33,6 @@ export default function ModelSelector({
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // ⛔️ Close on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -87,7 +96,7 @@ export default function ModelSelector({
                     )}
                     disabled={!modelItem.active}
                   >
-                    <span>{modelItem.name}</span>
+                    <span>{modelItem.title}</span>
                     {!modelItem.active && <Lock className="w-4 h-4" />}
                   </button>
                 ))}

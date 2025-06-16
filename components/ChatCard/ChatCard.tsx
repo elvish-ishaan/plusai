@@ -198,11 +198,11 @@ export default function ChatCard({
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
 
-      <div className="flex-1  px-8 py-6 space-y-3 scrollbar-hide">
+      <div className="flex-1 px-8 py-6 space-y-3">
         {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
-          <div className="max-w-4xl mx-auto overflow-y-auto">
+          <div className="max-w-4xl mx-auto overflow-y-auto max-h-[calc(100vh-200px)] pr-2 custom-scroll">
             {chat?.map((chatItem) => (
               <div
                 key={chatItem.id}
@@ -212,14 +212,15 @@ export default function ChatCard({
                   <PromptBubble prompt={chatItem.prompt} />
                 </div>
                 {chatItem.response && (
-                  <div className="flex justify-start ">
-                    <div className="p-3  max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
+                  <div className="flex justify-start">
+                    <div className="p-3 max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
                       <ReactMarkdown>{chatItem.response}</ReactMarkdown>
                     </div>
                   </div>
                 )}
               </div>
             ))}
+
             {isLoading && (
               <div className="flex justify-start">
                 <div className="p-3 animate-pulse">

@@ -3,6 +3,7 @@
   import { Globe, Paperclip, ArrowUp } from "lucide-react";
   import TextareaAutosize from "react-textarea-autosize";
   import ModelSelector from "./ModelSelector";
+import { useState } from "react";
 
   type Props = {
     message: string;
@@ -29,6 +30,7 @@
         onSend(message);
       }
     };
+    const [isSelected , setIsSelected] = useState(false);
 
     const isSendDisabled = message.trim() === "" || isLoading;
 
@@ -74,10 +76,17 @@
               </button>
 
               <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center mb-6">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 ">
                   <ModelSelector setModel={setModel} selectedModel={model} />
                   <button
-                    className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border border-[#eddfed] dark:border-[#39323f] text-[#ac1668] dark:text-[#f9f8fb] hover:bg-[#f4d6e7] dark:hover:bg-[#322c38]"
+                    onClick={() => setIsSelected(!isSelected)}
+                    className={`
+                      ${
+                        isSelected
+                          ? "bg-[#f4d5e7] text-[#501854] dark:bg-[#322c38]"
+                          : "hover:bg-[#f4d6e7] dark:hover:bg-[#322c38]"
+                      }
+                      flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border cursor-pointer border-[#eddfed] dark:border-[#39323f] text-[#ac1668] dark:text-[#f9f8fb] `}
                     type="button"
                   >
                     <Globe className="w-4 h-4" />
