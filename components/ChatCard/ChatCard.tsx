@@ -208,11 +208,12 @@ export default function   ChatCard({
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
 
-      <div className="flex-1  px-8 py-6 space-y-3 scrollbar-hide overflow-y-scroll">
+      <div className="flex-1 relative px-8 py-6 space-y-3 scrollbar-hide">
         {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
-          <div className="max-w-4xl mx-auto overflow-y-auto">
+          <div className="max-w-4xl mx-auto h-full overflow-y-auto pb-52 pr-2">
+            {/* ↑ pb-52 ensures space for fixed ChatInputCard */}
             {chat?.map((chatItem) => (
               <div
                 key={chatItem.id}
@@ -221,10 +222,10 @@ export default function   ChatCard({
                 <div className="flex justify-end">
                   <PromptBubble prompt={chatItem?.prompt} />
                 </div>
-                {chatItem?.response && (
-                  <div className="flex justify-start ">
-                    <div className="p-3  max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
-                      <ReactMarkdown>{chatItem?.response}</ReactMarkdown>
+                {chatItem.response && (
+                  <div className="flex justify-start">
+                    <div className="p-3 max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
+                      <ReactMarkdown>{chatItem.response}</ReactMarkdown>
                     </div>
                   </div>
                 )}
@@ -243,20 +244,22 @@ export default function   ChatCard({
 
       {/* <ChatMessageArea messages={chat} message={message} onPromptSelect={handlePromptSelect} loading={isLoading} /> */}
 
-      <div className="px-6 border-[#efbdeb] bg-[#f9f3f9] dark:bg-[#221d27] ">
-        <ChatInputBox
-          message={message}
-          setFileUrl={setFileUrl}
-          setMessage={setMessage}
-          //@ts-expect-error fix  it
-          setProvider={setProvider}
-          setIsWebSearchEnabled={setIsWebSearchEnabled}
-          iswebsearchenabled={isWebSearchEnabled}
-          onSend={handleSend}
-          setModel={setModel}
-          model={model}
-          isLoading={isLoading}
-        />
+      <div className="relative z-10 backdrop-blur-lg">
+        <div className="max-w-4xl w-full mx-auto bg-[rgba(249,243,249,0.8)] dark:bg-[#221d27]/80 sticky bottom-0 backdrop-blur-md  border-[#efbdeb] dark:border-[#322028]">
+          <ChatInputBox
+            message={message}
+            setFileUrl={setFileUrl}
+            currentThreadId={currentThreadId}
+            setMessage={setMessage}
+            //@ts-ignore
+            setProvider={setProvider}
+            setIsWebSearchEnabled={setIsWebSearchEnabled}
+            onSend={handleSend}
+            setModel={setModel}
+            model={model}
+            isLoading={isLoading}
+          />
+        </div>
       </div>
     </div>
   );
