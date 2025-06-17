@@ -1,4 +1,4 @@
-  "use client";
+"use client";
 
 import { Globe, Paperclip, ArrowUp } from "lucide-react";
 import TextareaAutosize from "react-textarea-autosize";
@@ -60,7 +60,7 @@ export default function ChatInputBox({
     }
   };
 }
-}
+  }
 
   return (
     <div className=" px-4 pt-4 mx-auto">
