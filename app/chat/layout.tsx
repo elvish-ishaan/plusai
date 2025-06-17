@@ -1,6 +1,5 @@
 "use client";
 
-import ChatCard from "@/components/ChatCard/ChatCard";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -17,10 +16,6 @@ export default function Layout({children}: {children: React.ReactNode}) {
     fetchThreads();
   }, [])
   
-  //console threds whenever thread array changes
-  useEffect(() => {
-    console.log(threads, 'threads');
-  }, [threads]);
   return (
     <div className="relative bg-[#f2e6f5] dark:bg-[#1d131a] h-screen overflow-hidden flex">
       {/* Sidebar */}
@@ -39,7 +34,7 @@ export default function Layout({children}: {children: React.ReactNode}) {
           !isCollapsed ? "md:mt-1" : ""
         }`}
       >
-        <ChatCard isCollapsed={isCollapsed} setthreads={setThreads} />
+        {children}
       </div>
     </div>
   );

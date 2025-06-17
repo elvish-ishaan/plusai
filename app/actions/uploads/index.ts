@@ -1,13 +1,16 @@
 "use server"
 
 import { s3Client } from "@/app/configs/s3"
+import { authOptions } from "@/libs/authOptions";
 import prisma from "@/prisma/prismaClient";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getServerSession } from "next-auth";
 
 export const uploadToS3 = async (formData: FormData) => {
+  //get session
+  const session = await getServerSession(authOptions);
     //extract the file from the form data
   const file = formData.get('file') as File;
-  const threadId = formData.get('threadId') as string;
   // Create a readable stream from the file path
   try {
     const fileName = file.name;
@@ -26,15 +29,23 @@ export const uploadToS3 = async (formData: FormData) => {
       //return the public url of the uploaded file
       const url = `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
       //update the attachment metadata
-      // await prisma.attachmentMetaData.create({
-      //   data: {
-      //     fileName: file.name,
-      //     fileType: file.type,
-      //     fileSize: file.size,
-      //     url: url,
-      //     threadId: threadId,
-      //   },
-      // });
+      try {
+        await prisma.attachmentMetaData.create({
+        data: {
+          userid: session?.user.id as string,
+          fileName: file.name,
+          fileType: file.type.split('/')[1] || 'unknown',   //eg application/pdf => pdf
+          fileSize: file.size,
+          url: url,
+        },
+      });
+      } catch (error) {
+        console.log(error, 'error in saving attachment metadata');
+        return {
+          success: false,
+          message: "Error in saving attachment metadata",
+      }
+    }
       console.log(url,'getting file url')
       return {
         success: true,

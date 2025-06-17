@@ -41,13 +41,14 @@ export async function POST(req: Request) {
     if (prevPrompts && prevPrompts.length > 0 && prevPrompts[0].prompt !== '') {
       finalPrompt = `
     previous conversation:
-    ${prevPrompts.map((prompt) => prompt.prompt).join('\n')}
+    ${prevPrompts.map((prompt) => "user:" + prompt.prompt +","+ "response" + prompt.response).join('\n')}
     
     current conversation:
     ${prompt}
       `;
     }
 
+    console.log(finalPrompt, 'final prompt');
     const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
 
     const session = await getServerSession(authOptions);

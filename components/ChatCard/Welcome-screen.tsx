@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Sparkles, Newspaper, Code, GraduationCap } from "lucide-react";
 import { cn } from "@/libs/utils";
+import { useSession } from "next-auth/react";
 
 interface WelcomeScreenProps {
   onPromptSelect: (prompt: string) => void;
@@ -73,6 +74,7 @@ const categories = [
 
 export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const {data: session} = useSession();
 
   const currentCategory = categories.find(
     (cat) => cat.id === (selectedCategory ?? "default")
@@ -82,7 +84,7 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
     <div className="flex h-full w-full justify-center items-center text-center px-4 mt-10">
       <div className="w-full max-w-3xl space-y-8">
         <h2 className="text-3xl font-bold text-start text-[#501854] dark:text-[#f9f8fb]">
-          How can I help you, Piyush?
+          How can I help you, { session?.user?.name || 'Anonymous'}?
         </h2>
 
         {/* Category Buttons */}

@@ -17,6 +17,7 @@ model User {
   password  String?
   createdAt DateTime @default(now())
   threads   Thread[]
+  attachments AttachmentMetaData[]
 }
 
 //chat thread
@@ -26,7 +27,7 @@ model Thread {
   title     String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   chats     Chat[]
-  attachments AttachmentMetaData[]
+  pinned    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -49,8 +50,7 @@ model AttachmentMetaData {
   fileType  String
   fileSize  Int
   url       String
-  threadId  String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  userid    String
+  user      User     @relation(fields: [userid], references: [id], onDelete: Cascade)
 }

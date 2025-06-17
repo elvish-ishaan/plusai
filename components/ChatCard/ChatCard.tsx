@@ -26,18 +26,18 @@ export default function   ChatCard({
   const [chat, setchat] = useState<Chat[]>([]);
   const [message, setMessage] = useState<string>("");
   const [provider, setProvider] = useState<string>("gemini");
-  const [model, setModel] = useState<string>("Gemini-2.0-flash");
+  const [model, setModel] = useState<string>("gemini-2.0-flash");
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const [isWebSearchEnabled, setIsWebSearchEnabled] = useState<boolean>(false);
   const { data: session } = useSession();
 
-  //for prompt animation
-
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+
+
 
   // Load thread data when threadId changes
   useEffect(() => {
@@ -193,6 +193,10 @@ export default function   ChatCard({
       setIsLoading(false);
     }
   };
+  
+  useEffect(() => {
+    console.log(isWebSearchEnabled, 'isWebSearchEnabled');
+  }, [isWebSearchEnabled]);
 
   return (
     <div
@@ -216,7 +220,7 @@ export default function   ChatCard({
                 className="flex flex-col space-y-4 mb-3 mt-8"
               >
                 <div className="flex justify-end">
-                  <PromptBubble prompt={chatItem.prompt} />
+                  <PromptBubble prompt={chatItem?.prompt} />
                 </div>
                 {chatItem.response && (
                   <div className="flex justify-start">
