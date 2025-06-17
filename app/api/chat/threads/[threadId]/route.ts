@@ -1,8 +1,6 @@
 import prisma from "@/prisma/prismaClient";
-import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { threadId } from "worker_threads";
 
 export async function GET(request: Request, { params }: { params: { threadId: string } }) {
     try {
