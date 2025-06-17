@@ -1,46 +1,16 @@
-"use client";
 
-import { useState } from "react";
-import { Trash2, Upload, Download, Pin } from "lucide-react";
+import { Trash2, Upload, Download } from "lucide-react";
 
-const historyData = [
-  {
-    id: 1,
-    title: "Rs in strawberry",
-    date: "11/06/2025, 01:22:39",
-    pinned: false,
-  },
-  {
-    id: 2,
-    title: "React Chat Input Box Component with Model Selector and Toolbar",
-    date: "10/06/2025, 01:35:02",
-    pinned: true,
-  },
-];
 
 export default function HistoryAndSync() {
-  const [selected, setSelected] = useState<number[]>([]);
 
-  const toggleSelect = (id: number) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
-  };
-
-  const selectAll = () => {
-    if (selected.length === historyData.length) {
-      setSelected([]);
-    } else {
-      setSelected(historyData.map((h) => h.id));
-    }
-  };
 
   return (
     <section className=" text-[#77347c] dark:text-white ">
       <h2 className="text-xl font-bold mb-1">Message History</h2>
       <p className="text-sm mb-4">
-        Save your history as JSON, or import someone else's. Importing will NOT
-        delete existing messages
+        Save your history as JSON, or import someone else&#39;s. Importing will
+        NOT delete existing messages
       </p>
 
       {/* Header row: Select All & buttons */}
