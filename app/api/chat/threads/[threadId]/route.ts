@@ -2,8 +2,9 @@ import prisma from "@/prisma/prismaClient";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest,
-  { params }: { params: Promise<{ threadId: string }> }) {
+export async function GET(request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;
+    const threadId = searchParams.get('threadId');
     try {
         //check for auth
     const session = await getServerSession()
@@ -15,10 +16,9 @@ export async function GET(request: NextRequest,
     }
 
     try {
-        const { threadId } = await params;
         const thread = await prisma.thread.findUnique({
         where: {
-            id: threadId
+            id: threadId || "",
         },
         include: {
             chats: true
@@ -50,7 +50,9 @@ export async function GET(request: NextRequest,
 }
 
 //write post post route to pin a thread
-export async function PATCH(request: Request, { params }: { params: { threadId: string } }) {
+export async function PATCH(request: NextRequest) {
+     const searchParams = request.nextUrl.searchParams;
+    const threadId = searchParams.get('threadId');
     try {
         const session = await getServerSession();
         if (!session) {
@@ -59,14 +61,11 @@ export async function PATCH(request: Request, { params }: { params: { threadId: 
                 message: "You are not logged in",
             }, { status: 401 });
         }
-
-        const threadId = await params.threadId
-        console.log("Thread ID to pin:", threadId);
         //first get the thread 
        try {
          const thread = await prisma.thread.findUnique({
             where: {
-                id: threadId,
+                id: threadId || "",
             },
         });
         if (!thread) {
@@ -78,7 +77,7 @@ export async function PATCH(request: Request, { params }: { params: { threadId: 
         //update the thread
         const updatedThread = await prisma.thread.updateMany({
             where: {
-                id: threadId,
+                id: threadId || "",
             },
             data: {
                 pinned: !thread.pinned, // Toggle the pinned status

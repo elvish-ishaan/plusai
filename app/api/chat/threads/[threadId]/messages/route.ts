@@ -3,20 +3,19 @@ import prisma from "@/prisma/prismaClient";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET( request: NextRequest,
-  { params }: { params: Promise<{ threadId: string }> }) {
+export async function GET( request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;
+    const threadId = searchParams.get('threadId');
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
   }
 
-  const { threadId } = await params;
-
   try {
     // Verify thread belongs to user
     const thread = await prisma.thread.findFirst({
       where: {
-        id: threadId,
+        id: threadId || "",
         userId: session.user.id || ""
       }
     });
@@ -28,7 +27,7 @@ export async function GET( request: NextRequest,
     // Get all chats for the thread
     const chats = await prisma.chat.findMany({
       where: {
-        threadId: threadId
+        threadId: threadId || ""
       },
       orderBy: {
         createdAt: 'asc'
