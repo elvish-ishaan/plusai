@@ -77,7 +77,7 @@ export default function   ChatCard({
     };
 
     getThread();
-  }, [threadId, baseUrl, session?.user?.id]);
+  }, [threadId, session?.user?.id]);
 
   const handlePromptSelect = (prompt: string) => {
     setMessage(prompt);
