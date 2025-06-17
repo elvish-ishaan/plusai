@@ -64,7 +64,7 @@ import { uploadToS3 } from "@/app/actions/uploads";
 }
 
     return (
-      <div className="max-w-3xl w-full px-4 pt-4 mx-auto">
+      <div className=" px-4 pt-4 mx-auto">
         <div
           className="relative bg-[rgba(255,255,255,0.7)] dark:bg-[#25202b] backdrop-blur-lg rounded-t-[20px] border border-[#d9b4cc] dark:border-[#403040] border-b-0 p-2 pb-0 shadow-[0_80px_50px_rgba(0,0,0,0.1),0_50px_30px_rgba(0,0,0,0.07),0_30px_15px_rgba(0,0,0,0.06),0_15px_8px_rgba(0,0,0,0.04),0_6px_4px_rgba(0,0,0,0.04),0_2px_2px_rgba(0,0,0,0.02)] outline outline-1 outline-[rgba(207,155,205,0.4)] dark:outline-[rgba(172,114,190,0.3)]"
           style={{
