@@ -19,7 +19,6 @@ export async function GET( request: NextRequest) {
         userId: session.user.id || ""
       }
     });
-
     if (!thread) {
       return NextResponse.json({ success: false, message: "Thread not found" }, { status: 404 });
     }

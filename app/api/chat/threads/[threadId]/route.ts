@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-    const searchParams = request.nextUrl.searchParams;
-    const threadId = searchParams.get('threadId');
+    const url = request.nextUrl;
+    const threadId = url.pathname.split('/')[4]
     try {
         //check for auth
     const session = await getServerSession()
@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
             chats: true
         }
     });
+    //check if thread exists
     if (!thread) {
         return NextResponse.json({
             success: false,
@@ -51,8 +52,8 @@ export async function GET(request: NextRequest) {
 
 //write post post route to pin a thread
 export async function PATCH(request: NextRequest) {
-     const searchParams = request.nextUrl.searchParams;
-    const threadId = searchParams.get('threadId');
+    const url = request.nextUrl;
+    const threadId = url.pathname.split('/')[4]
     try {
         const session = await getServerSession();
         if (!session) {
@@ -75,7 +76,7 @@ export async function PATCH(request: NextRequest) {
             }, { status: 404 });
         }
         //update the thread
-        const updatedThread = await prisma.thread.updateMany({
+        await prisma.thread.updateMany({
             where: {
                 id: threadId || "",
             },
@@ -83,7 +84,6 @@ export async function PATCH(request: NextRequest) {
                 pinned: !thread.pinned, // Toggle the pinned status
             },
         });
-        console.log("Thread updated successfully:", updatedThread);
 
         return NextResponse.json({
             success: true,

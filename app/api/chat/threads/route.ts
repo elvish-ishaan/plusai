@@ -7,7 +7,6 @@ import { NextResponse } from "next/server";
 export async function GET() {
 
     const session = await getServerSession(authOptions);
-    console.log(session, 'session in get threads api');
     if (!session) {
         return NextResponse.json({
             success: false,
@@ -25,7 +24,6 @@ export async function GET() {
         createdAt: 'desc',
       }
     });
-    console.log("threads from db", response);
     if (!response) {
         return NextResponse.json({
             success: false,
@@ -53,13 +51,12 @@ export async function DELETE(request: Request) {
     }
     const { threadId } = await request.json();
     try {
-        const deletedThread = await prisma.thread.delete({
+        await prisma.thread.delete({
             where: {
                 userId: session?.user.id as string,
                 id: threadId,
             },
         });
-        console.log("Thread deleted successfully:", deletedThread);
         return NextResponse.json({
             success: true,
             message: "Thread deleted successfully",

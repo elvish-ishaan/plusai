@@ -46,7 +46,6 @@ export const uploadToS3 = async (formData: FormData) => {
           message: "Error in saving attachment metadata",
       }
     }
-      console.log(url,'getting file url')
       return {
         success: true,
         url: url,

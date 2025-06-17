@@ -43,7 +43,6 @@ export class GoogleClient {
       
         try {
           const res = await this.gemini.models.generateContent(options);
-          console.log(res.text,'getting res')
         return {
         text: res.text as string,
         usage: {

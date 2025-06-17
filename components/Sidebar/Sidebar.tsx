@@ -98,7 +98,6 @@ export default function Sidebar({
       const response = await axios.delete("/api/chat/threads", {
         data: { threadId: threadToDelete },
       });
-      console.log("Delete response:", response.data);
 
       if (response.data.success) {
         setThreads((prev) =>
@@ -136,7 +135,6 @@ export default function Sidebar({
         )
       );
       
-      console.log(`Thread ${threadId} ${!currentPinnedState ? 'pinned' : 'unpinned'} successfully`);
     } catch (error) {
       console.error("Failed to toggle pin:", error);
     }

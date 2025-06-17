@@ -121,9 +121,9 @@ export default function   ChatCard({
         systemPrompt: "you are helpful assistant.",
         llmProvider: provider || "gemini",
       };
-      console.log(body, "body in handleSend");
-
-      const res = await axios.post(`api/chat`, body);
+      console.log("Sending chat request with body:", body);
+      // Send request
+      const res = await axios.post(`/api/chat`, body);
       if (res.data.success) {
         // Remove temp entry and add real response
         setchat((prev) => {
@@ -192,10 +192,6 @@ export default function   ChatCard({
       setIsLoading(false);
     }
   };
-  
-  useEffect(() => {
-    console.log(isWebSearchEnabled, 'isWebSearchEnabled');
-  }, [isWebSearchEnabled]);
 
   return (
     <div

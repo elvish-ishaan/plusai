@@ -48,7 +48,6 @@ export async function POST(req: Request) {
       `;
     }
 
-    console.log(finalPrompt, 'final prompt');
     //@ts-expect-error fix it
     const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
 
@@ -63,7 +62,7 @@ export async function POST(req: Request) {
     });
     if(user){
         // Make sure thread exists first
-        const thread = await prisma.thread.upsert({
+          await prisma.thread.upsert({
           where: {
             id: threadId,
           },
@@ -78,7 +77,6 @@ export async function POST(req: Request) {
             updatedAt: new Date(),
           },
         });
-        console.log(thread, 'thread');
    
         // Now create the chat and connect it to the existing thread
          chat = await prisma.chat.create({
@@ -92,7 +90,6 @@ export async function POST(req: Request) {
        },
      },
         });
-        console.log(chat, 'chat');
   
        // Connect the chat to the user
         await prisma.user.update({
@@ -107,7 +104,6 @@ export async function POST(req: Request) {
        },
      },
         });
-        console.log(user, 'user');
         return NextResponse.json({
           success: true,
           message: "Chat created successfully",

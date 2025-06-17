@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 //fetching all attachments of user
 export async function GET() {
     const session = await getServerSession(authOptions);
-    console.log(session,'get session in attachments route');
     if (!session) {
         return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
@@ -17,7 +16,6 @@ export async function GET() {
             userid: session.user?.id || "",
         },
     });
-    console.log(attachments, 'attachments');
     return NextResponse.json({ success: true, attachments });
     } catch (error) {
         console.log("Error fetching attachments:", error);
