@@ -49,7 +49,7 @@ export default function Home() {
         {/* ChatCard */}
         <ChatCard
           isCollapsed={isCollapsed}
-          setthreads={setThreads}
+          setThreads={setThreads}
           threadId={threadId || undefined}
         />
       </div>

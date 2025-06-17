@@ -13,13 +13,13 @@ import PromptBubble from "./PromptBubble";
 
 interface ChatCardProps {
   isCollapsed: boolean;
-  setthreads?: React.Dispatch<React.SetStateAction<Thread[]>>;
+  setThreads?: React.Dispatch<React.SetStateAction<Thread[]>>;
   threadId?: string;
 }
 
 export default function   ChatCard({
   isCollapsed,
-  setthreads,
+  setThreads,
   threadId,
 }: ChatCardProps) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -144,14 +144,13 @@ export default function   ChatCard({
           const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
             initPrompt: text,
           });
-          console.log(titleRes.data, "titleRes.data");
 
           if (titleRes.data.success) {
             setIsInitPrompt(false);
             // Use the backend thread ID if available
             const newThreadId =
               res.data.genResponse?.thread?.id || currentThreadId;
-            setthreads?.((prev) => {
+            setThreads?.((prev) => {
               // Only add if not already present
               if (prev.some((t) => t.id === newThreadId)) return prev;
               return [

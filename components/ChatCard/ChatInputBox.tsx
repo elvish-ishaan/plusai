@@ -113,8 +113,10 @@ export default function ChatInputBox({
               {/* Search Button */}
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
                   setSelectedTool(selectedTool === "search" ? null : "search")
+                  setIsWebSearchEnabled((prev) => !prev);
+                }
                 }
                 className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border cursor-pointer
               border-[#eddfed] dark:border-[#39323f]
