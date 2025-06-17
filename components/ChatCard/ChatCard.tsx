@@ -247,9 +247,8 @@ export default function   ChatCard({
         <ChatInputBox
           message={message}
           setFileUrl={setFileUrl}
-          currentThreadId={currentThreadId}
           setMessage={setMessage}
-          //@ts-ignore
+          //@ts-expect-error fix  it
           setProvider={setProvider}
           setIsWebSearchEnabled={setIsWebSearchEnabled}
           iswebsearchenabled={isWebSearchEnabled}

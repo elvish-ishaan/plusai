@@ -1,6 +1,5 @@
 "use client";
 
-import ChatCard from "@/components/ChatCard/ChatCard";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -35,7 +34,7 @@ export default function Layout({children}: {children: React.ReactNode}) {
           !isCollapsed ? "md:mt-1" : ""
         }`}
       >
-        <ChatCard isCollapsed={isCollapsed} setthreads={setThreads} />
+        {children}
       </div>
     </div>
   );
