@@ -47,7 +47,11 @@ export default function Sidebar({
   const [threadToDelete, setThreadToDelete] = useState<string | null>(null);
   const hasMounted = useRef(false);
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
-
+  const [pinnedThreads, setPinnedThreads] = useState<string[]>([]);
+  const pinnedThreadsFiltered = useMemo(() => {
+    return threads.filter((thread) => thread?.pinned).map((thread) => thread.id);
+  }, [threads]);
+  setPinnedThreads(pinnedThreadsFiltered);
 
   const router = useRouter();
 

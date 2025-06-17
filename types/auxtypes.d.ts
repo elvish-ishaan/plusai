@@ -4,6 +4,7 @@ interface Thread {
   id: string; 
   title: string;
   createdAt: Date;
+  pinned: boolean;
   updatedAt: Date;
   userId: string;
 }
