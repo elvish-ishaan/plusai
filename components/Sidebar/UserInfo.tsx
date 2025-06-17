@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
-import {  signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { ArrowLeftFromLine, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -40,12 +40,11 @@ export default function UserInfo() {
 
   // If not authenticated
   return (
-    <div 
-    onClick={() =>router.push("/auth")}
-    className="p-4 border-[#e6c4de] hover:bg-white dark:hover:bg-[#261922] m-3 rounded-lg cursor-pointer">
-      <button
-        className="flex items-center text-[#a74576] text-md font-medium gap-2 cursor-pointer ml-2"
-      >
+    <div
+      onClick={() => router.push("/auth")}
+      className="p-4 border-[#e6c4de] hover:bg-white dark:hover:bg-[#261922] m-3 rounded-lg cursor-pointer"
+    >
+      <button className="flex items-center text-[#a74576] text-md font-medium gap-2 cursor-pointer ml-2">
         <LogOut className="w-4 h-4 text-[#a74576]" />
         <span className="pl-4">Login</span>
       </button>
