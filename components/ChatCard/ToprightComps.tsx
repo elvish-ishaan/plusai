@@ -4,6 +4,7 @@ import Image from "next/image";
 import {  Sun, Moon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function TopRightIconHolder({
   isCollapsed,
@@ -12,6 +13,7 @@ export default function TopRightIconHolder({
 }) {
   const [isDark, setIsDark] = useState(true);
   const router = useRouter();
+  const {data : session} = useSession();
 
   useEffect(() => {
     const html = document.documentElement;
@@ -42,6 +44,7 @@ export default function TopRightIconHolder({
     setIsDark(applyDark);
   }, []);
 
+
   return (
     <div className="absolute top-0 right-0 z-10">
       <svg
@@ -61,7 +64,13 @@ export default function TopRightIconHolder({
         <button
           className="flex items-center justify-center w-8 h-8 rounded-md text-[#ac1668] hover:text-[#501854] hover:bg-[#f0cde4] transition cursor-pointer dark:hover:text-[#e7d0dd] dark:text-white dark:hover:bg-[#29252e]"
           aria-label="Settings"
-          onClick={() => router.push("/settings/account")}
+          onClick={() => {
+            if (!session?.user) {
+              router.push("/auth");
+            } else {
+              router.push("/settings/account");
+            }
+          }}
         >
           <Image
             src="/setting.png"
@@ -71,6 +80,7 @@ export default function TopRightIconHolder({
             style={{ filter: isDark ? darkFilter : lightFilter }}
           />
         </button>
+
         <button
           onClick={toggleDarkMode}
           className="flex items-center justify-center w-8 h-8 rounded-md text-[#ac1668] hover:text-[#501854] dark:hover:text-[#e7d0dd] dark:text-white dark:hover:bg-[#29252e] hover:bg-[#f0cde4] transition cursor-pointer"
