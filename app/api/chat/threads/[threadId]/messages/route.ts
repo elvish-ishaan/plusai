@@ -1,27 +1,23 @@
 import { authOptions } from "@/libs/authOptions";
 import prisma from "@/prisma/prismaClient";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { threadId: string } }
-) {
+export async function GET( request: NextRequest,
+  { params }: { params: Promise<{ threadId: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
   }
 
-  const threadId = params.threadId;
+  const { threadId } = await params;
 
   try {
     // Verify thread belongs to user
     const thread = await prisma.thread.findFirst({
       where: {
         id: threadId,
-
-        //{Error} : Type Error: Property 'id' does not exist on type 'string | undefined'.ts(2339)
-        userId: session.user.id 
+        userId: session.user.id || ""
       }
     });
 

@@ -1,8 +1,9 @@
 import prisma from "@/prisma/prismaClient";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { threadId: string } }) {
+export async function GET(request: NextRequest,
+  { params }: { params: Promise<{ threadId: string }> }) {
     try {
         //check for auth
     const session = await getServerSession()
@@ -14,7 +15,7 @@ export async function GET(request: Request, { params }: { params: { threadId: st
     }
 
     try {
-        const threadId = await params.threadId
+        const { threadId } = await params;
         const thread = await prisma.thread.findUnique({
         where: {
             id: threadId
