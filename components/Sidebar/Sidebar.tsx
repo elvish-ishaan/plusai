@@ -47,7 +47,7 @@ export default function Sidebar({
   const [threadToDelete, setThreadToDelete] = useState<string | null>(null);
   const hasMounted = useRef(false);
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
-
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   const handleThreadClick = (threadId: string) => {
@@ -142,17 +142,22 @@ export default function Sidebar({
     }
   };
 
-  const { theme } = useTheme();
   const handleNewChat = () => {
     router.push("/");
   };
 
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true); // wait for client mount to access `theme` safely
+  }, []);
   const lightFilter =
     "brightness(0.2) saturate(100%) invert(19%) sepia(47%) saturate(3761%) hue-rotate(309deg) brightness(95%) contrast(88%)"; // for #b8387f
 
   const darkFilter =
     "brightness(0.9) saturate(200%) invert(85%) sepia(5%) saturate(120%) hue-rotate(300deg) contrast(105%)"; // tuned for #e7d0dd
-
+  
+  const appliedFilter = theme === "dark" ? darkFilter : lightFilter;
   
   return (
     <motion.aside
@@ -183,7 +188,8 @@ export default function Sidebar({
               width={24}
               height={24}
               style={{
-                filter: theme === "dark" ? darkFilter : lightFilter,
+                color: "transparent",
+                filter: mounted ? appliedFilter : undefined, // prevent hydration mismatch
               }}
             />
           </button>
@@ -227,7 +233,8 @@ export default function Sidebar({
                   width={24}
                   height={24}
                   style={{
-                    filter: theme === "dark" ? darkFilter : lightFilter,
+                    color: "transparent",
+                    filter: mounted ? appliedFilter : undefined, // prevent hydration mismatch
                   }}
                 />
               </button>
@@ -344,7 +351,7 @@ export default function Sidebar({
                             >
                               <PinOff className="w-4 h-4 cursor-pointer" />
                             </span>
-                            <span 
+                            <span
                               className="p-1 hover:bg-pink-300 dark:hover:bg-[#611837] rounded-md"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -429,7 +436,7 @@ export default function Sidebar({
                               >
                                 <Pin className="w-4 h-4 cursor-pointer" />
                               </span>
-                              <span 
+                              <span
                                 className="p-1 hover:bg-pink-300 dark:hover:bg-[#611837] rounded-md"
                                 onClick={(e) => {
                                   e.stopPropagation();
