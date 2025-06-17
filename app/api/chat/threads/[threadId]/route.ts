@@ -1,4 +1,5 @@
 import prisma from "@/prisma/prismaClient";
+import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { threadId } from "worker_threads";
@@ -51,7 +52,6 @@ export async function GET(request: Request, { params }: { params: { threadId: st
 
 //write post post route to pin a thread
 export async function PATCH(request: Request, { params }: { params: { threadId: string } }) {
-    console.log('request hitted', await params.threadId)
     try {
         const session = await getServerSession();
         if (!session) {
@@ -61,7 +61,8 @@ export async function PATCH(request: Request, { params }: { params: { threadId: 
             }, { status: 401 });
         }
 
-        const threadId = await params.threadId;
+        const threadId = await params.threadId
+        console.log("Thread ID to pin:", threadId);
         //first get the thread 
        try {
          const thread = await prisma.thread.findUnique({

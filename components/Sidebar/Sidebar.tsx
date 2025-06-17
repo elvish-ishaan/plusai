@@ -108,7 +108,7 @@ export default function Sidebar({
     console.log('pinthread clicked.......')
     try {
       console.log('sending pinned req.........', threadId);
-      const response = await axios.patch(`/chat/threads/${threadId}`);
+      const response = await axios.patch(`/api/chat/threads/${threadId}`);
       console.log("Pin response:", response.data);
 
       if (!response.data.success) {
