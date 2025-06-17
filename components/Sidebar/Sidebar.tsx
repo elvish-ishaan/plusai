@@ -68,7 +68,7 @@ export default function Sidebar({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [setIsCollapsed]);
 
   const filteredThreads = useMemo(() => {
     return threads?.filter((thread) =>

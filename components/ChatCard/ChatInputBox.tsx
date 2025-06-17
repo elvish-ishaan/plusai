@@ -12,6 +12,7 @@ type Props = {
   model: string;
   setIsWebSearchEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   setModel: React.Dispatch<React.SetStateAction<string>>;
+  setProvider?: React.Dispatch<React.SetStateAction<string>>;
   setFileUrl: React.Dispatch<React.SetStateAction<string | null>>;
   onSend: (val: string) => void;
   // inputRef: React.RefObject<HTMLTextAreaElement>;
@@ -24,6 +25,7 @@ export default function ChatInputBox({
   setMessage,
   setIsWebSearchEnabled,
   model,
+  setProvider,
   setModel,
   setFileUrl,
   onSend,
@@ -107,7 +109,7 @@ export default function ChatInputBox({
             {/* ModelSelector, Search, Upload */}
             <div className="flex flex-wrap items-center gap-2 pr-2 mb-6">
               <div className="cursor-pointer">
-                <ModelSelector setModel={setModel} selectedModel={model} />
+                <ModelSelector setModel={setModel} selectedModel={model} setProvider={setProvider} />
               </div>
 
               {/* Search Button */}

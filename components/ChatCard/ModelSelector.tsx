@@ -41,9 +41,11 @@ const models = [
 export default function ModelSelector({
   setModel,
   selectedModel,
+  setProvider
 }: {
   setModel: React.Dispatch<React.SetStateAction<string>>;
   selectedModel: string;
+  setProvider?: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -99,6 +101,7 @@ export default function ModelSelector({
                     key={modelItem.name}
                     onClick={() => {
                       if (modelItem.active) {
+                        setProvider?.(modelItem.provider);
                         setModel(modelItem.name.toLocaleLowerCase());
                         setIsOpen(false);
                       }

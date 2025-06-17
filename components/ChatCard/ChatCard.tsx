@@ -150,6 +150,7 @@ export default function   ChatCard({
             // Use the backend thread ID if available
             const newThreadId =
               res.data.genResponse?.thread?.id || currentThreadId;
+              //@ts-expect-error fix it
             setThreads?.((prev) => {
               // Only add if not already present
               if (prev.some((t) => t.id === newThreadId)) return prev;
@@ -250,7 +251,7 @@ export default function   ChatCard({
             setFileUrl={setFileUrl}
             currentThreadId={currentThreadId}
             setMessage={setMessage}
-            //@ts-ignore
+            
             setProvider={setProvider}
             setIsWebSearchEnabled={setIsWebSearchEnabled}
             onSend={handleSend}

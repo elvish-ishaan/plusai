@@ -69,7 +69,8 @@ export default function Page() {
       {/* Google Sign-In Button */}
       <div className="w-full max-w-sm">
         <button
-          onClick={() => signIn("google", { callbackUrl: "/" })}
+          onClick={handleGoogleLogin}
+          disabled={loading}
           className="flex items-center justify-center gap-3 w-full h-14 px-6 py-2 text-lg font-semibold text-white bg-[#a23b67] hover:bg-[#d56698] active:bg-[#a23b67] dark:bg-[#3a0f25] dark:text-white rounded-lg shadow transition-all hover:shadow-lg cursor-pointer backdrop-blur-sm"
         >
           <Image src="/google.png" alt="Google" width={24} height={24} />

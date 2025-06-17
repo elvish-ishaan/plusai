@@ -54,7 +54,7 @@ export default function Contact() {
   return (
     <section className=" dark:bg-[#1c131b]  text-[#77347c] dark:text-white  ">
       <h1 className="text-3xl font-semibold mb-4 text-[#501854] dark:text-white">
-        We're here to help!
+        We&apos;re here to help
       </h1>
       <div className="space-y-4">
         {links.map((item, index) => (

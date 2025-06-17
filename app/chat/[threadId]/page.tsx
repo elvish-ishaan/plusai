@@ -10,14 +10,12 @@ export default function Page() {
   console.log(threadId, "threadId in page.tsx");
   
   //{Error} :lints threads and setIsCollapsed are declared but its value is never read.ts(6133)
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [threads, setThreads] = useState<Thread[]>([]);
+  const [isCollapsed] = useState(false);
   return (
     <div className="flex-1 transition-all duration-300 h-screen">
       <ChatCard
         threadId={threadId}
         isCollapsed={isCollapsed}
-        setthreads={setThreads}
       />
     </div>
   );
