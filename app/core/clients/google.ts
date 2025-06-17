@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Tool } from "@google/genai";
 
 
 export class GoogleClient {
@@ -13,7 +13,7 @@ export class GoogleClient {
       attachmentUrl: string | null = null
     ) {
       // Conditionally define the tools array
-      const toolsToUse = isWebSearchEnabled ? [{ googleSearch: {} }] : [];
+      const toolsToUse: Tool[] = isWebSearchEnabled ? [{ googleSearch: {} }] : [];
       const CustomContents = []
       if (attachmentUrl) {
          const response = await fetch(attachmentUrl || '');

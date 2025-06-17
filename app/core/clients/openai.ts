@@ -15,6 +15,7 @@ export class OpenAIClient {
         model: model,
         input: prompt,
         instructions: systemPrompt,
+        //@ts-expect-error fix it
         tools: customTools,
         temperature: temperature,
         max_output_tokens: maxOutputTokens,

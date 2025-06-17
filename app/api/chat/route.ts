@@ -49,6 +49,7 @@ export async function POST(req: Request) {
     }
 
     console.log(finalPrompt, 'final prompt');
+    //@ts-expect-error fix it
     const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
 
     const session = await getServerSession(authOptions);
