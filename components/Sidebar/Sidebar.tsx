@@ -47,24 +47,6 @@ export default function Sidebar({
   const [threadToDelete, setThreadToDelete] = useState<string | null>(null);
   const hasMounted = useRef(false);
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
-  // Pinned threads state
-  const [pinnedThreads, setPinnedThreads] = useState<string[]>([]);
-
- 
-
-  // const pinThread = (threadId: string) => {
-  //   setPinnedThreads((prev) => {
-  //     if (!prev.includes(threadId)) {
-  //       return [threadId, ...prev]; // keep most recent pin on top
-  //     }
-  //     return prev;
-  //   });
-  // };
-  
-  // const unpinThread = (threadId: string) => {
-  //   setPinnedThreads((prev) => prev.filter((id) => id !== threadId));
-  // };
-  
 
 
   const router = useRouter();
@@ -124,9 +106,7 @@ export default function Sidebar({
   };
 
   const handlePinThread = async (threadId: string) => {
-    console.log('pinthread clicked.......')
     try {
-      console.log('sending pinned req.........', threadId);
       const response = await axios.patch(`/api/chat/threads/${threadId}`);
       console.log("Pin response:", response.data);
 
@@ -221,7 +201,7 @@ export default function Sidebar({
                 className="p-1 text-[#a74576] hover:bg-[#f0cde4] dark:text-white dark:hover:bg-[#2b222c] rounded-md"
                 aria-label="Collapse sidebar"
               >
-                {/* <Image
+                <Image
                   src={sidebar}
                   alt="Sidebar Icon"
                   width={24}
@@ -229,7 +209,7 @@ export default function Sidebar({
                   style={{
                     filter: theme === "dark" ? darkFilter : lightFilter,
                   }}
-                /> */}
+                />
               </button>
               <Link
                 href="/"
@@ -288,76 +268,7 @@ export default function Sidebar({
             aria-label="Thread list"
             className="flex-grow overflow-y-auto px-2 space-y-1 scrollbar-hide"
           >
-            {/* {pinnedThreads.length > 0 && (
-              <div>
-                <h4 className="text-xs font-medium text-[#560f2b] dark:text-[#c46095] my-1.5 pl-1">
-                  Pinned
-                </h4>
-                <div className="space-y-0.5 mt-2">
-                  {pinnedThreads.map((thread) => (
-                    <motion.div
-                      key={thread}
-                      className={`relative group cursor-pointer ${
-                        selectedThreadId === thread.id ? "bg-[#efcae3]" : ""
-                      }`}
-                      initial="rest"
-                      animate="rest"
-                      whileHover="hover"
-                      onClick={() => handleThreadClick(thread.id)}
-                    >
-                      <div className="relative flex justify-between items-center rounded-md px-2 py-1 overflow-hidden truncate">
-                        <motion.div
-                          className="absolute inset-0 bg-white dark:bg-[#261922] z-0"
-                          variants={{
-                            rest: { x: "100%" },
-                            hover: { x: "0%" },
-                          }}
-                          transition={{ duration: 0.1, ease: "easeInOut" }}
-                        />
-                        <div className="relative z-10 flex items-center truncate text-[#ac1668] dark:text-[#e7d0dd]">
-                          <Link href={`/chat/${thread.id}`}>
-                            {!isCollapsed ? (
-                              <span className="text-sm font-medium">
-                                {thread.title}
-                              </span>
-                            ) : (
-                              <Pin className="w-4 h-4" />
-                            )}
-                          </Link>
-                        </div>
-                        {!isCollapsed && (
-                          <motion.div
-                            variants={{
-                              rest: { x: 20, opacity: 0 },
-                              hover: { x: 0, opacity: 1 },
-                            }}
-                            transition={{ duration: 0.1, ease: "easeInOut" }}
-                            className="relative z-10 flex gap-1 text-foreground"
-                          >
-                            <span
-                              className="p-1 hover:bg-pink-300 dark:hover:bg-[#312630] rounded-md"
-                              onClick={() => unpinThread(thread.id)}
-                            >
-                              <PinOff className="w-4 h-4 cursor-pointer" />
-                            </span>
-                            <span className="p-1 hover:bg-pink-300 dark:hover:bg-[#611837] rounded-md">
-                              <X
-                                className="w-4 h-4 cursor-pointer"
-                                onClick={() => {
-                                  setThreadToDelete(thread.id);
-                                  setShowModal(true);
-                                }}
-                              />
-                            </span>
-                          </motion.div>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            )} */}
-
+           
             {/* Regular grouped threads section below */}
             {Object.keys(grouped).length === 0 ? (
               <p className="text-xs text-[#560f2b] dark:text-[#c46095] pl-1">

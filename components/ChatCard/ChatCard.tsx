@@ -208,11 +208,11 @@ export default function   ChatCard({
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
 
-      <div className="flex-1 relative px-8 py-6 space-y-3 scrollbar-hide">
+      <div className="flex-1 relative px-8 py-6 space-y-3 overflow-y-scroll scrollbar-hide">
         {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
-          <div className="max-w-4xl mx-auto h-full overflow-y-auto pb-52 pr-2">
+          <div className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-52 pr-2">
             {/* ↑ pb-52 ensures space for fixed ChatInputCard */}
             {chat?.map((chatItem) => (
               <div
