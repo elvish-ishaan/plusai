@@ -40,9 +40,10 @@ export default function UserInfo() {
 
   // If not authenticated
   return (
-    <div className="p-4 border-[#e6c4de] hover:bg-white dark:hover:bg-[#261922] m-3 rounded-lg cursor-pointer">
+    <div 
+    onClick={() =>router.push("/auth")}
+    className="p-4 border-[#e6c4de] hover:bg-white dark:hover:bg-[#261922] m-3 rounded-lg cursor-pointer">
       <button
-        onClick={() =>router.push("/auth")}
         className="flex items-center text-[#a74576] text-md font-medium gap-2 cursor-pointer ml-2"
       >
         <LogOut className="w-4 h-4 text-[#a74576]" />
