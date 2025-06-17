@@ -130,7 +130,7 @@ export default function Sidebar({
       } bg-[#f3e6f5] dark:bg-[#1d131a] flex flex-col overflow-hidden `}
     >
       {isCollapsed ? (
-        // Collapsed view with evenly spaced icons
+        // Collapsed is present in the sidebar
         <div className="flex items-center justify-around  h-full px-1.5 py-1.5">
           <button
             onClick={() => setIsCollapsed(false)}
