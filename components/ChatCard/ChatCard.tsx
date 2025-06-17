@@ -22,7 +22,6 @@ export default function   ChatCard({
   setThreads,
   threadId,
 }: ChatCardProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const [chat, setchat] = useState<Chat[]>([]);
   const [message, setMessage] = useState<string>("");
   const [provider, setProvider] = useState<string>("gemini");
@@ -51,7 +50,7 @@ export default function   ChatCard({
     const getThread = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`${baseUrl}/chat/threads/${threadId}`);
+        const res = await axios.get(`/api/chat/threads/${threadId}`);
         if (res.data.success) {
           setCurrentThreadId(threadId);
           setchat(res.data.thread?.chats || []);
@@ -124,7 +123,7 @@ export default function   ChatCard({
       };
       console.log(body, "body in handleSend");
 
-      const res = await axios.post(`${baseUrl}/chat`, body);
+      const res = await axios.post(`api/chat`, body);
       if (res.data.success) {
         // Remove temp entry and add real response
         setchat((prev) => {
@@ -141,7 +140,7 @@ export default function   ChatCard({
       // Handle title generation for first prompt
       if (isInitPrompt) {
         try {
-          const titleRes = await axios.post(`${baseUrl}/chat/generate-title`, {
+          const titleRes = await axios.post(`/api/chat/generate-title`, {
             initPrompt: text,
           });
 
