@@ -123,6 +123,27 @@ export default function Sidebar({
     }
   };
 
+  const handlePinThread = async (threadId: string) => {
+    console.log('pinthread clicked.......')
+    try {
+      console.log('sending pinned req.........', threadId);
+      const response = await axios.patch(`/chat/threads/${threadId}`);
+      console.log("Pin response:", response.data);
+
+      if (!response.data.success) {
+        console.error("Failed to pin thread:", response.data.message);
+        return;
+      }
+       setThreads((prev) =>
+          prev.map((thread) =>
+            thread.id === threadId ? { ...thread, pinned: true } : thread
+          )
+        );
+    } catch (error) {
+      console.error("Failed to pin thread:", error);
+    }
+  };
+
   const { theme } = useTheme();
   const handleNewChat = () => {
     router.push("/");
@@ -378,7 +399,9 @@ export default function Sidebar({
                                   {thread.title}
                                 </span>
                               ) : (
-                                <Pin className="w-4 h-4" />
+                                <Pin 
+                                 onClick={() => handlePinThread(thread.id)}
+                                className="w-4 h-4" />
                               )}
                             </Link>
                           </div>
@@ -391,11 +414,11 @@ export default function Sidebar({
                               transition={{ duration: 0.1, ease: "easeInOut" }}
                               className="relative z-10 flex gap-1 text-foreground"
                             >
-                              <span
-                                className="p-1 hover:bg-pink-300 dark:hover:bg-[#312630] rounded-md"
-                                onClick={() => pinThread(thread.id)}
-                              >
-                                <Pin className="w-4 h-4 cursor-pointer" />
+
+                              <span className="p-1 hover:bg-pink-300 dark:hover:bg-[#312630] rounded-md">
+                                <Pin 
+                                onClick={() => handlePinThread(thread.id)}
+                                className="w-4 h-4 cursor-pointer" />
                               </span>
                               <span className="p-1 hover:bg-pink-300 dark:hover:bg-[#611837] rounded-md">
                                 <X
