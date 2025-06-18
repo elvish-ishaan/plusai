@@ -19,7 +19,7 @@ interface ChatCardProps {
   threadId?: string;
 }
 
-export default function   ChatCard({
+export default function ChatCard({
   isCollapsed,
   setThreads,
   threadId,
