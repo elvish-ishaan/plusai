@@ -45,7 +45,7 @@ export default function HistoryAndSync() {
 
       {/* Danger Zone */}
       <div className="mt-10">
-        <h3 className="text-lg font-bold text-white dark:text-white mb-2">
+        <h3 className="text-lg font-bold dark:text-white text-[#501854] mb-2">
           Danger Zone
         </h3>
         <p className="text-sm text-[#77347c] dark:text-[#b89ab5] mb-3">
