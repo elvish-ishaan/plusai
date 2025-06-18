@@ -19,7 +19,7 @@ interface ChatCardProps {
   threadId?: string;
 }
 
-export default function   ChatCard({
+export default function ChatCard({
   isCollapsed,
   setThreads,
   threadId,
@@ -40,33 +40,34 @@ export default function   ChatCard({
 
   // Scroll to bottom button state
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const latestMessageRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
+  const scrollToBottom = () => {
+    latestMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Auto-scroll to bottom when new chat added
+  useEffect(() => {
+    scrollToBottom();
+  }, [chat]);
+
+  // Toggle scroll button visibility
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
     const handleScroll = () => {
-      const nearBottom =
-        container.scrollHeight - container.scrollTop - container.clientHeight <
-        100;
-      setShowScrollButton(!nearBottom);
+      const scrollThreshold = 100;
+      const distanceFromBottom =
+        container.scrollHeight - container.scrollTop - container.clientHeight;
+
+      setShowScrollButton(distanceFromBottom > scrollThreshold);
     };
 
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const scrollToBottom = () => {
-    scrollContainerRef.current?.scrollTo({
-      top: scrollContainerRef.current.scrollHeight,
-      behavior: "smooth",
-    });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [chat]);
 
 
 
@@ -234,7 +235,7 @@ export default function   ChatCard({
       } overflow-hidden`}
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
-  
+
       <div className="flex-1 relative px-8 py-6 space-y-3 overflow-hidden">
         {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
@@ -244,9 +245,10 @@ export default function   ChatCard({
               className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-52 pr-2"
               ref={scrollContainerRef}
             >
-              {chat?.map((chatItem) => (
+              {chat?.map((chatItem, index) => (
                 <div
                   key={chatItem.id}
+                  ref={index === chat.length - 1 ? latestMessageRef : null}
                   className="flex flex-col space-y-4 mb-3 mt-8"
                 >
                   <div className="flex justify-end">
@@ -259,7 +261,7 @@ export default function   ChatCard({
                   )}
                 </div>
               ))}
-  
+
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="p-3 animate-pulse">
@@ -268,8 +270,7 @@ export default function   ChatCard({
                 </div>
               )}
             </div>
-  
-            {/*  Scroll Button */}
+
             <ScrollToBottomButton
               onClick={scrollToBottom}
               isVisible={showScrollButton}
@@ -277,7 +278,7 @@ export default function   ChatCard({
           </div>
         )}
       </div>
-  
+
       <div className="relative z-10 backdrop-blur-lg">
         <div className="max-w-4xl w-full mx-auto bg-[rgba(249,243,249,0.8)] dark:bg-[#221d27]/80 sticky bottom-0 backdrop-blur-md border-[#efbdeb] dark:border-[#322028]">
           <ChatInputBox

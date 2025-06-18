@@ -31,7 +31,7 @@ export default function Layout({children}: {children: React.ReactNode}) {
       {/* Main Content */}
       <div
         className={`flex-1 transition-all duration-300 h-screen ${
-          !isCollapsed ? "md:mt-1" : ""
+          !isCollapsed ? "md:mt-3.5" : ""
         }`}
       >
         {children}

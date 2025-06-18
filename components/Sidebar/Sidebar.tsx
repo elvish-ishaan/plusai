@@ -160,7 +160,7 @@ export default function Sidebar({
   return (
     <motion.aside
       initial={false}
-      animate={{ width: isCollapsed ? 100 : 240 }}
+      animate={{ width: isCollapsed ? 100 : 270 }}
       transition={
         hasMounted.current
           ? { duration: 0.3, ease: "easeInOut" }
@@ -168,9 +168,9 @@ export default function Sidebar({
       }
       className={`${
         isCollapsed
-          ? "absolute left-0 top-0 z-30 h-[42px] flex items-center  m-3 rounded-md"
+          ? "absolute left-0 top-0 z-30 h-[42px] flex items-center p-3 rounded-md"
           : "relative h-full"
-      } bg-[#f3e6f5] dark:bg-[#19171d] flex flex-col overflow-hidden `}
+      } bg-[#f3e6f5] dark:bg-[#1d131b] flex flex-col overflow-hidden `}
     >
       {isCollapsed ? (
         // Collapsed is present in the sidebar
@@ -228,8 +228,8 @@ export default function Sidebar({
                 <Image
                   src={sidebar}
                   alt="Sidebar Icon"
-                  width={24}
-                  height={24}
+                  width={20}
+                  height={20}
                   style={{
                     color: "transparent",
                     filter: mounted ? appliedFilter : undefined, // prevent hydration mismatch
@@ -238,7 +238,7 @@ export default function Sidebar({
               </button>
               <Link
                 href="/"
-                className="flex items-center justify-center flex-grow"
+                className="flex items-center justify-center mx-auto pr-8"
               >
                 {/* Light logo (default) */}
                 <Image
