@@ -59,7 +59,7 @@ export default function Models() {
   };
 
   return (
-    <section className="text-[#77347c] dark:text-white">
+    <section className="text-[#77347c] dark:text-white mb-6">
       <h2 className="text-xl font-bold mb-1">Available Models</h2>
       <p className="text-sm mb-4">
         Choose which models appear in your model selector. This won&apos;t
