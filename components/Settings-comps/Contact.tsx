@@ -52,7 +52,7 @@ export default function Contact() {
   ];
 
   return (
-    <section className=" dark:bg-[#1c131b]  text-[#77347c] dark:text-white  ">
+    <section className=" dark:bg-[#1c131b]  text-[#77347c] dark:text-white mb-4 ">
       <h1 className="text-3xl font-semibold mb-4 text-[#501854] dark:text-white">
         We&apos;re here to help
       </h1>

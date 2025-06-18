@@ -170,16 +170,16 @@ export default function Sidebar({
       }
       className={`${
         isCollapsed
-          ? "absolute left-0 top-0 z-30 h-[48px] flex items-center shadow-md m-3 rounded-lg"
+          ? "absolute left-0 top-0 z-30 h-[42px] flex items-center  m-3 rounded-md"
           : "relative h-full"
-      } bg-[#f3e6f5] dark:bg-[#1d131a] flex flex-col overflow-hidden `}
+      } bg-[#f3e6f5] dark:bg-[#19171d] flex flex-col overflow-hidden `}
     >
       {isCollapsed ? (
         // Collapsed is present in the sidebar
-        <div className="flex items-center justify-around  h-full px-1.5 py-1.5">
+        <div className="flex items-center justify-around  h-full px-1.5 py-1">
           <button
             onClick={() => setIsCollapsed(false)}
-            className="p-1 text-[#a74576] dark dark:text-[#e7d0dd] hover:bg-[#f0cde4] dark:hover:bg-[#261922] rounded-md cursor-pointer"
+            className="p-1 text-[#a74576] dark dark:text-[#e7d0dd] dark:bg-[#19171d] hover:bg-[#f0cde4] dark:hover:bg-[#261922] rounded-md cursor-pointer"
             aria-label="Expand sidebar"
           >
             <Image
