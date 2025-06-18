@@ -1,8 +1,7 @@
 import React from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { signOut, useSession } from "next-auth/react";
-import { ArrowLeftFromLine, LogOut } from "lucide-react";
+import {  useSession } from "next-auth/react";
+import {  LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function UserInfo() {
