@@ -17,21 +17,27 @@ export class GoogleClient {
       const CustomContents = []
       if (attachmentUrl) {
          const response = await fetch(attachmentUrl || '');
-          // Get the array buffer of the PDF data
-           const pdfArrayBuffer = await response.arrayBuffer();
-          // Convert ArrayBuffer to Buffer
-          const pdfBuffer = Buffer.from(pdfArrayBuffer);
-      // If attachmentUrl is provided, include it in the prompt
-        CustomContents.push(
-          { text: prompt },
-          {
-              inlineData: {
-                  mimeType: 'application/pdf',
-                  data: pdfBuffer.toString("base64")
+         if (!response.ok) {
+          throw new Error(`Failed to fetch file: ${response.status}`);
+        }
+
+        const mimeType = response.headers.get("content-type");
+              // Get the array buffer of the PDF data
+               const fileArrayBuffer = await response.arrayBuffer();
+              // Convert ArrayBuffer to Buffer
+              const fileBuffer = Buffer.from(fileArrayBuffer);
+          // If attachmentUrl is provided, include it in the prompt
+            CustomContents.push(
+              { text: prompt },
+              {
+                  inlineData: {
+                    //get the mine type from the url
+                      mimeType: mimeType,
+                      data: fileBuffer.toString("base64")
+                  }
               }
+            )
           }
-        )
-      }
       //construct the options for the gemini api
       const options = {
         model: model,
@@ -42,7 +48,8 @@ export class GoogleClient {
       };
       
         try {
-          const res = await this.gemini.models.generateContent(options);
+          //@ts-expect-error fix option type
+          const res = await this.gemini.models.generateContent(options)
         return {
         text: res.text as string,
         usage: {

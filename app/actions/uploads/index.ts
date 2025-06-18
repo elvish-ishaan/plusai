@@ -15,12 +15,12 @@ export const uploadToS3 = async (formData: FormData) => {
   try {
     const fileName = file.name;
     const fileStream = await file.arrayBuffer();
-    // Upload the file to S3
+   // Upload the file to S3
     const command = new PutObjectCommand({
         Bucket: process.env.AWS_BUCKET,
         Key: fileName,
         Body: new Uint8Array(fileStream),
-        ContentType: 'application/pdf',
+        ContentType: file.type,
       });
       const data = await s3Client.send(command);
       if(data.$metadata.httpStatusCode !== 200){
