@@ -7,11 +7,9 @@ import TopRightIconHolder from "./ToprightComps";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
-import ReactMarkdown from "react-markdown";
 import ChatLoader from "../Loaders/ChatLoader";
 import PromptBubble from "./PromptBubble";
 import TypingText from "../ui/TypingText";
-import ScrollToBottomButton from "../ui/ScrollButton";
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -37,38 +35,6 @@ export default function ChatCard({
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
   const [fileUrl, setFileUrl] = useState<string | null>(null);
-
-  // Scroll to bottom button state
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const latestMessageRef = useRef<HTMLDivElement>(null);
-  const [showScrollButton, setShowScrollButton] = useState(false);
-
-  const scrollToBottom = () => {
-    latestMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  // Auto-scroll to bottom when new chat added
-  useEffect(() => {
-    scrollToBottom();
-  }, [chat]);
-
-  // Toggle scroll button visibility
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const scrollThreshold = 100;
-      const distanceFromBottom =
-        container.scrollHeight - container.scrollTop - container.clientHeight;
-
-      setShowScrollButton(distanceFromBottom > scrollThreshold);
-    };
-
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
-
 
 
   // Load thread data when threadId changes
@@ -243,12 +209,10 @@ export default function ChatCard({
           <div className="relative h-full">
             <div
               className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-52 pr-2"
-              ref={scrollContainerRef}
             >
-              {chat?.map((chatItem, index) => (
+              {chat?.map((chatItem) => (
                 <div
                   key={chatItem.id}
-                  ref={index === chat.length - 1 ? latestMessageRef : null}
                   className="flex flex-col space-y-4 mb-3 mt-8"
                 >
                   <div className="flex justify-end">
@@ -270,11 +234,6 @@ export default function ChatCard({
                 </div>
               )}
             </div>
-
-            <ScrollToBottomButton
-              onClick={scrollToBottom}
-              isVisible={showScrollButton}
-            />
           </div>
         )}
       </div>
