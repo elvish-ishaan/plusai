@@ -10,6 +10,8 @@ import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 import ChatLoader from "../Loaders/ChatLoader";
 import PromptBubble from "./PromptBubble";
+import TypingText from "../ui/TypingText";
+import ScrollToBottomButton from "../ui/ScrollButton";
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -35,6 +37,36 @@ export default function   ChatCard({
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+
+  // Scroll to bottom button state
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const nearBottom =
+        container.scrollHeight - container.scrollTop - container.clientHeight <
+        100;
+      setShowScrollButton(!nearBottom);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToBottom = () => {
+    scrollContainerRef.current?.scrollTo({
+      top: scrollContainerRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chat]);
 
 
 
@@ -202,51 +234,57 @@ export default function   ChatCard({
       } overflow-hidden`}
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
-
-      <div className="flex-1 relative px-8 py-6 space-y-3 overflow-y-scroll scrollbar-hide">
+  
+      <div className="flex-1 relative px-8 py-6 space-y-3 overflow-hidden">
         {chat.length === 0 && !message && !isLoading ? (
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
-          <div className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-52 pr-2">
-            {/* ↑ pb-52 ensures space for fixed ChatInputCard */}
-            {chat?.map((chatItem) => (
-              <div
-                key={chatItem.id}
-                className="flex flex-col space-y-4 mb-3 mt-8"
-              >
-                <div className="flex justify-end">
-                  <PromptBubble prompt={chatItem?.prompt} />
-                </div>
-                {chatItem.response && (
-                  <div className="flex justify-start">
-                    <div className="p-3 max-w-xs md:max-w-md lg:max-w-2xl prose prose-sm">
-                      <ReactMarkdown>{chatItem.response}</ReactMarkdown>
-                    </div>
+          <div className="relative h-full">
+            <div
+              className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-52 pr-2"
+              ref={scrollContainerRef}
+            >
+              {chat?.map((chatItem) => (
+                <div
+                  key={chatItem.id}
+                  className="flex flex-col space-y-4 mb-3 mt-8"
+                >
+                  <div className="flex justify-end">
+                    <PromptBubble prompt={chatItem?.prompt} />
                   </div>
-                )}
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="p-3 animate-pulse">
-                  <ChatLoader />
+                  {chatItem.response && (
+                    <div className="flex justify-start">
+                      <TypingText text={chatItem.response} />
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
+              ))}
+  
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="p-3 animate-pulse">
+                    <ChatLoader />
+                  </div>
+                </div>
+              )}
+            </div>
+  
+            {/*  Scroll Button */}
+            <ScrollToBottomButton
+              onClick={scrollToBottom}
+              isVisible={showScrollButton}
+            />
           </div>
         )}
       </div>
-
-      {/* <ChatMessageArea messages={chat} message={message} onPromptSelect={handlePromptSelect} loading={isLoading} /> */}
-
+  
       <div className="relative z-10 backdrop-blur-lg">
-        <div className="max-w-4xl w-full mx-auto bg-[rgba(249,243,249,0.8)] dark:bg-[#221d27]/80 sticky bottom-0 backdrop-blur-md  border-[#efbdeb] dark:border-[#322028]">
+        <div className="max-w-4xl w-full mx-auto bg-[rgba(249,243,249,0.8)] dark:bg-[#221d27]/80 sticky bottom-0 backdrop-blur-md border-[#efbdeb] dark:border-[#322028]">
           <ChatInputBox
             message={message}
             setFileUrl={setFileUrl}
             currentThreadId={currentThreadId}
             setMessage={setMessage}
-            
             setProvider={setProvider}
             setIsWebSearchEnabled={setIsWebSearchEnabled}
             onSend={handleSend}
@@ -258,4 +296,4 @@ export default function   ChatCard({
       </div>
     </div>
   );
-}
+}  
