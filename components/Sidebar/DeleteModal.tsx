@@ -50,7 +50,7 @@ export default function DeleteModal({
           </button>
           <button
             onClick={onDelete}
-            className="bg-[#f7086c]  dark:bg-[#9d174d] text-white px-4 py-1.5 rounded-md shadow hover:bg-[#e6006b] transition"
+            className="bg-[#f7086c]  dark:bg-[#9d174d] text-white px-4 py-1.5 rounded-md shadow hover:bg-[#e6006b] transition cursor-pointer"
           >
             Delete
           </button>
