@@ -141,10 +141,6 @@ export default function Sidebar({
     }
   };
 
-  const handleNewChat = () => {
-    router.push("/");
-  };
-
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -261,12 +257,13 @@ export default function Sidebar({
               </Link>
             </div>
 
+            <Link href={'/'}>
             <Button
-              onClick={() => handleNewChat()}
               className="w-full mt-2 bg-[#a23b67] hover:bg-[#d56a9d] dark:bg-[#3b1127] dark:hover:bg-[#791840] cursor-pointer text-white font-bold py-2 border border-[#8f3c66] rounded-lg shadow text-sm"
             >
               New Chat
             </Button>
+            </Link>
 
             {/* Search box */}
             <div className="text-sm font-normal">
