@@ -3,6 +3,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Montserrat } from "next/font/google";
 import AuthProvider from "@/AuthProvider";
+import { Toaster } from 'sonner'
+
 
 export const metadata: Metadata = {
   title: "T3 Chat",
@@ -22,6 +24,7 @@ export default function RootLayout({
       <body
         className={`${montserrat.className}  antialiased min-h-screen bg-[radial-gradient(ellipse_at_center,var(--background)_20%,oklch(0.235_0.017_290)_100%)]`}
       >
+        <Toaster />
         <ThemeProvider>
           <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>

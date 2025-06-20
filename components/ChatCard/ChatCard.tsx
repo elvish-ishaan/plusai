@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import ChatLoader from "../Loaders/ChatLoader";
 import PromptBubble from "./PromptBubble";
 import TypingText from "../ui/TypingText";
+import { toast } from "sonner";
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -123,6 +124,11 @@ export default function ChatCard({
       console.log("Sending chat request with body:", body);
       // Send request
       const res = await axios.post(`/api/chat`, body);
+      if(!res.data.success){
+        toast.error(res.data.message);
+        return;
+      }
+
       if (res.data.success) {
         // Remove temp entry and add real response
         setchat((prev) => {
