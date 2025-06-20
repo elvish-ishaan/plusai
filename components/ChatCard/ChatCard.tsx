@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import ChatLoader from "../Loaders/ChatLoader";
 import PromptBubble from "./PromptBubble";
 import TypingText from "../ui/TypingText";
+import { toast } from "sonner";
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -123,6 +124,11 @@ export default function ChatCard({
       console.log("Sending chat request with body:", body);
       // Send request
       const res = await axios.post(`/api/chat`, body);
+      if(!res.data.success){
+        toast.error(res.data.message);
+        return;
+      }
+
       if (res.data.success) {
         // Remove temp entry and add real response
         setchat((prev) => {
@@ -207,13 +213,11 @@ export default function ChatCard({
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
           <div className="relative h-full">
-            <div
-              className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-52 pr-2"
-            >
+            <div className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-42 pr-2">
               {chat?.map((chatItem) => (
                 <div
                   key={chatItem.id}
-                  className="flex flex-col space-y-4 mb-3 mt-8"
+                  className="flex flex-col space-y-4 mb-3 mt-8 px-4"
                 >
                   <div className="flex justify-end">
                     <PromptBubble prompt={chatItem?.prompt} />
@@ -238,8 +242,8 @@ export default function ChatCard({
         )}
       </div>
 
-      <div className="relative z-10 backdrop-blur-lg">
-        <div className="max-w-4xl w-full mx-auto bg-[rgba(249,243,249,0.8)] dark:bg-[#221d27]/80 sticky bottom-0 backdrop-blur-md border-[#efbdeb] dark:border-[#322028]">
+      <div className="relative z-10">
+        <div className="max-w-4xl w-full mx-auto sticky bottom-0 backdrop-blur-md  ">
           <ChatInputBox
             message={message}
             setFileUrl={setFileUrl}

@@ -59,6 +59,7 @@ export default function Sidebar({
     hasMounted.current = true;
   }, []);
 
+  
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
@@ -140,10 +141,6 @@ export default function Sidebar({
     }
   };
 
-  const handleNewChat = () => {
-    router.push("/");
-  };
-
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -152,8 +149,8 @@ export default function Sidebar({
   const lightFilter =
     "brightness(0.2) saturate(100%) invert(19%) sepia(47%) saturate(3761%) hue-rotate(309deg) brightness(95%) contrast(88%)"; // for #b8387f
 
-  const darkFilter =
-    "brightness(0.9) saturate(200%) invert(85%) sepia(5%) saturate(120%) hue-rotate(300deg) contrast(105%)"; // tuned for #e7d0dd
+    const darkFilter =
+      "invert(89%) sepia(9%) saturate(388%) hue-rotate(286deg) brightness(96%) contrast(93%)";
   
   const appliedFilter = theme === "dark" ? darkFilter : lightFilter;
   
@@ -168,7 +165,7 @@ export default function Sidebar({
       }
       className={`${
         isCollapsed
-          ? "absolute left-0 top-0 z-30 h-[42px] flex items-center p-3 rounded-md"
+          ? "absolute left-0 top-0 z-30 h-[42px] flex items-center p-3 rounded-md mt-3 ml-2"
           : "relative h-full"
       } bg-[#f3e6f5] dark:bg-[#1d131b] flex flex-col overflow-hidden `}
     >
@@ -177,20 +174,23 @@ export default function Sidebar({
         <div className="flex items-center justify-around  h-full px-1.5 py-1">
           <button
             onClick={() => setIsCollapsed(false)}
-            className="p-1 text-[#a74576] dark dark:text-[#e7d0dd] dark:bg-[#19171d] hover:bg-[#f0cde4] dark:hover:bg-[#261922] rounded-md cursor-pointer"
+            className="min-w-[32px] min-h-[32px] p-1 text-[#a74576] dark:text-[#e7d0dd] dark:bg-[#19171d] hover:bg-[#f0cde4] dark:hover:bg-[#261922] rounded-md cursor-pointer"
             aria-label="Expand sidebar"
           >
-            <Image
-              src={sidebar}
-              alt="Sidebar Icon"
-              width={24}
-              height={24}
-              style={{
-                color: "transparent",
-                filter: mounted ? appliedFilter : undefined, // prevent hydration mismatch
-              }}
-            />
+            {mounted && (
+              <Image
+                src={sidebar}
+                alt="Sidebar Icon"
+                width={24}
+                height={24}
+                className="min-w-[24px] min-h-[24px]"
+                style={{
+                  filter: appliedFilter,
+                }}
+              />
+            )}
           </button>
+
           <div className="text-[#a74576] dark:text-[#e7d0dd]  hover:bg-[#f0cde4] dark:hover:bg-[#261922] p-1 rounded-md cursor-pointer">
             <svg
               className="w-5 h-5"
@@ -257,12 +257,13 @@ export default function Sidebar({
               </Link>
             </div>
 
+            <Link href={'/'}>
             <Button
-              onClick={() => handleNewChat()}
               className="w-full mt-2 bg-[#a23b67] hover:bg-[#d56a9d] dark:bg-[#3b1127] dark:hover:bg-[#791840] cursor-pointer text-white font-bold py-2 border border-[#8f3c66] rounded-lg shadow text-sm"
             >
               New Chat
             </Button>
+            </Link>
 
             {/* Search box */}
             <div className="text-sm font-normal">
@@ -304,7 +305,9 @@ export default function Sidebar({
                     <motion.div
                       key={thread.id}
                       className={`relative group cursor-pointer ${
-                        selectedThreadId === thread.id ? "bg-[#efcae3]" : ""
+                        selectedThreadId === thread.id
+                          ? "bg-[#efcae3] dark:bg-[#261922]"
+                          : ""
                       }`}
                       initial="rest"
                       animate="rest"
@@ -386,7 +389,9 @@ export default function Sidebar({
                       <motion.div
                         key={thread.id}
                         className={`relative group cursor-pointer ${
-                          selectedThreadId === thread.id ? "bg-[#efcae3]" : ""
+                          selectedThreadId === thread.id
+                            ? "bg-[#efcae3] dark:bg-[#261922]"
+                            : ""
                         }`}
                         initial="rest"
                         animate="rest"
@@ -423,7 +428,7 @@ export default function Sidebar({
                                 duration: 0.1,
                                 ease: "easeInOut",
                               }}
-                              className="relative z-10 flex gap-1 text-foreground"
+                              className="relative z-10 flex gap-1"
                             >
                               <span
                                 className="p-1 hover:bg-pink-300 dark:hover:bg-[#312630] rounded-md"
