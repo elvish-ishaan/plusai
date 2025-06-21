@@ -99,7 +99,7 @@ export default function ChatInputBox({
             {/* Send button */}
             <button
               disabled={isLoading ? false : isSendDisabled}
-              className={`rounded-lg p-2 transition h-9 w-9 flex items-center justify-center ${
+              className={`rounded-lg p-2 transition h-8 w-8 flex items-center justify-center mb-4 ${
                 isLoading
                   ? "bg-[#a23b67] hover:bg-[#d56698] text-pink-50 dark:bg-[#4b1f39] dark:hover:bg-[#7d1d48] cursor-pointer"
                   : isSendDisabled
