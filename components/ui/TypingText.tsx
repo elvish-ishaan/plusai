@@ -1,29 +1,53 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 type TypingTextProps = {
   text: string;
+  isPaused?: boolean;
 };
 
-const TypingText = ({ text }: TypingTextProps) => {
+const TypingText = ({ text, isPaused = false }: TypingTextProps) => {
   const [displayedText, setDisplayedText] = useState("");
+  const indexRef = useRef(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Clear interval safely
+  const clearTypingInterval = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
 
   useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < text.length) {
-        setDisplayedText((prev) => prev + text.charAt(i));
-        i++;
-      } else {
-        clearInterval(interval);
-      }
-    }, 10); // Speed of typing
-
-    return () => clearInterval(interval);
+    // Reset on new text
+    setDisplayedText("");
+    indexRef.current = 0;
+    clearTypingInterval();
   }, [text]);
+
+  useEffect(() => {
+    if (isPaused) {
+      clearTypingInterval();
+      return;
+    }
+
+    if (indexRef.current >= text.length) return;
+
+    intervalRef.current = setInterval(() => {
+      setDisplayedText((prev) => prev + text.charAt(indexRef.current));
+      indexRef.current += 1;
+
+      if (indexRef.current >= text.length) {
+        clearTypingInterval();
+      }
+    }, 10);
+
+    return () => clearTypingInterval();
+  }, [isPaused, text]);
 
   return (
     <motion.div
@@ -37,3 +61,4 @@ const TypingText = ({ text }: TypingTextProps) => {
 };
 
 export default TypingText;
+
