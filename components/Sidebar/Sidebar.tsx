@@ -142,8 +142,9 @@ export default function Sidebar({
   };
 
   const handleNewChat = () => {
-    router.push("/");
+    router.refresh(); // This will shallow refresh the current route
   };
+  
 
   const { theme } = useTheme();
 
