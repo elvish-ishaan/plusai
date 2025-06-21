@@ -201,13 +201,13 @@ export default function ChatCard({
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!isPaused && chatContainerRef.current) {
+    if ( chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
         top: chatContainerRef.current.scrollHeight,
         behavior: "smooth",
       });
     }
-  }, [chat, isLoading, isPaused]);
+  }, [chat, isLoading]);
 
 
   return (
