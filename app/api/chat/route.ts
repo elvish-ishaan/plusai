@@ -52,6 +52,22 @@ export async function POST(req: Request) {
     const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
 
     const session = await getServerSession(authOptions);
+    if(!session?.user){
+      return NextResponse.json({
+        success: true,
+        message: 'chat has been created',
+        genResponse:{
+          id: Math.round(Math.random() * 1000000).toString(),
+          prompt,
+          model,
+          response: llmRes.text,
+          provider: llmProvider,
+          threadId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
+      });
+    }
 
     let chat;
     if(session){
