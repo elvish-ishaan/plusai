@@ -121,7 +121,6 @@ export default function ChatCard({
         systemPrompt: "you are helpful assistant.",
         llmProvider: provider || "gemini",
       };
-      console.log("Sending chat request with body:", body);
       // Send request
       const res = await axios.post(`/api/chat`, body);
       if(!res.data.success){
