@@ -32,7 +32,6 @@ export default function ChatCard({
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const [isWebSearchEnabled, setIsWebSearchEnabled] = useState<boolean>(false);
   const { data: session } = useSession();
-  const [isPaused, setIsPaused] = useState<boolean>(false);
 
   // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
@@ -224,10 +223,7 @@ export default function ChatCard({
                   </div>
                   {chatItem.response && (
                     <div className="flex justify-start">
-                      <TypingText
-                        text={chatItem.response}
-                        isPaused={isPaused}
-                      />
+                      <TypingText text={chatItem.response} />
                     </div>
                   )}
                 </div>
@@ -258,8 +254,6 @@ export default function ChatCard({
             setModel={setModel}
             model={model}
             isLoading={isLoading}
-            isPaused={isPaused}
-            setIsPaused={setIsPaused}
           />
         </div>
       </div>
