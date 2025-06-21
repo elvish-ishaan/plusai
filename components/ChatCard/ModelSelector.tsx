@@ -4,39 +4,9 @@ import { ChevronDown, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/libs/utils";
 import { Input } from "../ui/input";
+import { models } from "@/libs/constants";
 
-const models = [
-  {
-    title: "Gemini 2.5 Flash",
-    name: "gemini-2.0-flash",
-    active: true,
-    provider: "gemini",
-  },
-  {
-    title: "Gemini 2.5 Pro",
-    name: "gemini-2.5-pro",
-    active: true,
-    provider: "gemini",
-  },
-  {
-    title: "GPT ImageGen",
-    name: "gpt imageGen",
-    active: true,
-    provider: "GPT",
-  },
-  {
-    title: "Claude 4 Sonnet",
-    name: "claude 4 sonnet",
-    active: true,
-    provider: "claude",
-  },
-  {
-    title: "DeepSeek R1 (Llama Distilled)",
-    name: "deepSeek R1 (Llama Distilled)",
-    active: true,
-    provider: "deepseek",
-  },
-];
+
 
 export default function ModelSelector({
   setModel,
@@ -96,7 +66,7 @@ export default function ModelSelector({
               </div>
 
               <div className="flex flex-col gap-1 max-h-48 overflow-y-auto custom-scrollbar">
-                {models.map((modelItem) => (
+                {models?.map((modelItem) => (
                   <button
                     key={modelItem.name}
                     onClick={() => {
