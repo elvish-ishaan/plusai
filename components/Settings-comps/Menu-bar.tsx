@@ -37,7 +37,7 @@ export default function Menubar() {
       <div className="md:hidden w-full">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex justify-between items-center w-full px-4 py-2 rounded-md bg-[#f2cbe9] dark:bg-[#302836] text-[#77347c] dark:text-white"
+          className="flex justify-between items-center w-full px-4 py-2 rounded-md bg-accent dark:bg-accent text-foreground dark:text-foreground"
         >
           {MenuItems.find((i) => i.value === active)?.name || "Select"}
           <ChevronDown
@@ -48,15 +48,15 @@ export default function Menubar() {
         </button>
 
         {isOpen && (
-          <div className="mt-2 space-y-1 bg-[#f8e7f5] dark:bg-[#2b1f2a] rounded-md ">
+          <div className="mt-2 space-y-1 bg-accent dark:bg-accent rounded-md ">
             {MenuItems.map((item) => (
               <button
                 key={item.value}
                 onClick={() => handleClick(item.value)}
                 className={`w-full text-left px-4 py-2 text-sm rounded-md ${
                   active === item.value
-                    ? "bg-[#f2e1f4] text-[#77347c] dark:bg-[#21141e] dark:text-white"
-                    : "hover:bg-[#f5ddef] dark:hover:bg-[#382733]"
+                    ? "bg-accent/80 text-foreground dark:bg-accent/80 dark:text-foreground"
+                    : "hover:bg-accent/80 dark:hover:bg-accent/80"
                 }`}
               >
                 {item.name}
@@ -70,7 +70,7 @@ export default function Menubar() {
       <div
         role="tablist"
         aria-orientation="horizontal"
-        className="hidden md:inline-flex h-10 items-center gap-1 rounded-lg bg-[#f2cbe9] dark:bg-[#302836] p-1 dark:text-white text-[#77347c] w-fit"
+        className="hidden md:inline-flex h-10 items-center gap-1 rounded-lg bg-accent dark:bg-accent p-1 dark:text-foreground text-foreground w-fit"
       >
         {MenuItems.map((item) => (
           <button
@@ -84,8 +84,8 @@ export default function Menubar() {
               disabled:pointer-events-none disabled:opacity-50 cursor-pointer
               ${
                 active === item.value
-                  ? "bg-[#f2e1f4] text-[#77347c] shadow dark:bg-[#21141e] dark:text-white"
-                  : "hover:bg-[#f5ddef] dark:hover:bg-[#2c222e]"
+                  ? "bg-accent/80 text-foreground shadow dark:bg-accent/80 dark:text-foreground"
+                  : "hover:bg-accent/80 dark:hover:bg-accent/80"
               }`}
           >
             {item.name}

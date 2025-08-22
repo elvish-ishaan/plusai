@@ -29,12 +29,12 @@ export default function Attachments() {
             <div className="flex items-center gap-2">
               <div className="flex flex-col">
                 <p className="text-sm font-medium">{attachment.id}</p>
-                <p className="text-xs text-[#a74576] dark:text-pink-300">
+                <p className="text-xs text-primary dark:text-primary">
                   {attachment.url}
                 </p>
               </div>
             </div>
-            <button className="bg-primary hover:bg-[#d56a9d] text-white font-bold py-2 px-4 rounded-lg shadow">
+            <button className="bg-primary hover:bg-primary/80 text-primary-foreground font-bold py-2 px-4 rounded-lg shadow">
               Delete
             </button>
           </div>
@@ -43,7 +43,7 @@ export default function Attachments() {
     );
   }
   return (
-    <div className="text-center mt-10 text-[#a74576] dark:text-pink-300 text-md ">
+    <div className="text-center mt-10 text-primary dark:text-primary text-md ">
       No attachments found
     </div>
   );

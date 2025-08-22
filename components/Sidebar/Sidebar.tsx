@@ -394,8 +394,8 @@ export default function Sidebar({
                         key={thread.id}
                         className={`relative group cursor-pointer ${
                           selectedThreadId === thread.id
-                            ? "bg-[#efcae3] dark:bg-[#261922]"
-                            : ""
+                            ? "bg-accent dark:bg-accent"
+                            : "bg-transparent"
                         }`}
                         initial="rest"
                         animate="rest"
@@ -404,7 +404,7 @@ export default function Sidebar({
                       >
                         <div className="relative flex justify-between items-center rounded-md px-2 py-1 overflow-hidden truncate">
                           <motion.div
-                            className="absolute inset-0 bg-white dark:bg-[#261922] z-0"
+                            className="absolute inset-0 bg-card dark:bg-card z-0"
                             variants={{
                               rest: { x: "100%" },
                               hover: { x: "0%" },
