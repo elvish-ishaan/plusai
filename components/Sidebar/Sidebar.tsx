@@ -3,8 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import logo from "../../public/logo.png";
-import darklogo from "../../public/darklogo.png";
 import sidebar from "../../public/sidebar.png";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { format, isToday, isYesterday } from "date-fns";
@@ -15,6 +13,7 @@ import UserInfo from "./UserInfo";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import Logo from "../Home/Logo";
 
 const groupByDate = (threads: Thread[]) => {
   const groups: Record<string, Thread[]> = {};   
@@ -141,10 +140,6 @@ export default function Sidebar({
     }
   };
 
-  const handleNewChat = () => {
-    router.refresh(); // This will shallow refresh the current route
-  };
-
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -245,19 +240,7 @@ export default function Sidebar({
                 className="flex items-center justify-center mx-auto pr-8"
               >
                 {/* Light logo (default) */}
-                <Image
-                  src={logo}
-                  alt="T3.chat"
-                  height={18}
-                  className="block dark:hidden"
-                />
-                {/* Dark logo */}
-                <Image
-                  src={darklogo}
-                  alt="T3.chat"
-                  height={15}
-                  className="hidden dark:block"
-                />
+                <Logo/>
               </Link>
             </div>
 

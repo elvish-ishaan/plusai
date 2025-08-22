@@ -110,10 +110,10 @@ export default function ChatInputBox({
               disabled={isLoading ? false : isSendDisabled}
               className={`rounded-lg p-2 transition h-8 w-8 flex items-center justify-center mb-4 ${
                 isLoading
-                  ? "bg-[#a23b67] hover:bg-[#d56698] text-pink-50 dark:bg-[#4b1f39] dark:hover:bg-[#7d1d48] cursor-pointer"
+                  ? "bg-primary hover:bg-secondary text-pink-50 dark:bg-primary dark:hover:bg-secondary cursor-pointer"
                   : isSendDisabled
-                  ? "bg-[#e4b9cb] text-white dark:bg-[#3a2134] dark:text-[#8d818b] dark:border-[#7c2e51] cursor-not-allowed"
-                  : "bg-[#a23b67] hover:bg-[#d56698] text-pink-50 dark:bg-[#4b1f39] dark:border-[#7c2e51] dark:hover:bg-[#7d1d48] cursor-pointer"
+                  ? "bg-[#e4b9cb] text-white dark:bg-secondary dark:text-white dark:border-primary cursor-not-allowed"
+                  : "bg-primary hover:bg-secondary text-pink-50 dark:bg-primary dark:border-primary dark:hover:bg-secondary cursor-pointer"
               }`}
               aria-label={isLoading ? (isPaused ? "Resume" : "Pause") : "Send"}
               onClick={() => {
