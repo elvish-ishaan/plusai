@@ -17,7 +17,7 @@ export default function Layout({children}: {children: React.ReactNode}) {
   }, [])
   
   return (
-    <div className="relative bg-[#f2e6f5] dark:bg-[#1d131a] h-screen overflow-hidden flex">
+    <div className="relative bg-background dark:bg-background h-screen overflow-hidden flex">
       {/* Sidebar */}
       <div className="hidden md:block">
         <Sidebar

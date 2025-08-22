@@ -28,8 +28,8 @@ export default function ChatMessageArea({
               <div
                 className={`rounded-lg px-4 py-2 max-w-[70%] text-sm ${
                   msg.sender === "user"
-                    ? "bg-[#f0c7e0] text-[#501854] rounded-br-none"
-                    : "bg-[#f6ebf4] text-[#7a375b] rounded-bl-none"
+                    ? "bg-primary text-primary-foreground rounded-br-none"
+                    : "bg-muted text-muted-foreground rounded-bl-none"
                 }`}
               >
                 {msg.text}
@@ -38,7 +38,7 @@ export default function ChatMessageArea({
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-[#f6ebf4] text-[#7a375b] px-4 py-2 rounded-lg max-w-[70%] text-sm">
+              <div className="bg-muted text-muted-foreground px-4 py-2 rounded-lg max-w-[70%] text-sm">
                 <ChatLoader />
               </div>
             </div>

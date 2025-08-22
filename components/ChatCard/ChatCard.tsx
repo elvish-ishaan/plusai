@@ -201,8 +201,8 @@ export default function ChatCard({
     <div
       className={`relative flex flex-col ${
         isCollapsed
-          ? "w-screen h-screen bg-[#f9f3f9] dark:bg-[#211c26]"
-          : "h-screen w-full md:mt-3.5 md:rounded-l-xl md:border dark:bg-[#221d27] border-[#efbdeb] dark:border-[#322028]  bg-[#f9f3f9] shadow-md"
+          ? "w-screen h-screen bg-background dark:bg-background"
+          : "h-screen w-full md:mt-3.5 md:rounded-l-xl md:border dark:bg-background border-border dark:border-border  bg-background shadow-md"
       } overflow-hidden`}
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />

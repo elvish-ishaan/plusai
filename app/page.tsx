@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 export default function Page() {
   return (
-    <Suspense fallback={<div className="p-4 text-gray-500">Loading...</div>}>
+    <Suspense fallback={<div className="p-4 text-muted-foreground">Loading...</div>}>
       <HomePage />
     </Suspense>
   );
