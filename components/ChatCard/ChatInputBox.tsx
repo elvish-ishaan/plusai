@@ -95,7 +95,7 @@ export default function ChatInputBox({
             placeholder={
               isLoading ? "Please wait..." : "Type your message here..."
             }
-            className="w-full resize-none bg-transparent text-sm text-[#a14a86] dark:text-[#91869b] placeholder-[#d088b5] dark:placeholder-[#91869b] focus:outline-none leading-6"
+            className="w-full resize-none bg-transparent text-sm text-foreground dark:text-foreground placeholder-muted-foreground dark:placeholder-muted-foreground focus:outline-none leading-6"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -159,9 +159,9 @@ export default function ChatInputBox({
               border-border dark:border-border
                 ${
                   selectedTool === "search"
-                    ? "bg-[#f4d6e7] dark:bg-[#322c38]"
-                    : "hover:bg-[#f4d6e7] dark:hover:bg-[#322c38]"
-                }  text-[#ac1668] dark:text-[#f9f8fb]`}
+                    ? "bg-accent dark:bg-accent"
+                    : "hover:bg-accent dark:hover:bg-accent"
+                }  text-primary dark:text-primary-foreground`}
               >
                 <Globe className="w-4 h-4" />
                 <span className="hidden sm:inline">Search</span>
@@ -180,7 +180,7 @@ export default function ChatInputBox({
                 }
               >
                 <label className="cursor-pointer relative">
-                  <Paperclip className="w-4 h-4 text-[#ac1668] dark:text-[#f9f8fb]" />
+                  <Paperclip className="w-4 h-4 text-primary dark:text-primary-foreground" />
                   <input
                     disabled={ session?.user?.id ? false : true }
                     type="file"

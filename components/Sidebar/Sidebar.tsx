@@ -15,6 +15,7 @@ import UserInfo from "./UserInfo";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import Logo from "../Home/Logo";
 
 const groupByDate = (threads: Thread[]) => {
   const groups: Record<string, Thread[]> = {};   
@@ -245,19 +246,7 @@ export default function Sidebar({
                 className="flex items-center justify-center mx-auto pr-8"
               >
                 {/* Light logo (default) */}
-                <Image
-                  src={logo}
-                  alt="T3.chat"
-                  height={18}
-                  className="block dark:hidden"
-                />
-                {/* Dark logo */}
-                <Image
-                  src={darklogo}
-                  alt="T3.chat"
-                  height={15}
-                  className="hidden dark:block"
-                />
+                <Logo/>
               </Link>
             </div>
 
