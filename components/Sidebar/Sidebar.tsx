@@ -3,8 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import logo from "../../public/logo.png";
-import darklogo from "../../public/darklogo.png";
 import sidebar from "../../public/sidebar.png";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { format, isToday, isYesterday } from "date-fns";
@@ -140,10 +138,6 @@ export default function Sidebar({
     } catch (error) {
       console.error("Failed to toggle pin:", error);
     }
-  };
-
-  const handleNewChat = () => {
-    router.refresh(); // This will shallow refresh the current route
   };
 
   const { theme } = useTheme();
