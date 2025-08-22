@@ -25,7 +25,7 @@ export default function Switch({
     <button
       onClick={toggleSwitch}
       className={`w-11 h-6 rounded-full flex items-center transition-colors duration-300 ease-in-out
-        ${isChecked ? "bg-[#a74576]" : "bg-gray-700/60"}
+        ${isChecked ? "bg-primary" : "bg-muted"}
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
       role="switch"
       aria-checked={isChecked}

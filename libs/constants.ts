@@ -1,3 +1,43 @@
+// Color scheme constants
+export const colors = {
+  // Primary color scheme
+  primary: {
+    main: '#6a5bcd',
+    light: '#7c6fd8',
+    dark: '#5a4bbd',
+    contrast: '#ffffff'
+  },
+  // Secondary color scheme
+  secondary: {
+    main: '#8a2ce2',
+    light: '#9d4edd',
+    dark: '#7a1cd2',
+    contrast: '#ffffff'
+  },
+  // Text colors
+  text: {
+    primary: '#1a1a1a',
+    secondary: '#6c757d',
+    disabled: '#a1a1aa',
+    inverse: '#ffffff'
+  },
+  // Background colors
+  background: {
+    primary: '#ffffff',
+    secondary: '#f8f9fa',
+    dark: '#0f0f23',
+    card: '#ffffff',
+    cardDark: '#1a1a2e'
+  },
+  // Border colors
+  border: {
+    light: '#e9ecef',
+    dark: '#2d2d44',
+    primary: '#6a5bcd',
+    secondary: '#8a2ce2'
+  }
+} as const;
+
 export const models = [
   // Gemini
   {

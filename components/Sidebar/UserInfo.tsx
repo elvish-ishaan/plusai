@@ -14,18 +14,18 @@ export default function UserInfo() {
     return (
       <div 
       onClick={() => router.push("/settings/account")}
-      className="p-4 border-[#e6c4de] mb-3">
-        <div className="flex items-center space-x-3 hover:bg-white dark:hover:bg-[#261922] px-2 py-3 rounded-lg cursor-pointer">
+      className="p-4 border-sidebar-border mb-3">
+        <div className="flex items-center space-x-3 hover:bg-sidebar-accent px-2 py-3 rounded-lg cursor-pointer">
           <Avatar>
-            <AvatarFallback className="bg-blue-600 text-white">
+            <AvatarFallback className="bg-primary text-primary-foreground">
               {session.user.email?.charAt(0).toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <span className="text-xs text-[#a74576] block truncate">
+            <span className="text-xs text-sidebar-foreground block truncate">
               {session.user.email}
             </span>
-            <p className="text-xs text-[#a74576]">Free</p>
+            <p className="text-xs text-sidebar-foreground">Free</p>
           </div>
         </div>
       </div>
@@ -36,10 +36,10 @@ export default function UserInfo() {
   return (
     <div
       onClick={() => router.push("/auth")}
-      className="p-4 border-[#e6c4de] hover:bg-white dark:hover:bg-[#261922] m-3 rounded-lg cursor-pointer"
+      className="p-4 border-sidebar-border hover:bg-sidebar-accent m-3 rounded-lg cursor-pointer"
     >
-      <button className="flex items-center text-[#a74576] text-md font-medium gap-2 cursor-pointer ml-2">
-        <LogOut className="w-4 h-4 text-[#a74576]" />
+      <button className="flex items-center text-sidebar-foreground text-md font-medium gap-2 cursor-pointer ml-2">
+        <LogOut className="w-4 h-4 text-sidebar-foreground" />
         <span className="pl-4">Login</span>
       </button>
     </div>

@@ -71,42 +71,69 @@ body {
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.81 0.1 252);
-  --chart-2: oklch(0.62 0.19 260);
-  --chart-3: oklch(0.55 0.22 263);
-  --chart-4: oklch(0.49 0.22 264);
-  --chart-5: oklch(0.42 0.18 266);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Base colors */
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  
+  /* Card colors */
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  
+  /* Popover colors */
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  
+  /* Primary color scheme - #6a5bcd */
+  --primary: #6a5bcd;
+  --primary-foreground: #ffffff;
+  
+  /* Secondary color scheme - #8a2ce2 */
+  --secondary: #8a2ce2;
+  --secondary-foreground: #ffffff;
+  
+  /* Muted colors */
+  --muted: #f8f9fa;
+  --muted-foreground: #6c757d;
+  
+  /* Accent colors */
+  --accent: #f3f4f6;
+  --accent-foreground: #374151;
+  
+  /* Destructive colors */
+  --destructive: #dc3545;
+  --destructive-foreground: #ffffff;
+  
+  /* Border and input colors */
+  --border: #e9ecef;
+  --input: #ffffff;
+  --ring: #6a5bcd;
+  
+  /* Chart colors */
+  --chart-1: #6a5bcd;
+  --chart-2: #8a2ce2;
+  --chart-3: #a855f7;
+  --chart-4: #c084fc;
+  --chart-5: #d8b4fe;
+  
+  /* Sidebar colors */
+  --sidebar: #f8f9fa;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #6a5bcd;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e9ecef;
+  --sidebar-accent-foreground: #374151;
+  --sidebar-border: #dee2e6;
+  --sidebar-ring: #6a5bcd;
+  
+  /* Typography */
   --font-sans: Geist, sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
   --font-mono: Geist Mono, monospace;
+  
+  /* Border radius */
   --radius: 0.625rem;
+  
+  /* Shadows */
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1),
@@ -122,85 +149,73 @@ body {
 }
 
 .dark {
-  --background: oklch(0.255 0.017 290);
-  /* #1E1A24 - new darker base */
-  --foreground: oklch(0.876 0 0);
-  /* Main text color from image (light gray) */
-
-  --card: oklch(0.255 0.017 290);
-  /* Card background, to match new darker background */
-  --card-foreground: oklch(0.876 0 0);
-  /* Text on card */
-
-  --popover: oklch(0.25 0.02 283);
-  /* Popover background - kept previous, adjust if needed */
-  --popover-foreground: oklch(0.876 0 0);
-  /* Text on popover */
-  --primary: oklch(0.263 0.108 351.5);
-  /* Red color for "New Chat" button from hex #43132A */
-  --primary-foreground: oklch(1 0 0);
-  /* Text on "New Chat" button (white) */
-
-  --secondary: oklch(0.35 0.05 285);
-  /* A muted purple for secondary elements/buttons - kept previous */
-  --secondary-foreground: oklch(0.95 0 0);
-  /* Light text for secondary elements - kept previous */
-
-  --muted: oklch(0.255 0.017 290);
-  /* Background for muted elements, can be same as main */
-  --muted-foreground: oklch(0.629 0 0);
-  /* Muted text color (e.g., "Older", "Last 30 days") */
-
-  --accent: oklch(0.452 0.131 287.3);
-  /* Accent color, can be same as primary */
-  --accent-foreground: oklch(1 0 0);
-  /* Text on accent elements */
-
-  --destructive: oklch(0.55 0.22 25);
-  /* Destructive action color - kept previous */
-
-  --border: oklch(0.3 0.015 283);
-  /* Darker gray for general borders */
-  --input: oklch(0.346 0.026 283.3);
-  /* Input field background - lighter and more purple */
-  --ring: oklch(0.48 0.11 287.3);
-  /* Focus ring color, related to new primary chroma */
-
-  /* Sidebar specific colors from image */
-  --sidebar: oklch(0.194 0.011 300.94);
-  /* #130d11 */
-  --sidebar-foreground: #f5d0fe;
-  /* Updated color */
-
-  --sidebar-primary: oklch(62.319% 0.2396 327.389);
-  /* Sidebar primary elements - matched to new primary */
-  --sidebar-primary-foreground: oklch(1 0 0);
-  /* Text on sidebar primary elements (white) */
-
-  --sidebar-accent: #261922;
-  /* Updated hover color */
-  --sidebar-accent-foreground: oklch(1 0 0);
-  /* Text on sidebar accent elements */
-
-  --sidebar-border: oklch(0.3 0.015 283);
-  /* Darker gray for sidebar borders */
-  --sidebar-ring: oklch(0.48 0.11 287.3);
-  /* Sidebar focus ring - matched to general focus ring */
-
+  /* Base colors */
+  --background: #0f0f23;
+  --foreground: #ffffff;
+  
+  /* Card colors */
+  --card: #1a1a2e;
+  --card-foreground: #ffffff;
+  
+  /* Popover colors */
+  --popover: #1a1a2e;
+  --popover-foreground: #ffffff;
+  
+  /* Primary color scheme - #6a5bcd with dark mode adjustments */
+  --primary: #7c6fd8;
+  --primary-foreground: #ffffff;
+  
+  /* Secondary color scheme - #8a2ce2 with dark mode adjustments */
+  --secondary: #9d4edd;
+  --secondary-foreground: #ffffff;
+  
+  /* Muted colors */
+  --muted: #1a1a2e;
+  --muted-foreground: #a1a1aa;
+  
+  /* Accent colors */
+  --accent: #2d2d44;
+  --accent-foreground: #e4e4e7;
+  
+  /* Destructive colors */
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  
+  /* Border and input colors */
+  --border: #2d2d44;
+  --input: #1a1a2e;
+  --ring: #7c6fd8;
+  
+  /* Chart colors */
+  --chart-1: #7c6fd8;
+  --chart-2: #9d4edd;
+  --chart-3: #b565f7;
+  --chart-4: #c084fc;
+  --chart-5: #d8b4fe;
+  
+  /* Sidebar colors */
+  --sidebar: #0f0f23;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #7c6fd8;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2d2d44;
+  --sidebar-accent-foreground: #e4e4e7;
+  --sidebar-border: #2d2d44;
+  --sidebar-ring: #7c6fd8;
+  
   /* Custom scrollbar variables for dark mode */
-  --scrollbar-thumb-dark: oklch(0.5 0.02 270);
-  --scrollbar-thumb-hover-dark: oklch(0.6 0.025 270);
-  --scrollbar-track-dark: oklch(0.235 0.017 290);
+  --scrollbar-thumb-dark: #4a4a6a;
+  --scrollbar-thumb-hover-dark: #5a5a7a;
+  --scrollbar-track-dark: #0f0f23;
 }
 
-/* Tailwind-compatible pink scrollbar */
+/* Tailwind-compatible purple scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #ec4899;
-  /* Tailwind pink-500 */
+  background-color: #6a5bcd;
   border-radius: 10px;
 }
 
@@ -211,10 +226,8 @@ body {
 /* Firefox scrollbar */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #ec4899 transparent;
+  scrollbar-color: #6a5bcd transparent;
 }
-
-
 
 /* global.css or tailwind.css */
 .custom-scroll::-webkit-scrollbar {
@@ -222,6 +235,6 @@ body {
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-  background-color: #f0c7e0;
+  background-color: #8a2ce2;
   border-radius: 10px;
 }
