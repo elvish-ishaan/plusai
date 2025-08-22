@@ -32,11 +32,11 @@ export default function DeleteModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-      <div className="bg-[#f9f3f9] dark:bg-[#21141e] rounded-lg shadow-xl p-6 w-[500px]">
-        <h2 className="text-lg font-semibold text-[#501854] dark:text-[#ffffff]">
+      <div className="bg-card dark:bg-card rounded-lg shadow-xl p-6 w-[500px]">
+        <h2 className="text-lg font-semibold text-card-foreground">
           Delete Thread
         </h2>
-        <p className="mt-2 text-[#ac1668] dark:text-[#e7d0dd]">
+        <p className="mt-2 text-card-foreground">
           Are you sure you want to delete <strong>{threadTitle}</strong>? This
           action cannot be undone.
         </p>
@@ -44,13 +44,13 @@ export default function DeleteModal({
         <div className="mt-6 flex justify-end space-x-3">
           <button
             onClick={onClose}
-            className="text-[#7a375b] dark:text-[#ffffff] hover:bg-[#efcae3] py-2 px-3 rounded-md"
+            className="text-card-foreground hover:bg-accent py-2 px-3 rounded-md"
           >
             Cancel
           </button>
           <button
             onClick={onDelete}
-            className="bg-[#f7086c]  dark:bg-[#9d174d] text-white px-4 py-1.5 rounded-md shadow hover:bg-[#e6006b] transition cursor-pointer"
+            className="bg-destructive text-destructive-foreground px-4 py-1.5 rounded-md shadow hover:bg-destructive/90 transition cursor-pointer"
           >
             Delete
           </button>
