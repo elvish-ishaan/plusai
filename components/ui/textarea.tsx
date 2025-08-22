@@ -10,14 +10,14 @@ function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
         "flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs outline-none transition-[color,box-shadow] md:text-sm",
 
         // Light mode
-        "border-[#e7c1dc] text-[#ac1668] placeholder:text-[#ac1668]",
+        "border-border text-foreground placeholder:text-muted-foreground",
 
         // Dark mode
-        "dark:border-[#e7c1dc] dark:text-[#e7d0dd] dark:placeholder:text-[#e7d0dd] dark:bg-input/30",
+        "dark:border-border dark:text-foreground dark:placeholder:text-muted-foreground dark:bg-input",
 
         // Focus styles
-        "focus-visible:ring-[0.6px] focus-visible:ring-[#db2777] focus-visible:border-[#db2777]",
-        "dark:focus-visible:ring-[#db2777] dark:focus-visible:border-[#db2777]",
+        "focus-visible:ring-[0.6px] focus-visible:ring-ring focus-visible:border-ring",
+        "dark:focus-visible:ring-ring dark:focus-visible:border-ring",
 
         // Accessibility & disabled states
         "disabled:cursor-not-allowed disabled:opacity-50",

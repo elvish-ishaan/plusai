@@ -17,7 +17,7 @@ export default function ScrollToBottomButton({
           exit={{ opacity: 0, y: 50 }}
           transition={{ duration: 0.3 }}
           onClick={onClick}
-          className="fixed bottom-28 right-6 z-50 bg-[#ecb3df] dark:bg-[#332230] text-black dark:text-white p-2 rounded-full shadow-md hover:scale-105 transition-transform"
+          className="fixed bottom-28 right-6 z-50 bg-secondary text-secondary-foreground p-2 rounded-full shadow-md hover:scale-105 transition-transform"
         >
           <ChevronDown size={20} />
         </motion.button>
