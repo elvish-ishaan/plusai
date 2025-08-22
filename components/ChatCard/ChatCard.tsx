@@ -197,12 +197,25 @@ export default function ChatCard({
     }
   };
 
+  //Automatically scroll to bottom when chat updates
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if ( chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [chat, isLoading]);
+
+
   return (
     <div
       className={`relative flex flex-col ${
         isCollapsed
-          ? "w-screen h-screen bg-[#f9f3f9] dark:bg-[#211c26]"
-          : "h-screen w-full md:mt-3.5 md:rounded-l-xl md:border dark:bg-[#221d27] border-[#efbdeb] dark:border-[#322028]  bg-[#f9f3f9] shadow-md"
+          ? "w-screen h-screen bg-background dark:bg-background"
+          : "h-screen w-full md:mt-3.5 md:rounded-l-xl md:border dark:bg-background border-border dark:border-border  bg-background shadow-md"
       } overflow-hidden`}
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
@@ -212,11 +225,14 @@ export default function ChatCard({
           <WelcomeScreen onPromptSelect={handlePromptSelect} />
         ) : (
           <div className="relative h-full">
-            <div className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-42 pr-2">
+            <div
+              ref={chatContainerRef}
+              className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-42 pr-2"
+            >
               {chat?.map((chatItem) => (
                 <div
                   key={chatItem.id}
-                  className="flex flex-col space-y-4 mb-3 mt-8 px-4"
+                  className="flex flex-col space-y-4 mb-3 mt-8 px-2"
                 >
                   <div className="flex justify-end">
                     <PromptBubble prompt={chatItem?.prompt} />
@@ -231,8 +247,10 @@ export default function ChatCard({
 
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="p-3 animate-pulse">
-                    <ChatLoader />
+                  <div className="flex flex-col space-y-4 mb-3 mt-8 px-4">
+                    <div className="p-3 animate-pulse">
+                      <ChatLoader />
+                    </div>
                   </div>
                 </div>
               )}

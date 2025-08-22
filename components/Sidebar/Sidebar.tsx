@@ -141,6 +141,10 @@ export default function Sidebar({
     }
   };
 
+  const handleNewChat = () => {
+    router.refresh(); // This will shallow refresh the current route
+  };
+
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -167,14 +171,14 @@ export default function Sidebar({
         isCollapsed
           ? "absolute left-0 top-0 z-30 h-[42px] flex items-center p-3 rounded-md mt-3 ml-2"
           : "relative h-full"
-      } bg-[#f3e6f5] dark:bg-[#1d131b] flex flex-col overflow-hidden `}
+      } bg-sidebar dark:bg-sidebar flex flex-col overflow-hidden `}
     >
       {isCollapsed ? (
         // Collapsed is present in the sidebar
         <div className="flex items-center justify-around  h-full px-1.5 py-1">
           <button
             onClick={() => setIsCollapsed(false)}
-            className="min-w-[32px] min-h-[32px] p-1 text-[#a74576] dark:text-[#e7d0dd] dark:bg-[#19171d] hover:bg-[#f0cde4] dark:hover:bg-[#261922] rounded-md cursor-pointer"
+            className="min-w-[32px] min-h-[32px] p-1 text-sidebar-foreground hover:bg-sidebar-accent rounded-md cursor-pointer"
             aria-label="Expand sidebar"
           >
             {mounted && (
@@ -191,7 +195,7 @@ export default function Sidebar({
             )}
           </button>
 
-          <div className="text-[#a74576] dark:text-[#e7d0dd]  hover:bg-[#f0cde4] dark:hover:bg-[#261922] p-1 rounded-md cursor-pointer">
+          <div className="text-sidebar-foreground hover:bg-sidebar-accent p-1 rounded-md cursor-pointer">
             <svg
               className="w-5 h-5"
               fill="none"
@@ -202,7 +206,7 @@ export default function Sidebar({
               <path d="M21 21l-4.35-4.35m1.65-5.65a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <div className="text-[#a74576] dark:text-[#e7d0dd]  hover:bg-[#f0cde4] dark:hover:bg-[#261922] p-1 rounded-md cursor-pointer">
+          <div className="text-sidebar-foreground hover:bg-sidebar-accent p-1 rounded-md cursor-pointer">
             <svg
               className="w-5 h-5"
               fill="none"
@@ -222,7 +226,7 @@ export default function Sidebar({
             <div className="relative flex items-center justify-between">
               <button
                 onClick={() => setIsCollapsed(true)}
-                className="p-1 text-[#a74576] hover:bg-[#f0cde4] dark:text-white dark:hover:bg-[#2b222c] rounded-md"
+                className="p-1 text-sidebar-foreground hover:bg-sidebar-accent rounded-md"
                 aria-label="Collapse sidebar"
               >
                 <Image
@@ -259,7 +263,7 @@ export default function Sidebar({
 
             <Link href={'/'}>
             <Button
-              className="w-full mt-2 bg-[#a23b67] hover:bg-[#d56a9d] dark:bg-[#3b1127] dark:hover:bg-[#791840] cursor-pointer text-white font-bold py-2 border border-[#8f3c66] rounded-lg shadow text-sm"
+              className="w-full mt-2"
             >
               New Chat
             </Button>
@@ -267,9 +271,9 @@ export default function Sidebar({
 
             {/* Search box */}
             <div className="text-sm font-normal">
-              <div className="flex items-center gap-3 text-[#a74576] border-b border-[#efbdeb] dark:border-[#322028] px-1 py-2  transition">
+              <div className="flex items-center gap-3 text-sidebar-foreground border-b border-sidebar-border px-1 py-2 transition">
                 <svg
-                  className="w-4 h-4 text-[#ac1668] dark:text-[#e7d0dd]"
+                  className="w-4 h-4 text-sidebar-foreground"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -280,7 +284,7 @@ export default function Sidebar({
                 <input
                   type="search"
                   placeholder="Search your threads..."
-                  className="outline-none border-none dark:bg-[#1b131a] dark:placeholder-[#81727b] dark:text-white"
+                  className="outline-none border-none bg-transparent text-sidebar-foreground placeholder:text-muted-foreground"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   spellCheck={false}
@@ -297,7 +301,7 @@ export default function Sidebar({
             {/* Show pinned section only if there are pinned threads */}
             {pinnedThreads.length > 0 && (
               <div>
-                <h4 className="text-xs font-medium text-[#560f2b] dark:text-[#c46095] my-1.5 pl-1">
+                <h4 className="text-xs font-medium text-muted-foreground my-1.5 pl-1">
                   Pinned
                 </h4>
                 <div className="space-y-0.5 mt-2">
@@ -306,7 +310,7 @@ export default function Sidebar({
                       key={thread.id}
                       className={`relative group cursor-pointer ${
                         selectedThreadId === thread.id
-                          ? "bg-[#efcae3] dark:bg-[#261922]"
+                          ? "bg-sidebar-accent"
                           : ""
                       }`}
                       initial="rest"
@@ -316,14 +320,14 @@ export default function Sidebar({
                     >
                       <div className="relative flex justify-between items-center rounded-md px-2 py-1 overflow-hidden truncate">
                         <motion.div
-                          className="absolute inset-0 bg-white dark:bg-[#261922] z-0"
+                          className="absolute inset-0 bg-sidebar-accent z-0"
                           variants={{
                             rest: { x: "100%" },
                             hover: { x: "0%" },
                           }}
                           transition={{ duration: 0.1, ease: "easeInOut" }}
                         />
-                        <div className="relative z-10 flex items-center truncate text-[#ac1668] dark:text-[#e7d0dd]">
+                        <div className="relative z-10 flex items-center truncate text-sidebar-foreground">
                           <Link href={`/chat/${thread.id}`}>
                             {!isCollapsed ? (
                               <span className="text-sm font-medium">
@@ -344,7 +348,7 @@ export default function Sidebar({
                             className="relative z-10 flex gap-1 text-foreground"
                           >
                             <span
-                              className="p-1 hover:bg-pink-300 dark:hover:bg-[#312630] rounded-md"
+                              className="p-1 hover:bg-sidebar-accent rounded-md"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 togglePinThread(thread.id, thread.pinned);
@@ -353,7 +357,7 @@ export default function Sidebar({
                               <PinOff className="w-4 h-4 cursor-pointer" />
                             </span>
                             <span
-                              className="p-1 hover:bg-pink-300 dark:hover:bg-[#611837] rounded-md"
+                              className="p-1 hover:bg-sidebar-accent rounded-md"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setThreadToDelete(thread.id);
@@ -373,14 +377,14 @@ export default function Sidebar({
 
             {/* Regular threads section below */}
             {Object.keys(grouped).length === 0 && pinnedThreads.length === 0 ? (
-              <p className="text-xs text-[#560f2b] dark:text-[#c46095] pl-1">
+              <p className="text-xs text-muted-foreground pl-1">
                 No threads found
               </p>
             ) : (
               Object.entries(grouped).map(([dateLabel, threads]) => (
                 <div key={dateLabel}>
                   {!isCollapsed && (
-                    <h4 className="text-xs font-medium text-[#560f2b] dark:text-[#c46095] my-1.5 pl-1">
+                    <h4 className="text-xs font-medium text-muted-foreground my-1.5 pl-1">
                       {dateLabel}
                     </h4>
                   )}
@@ -390,8 +394,8 @@ export default function Sidebar({
                         key={thread.id}
                         className={`relative group cursor-pointer ${
                           selectedThreadId === thread.id
-                            ? "bg-[#efcae3] dark:bg-[#261922]"
-                            : ""
+                            ? "bg-accent dark:bg-accent"
+                            : "bg-transparent"
                         }`}
                         initial="rest"
                         animate="rest"
@@ -400,14 +404,14 @@ export default function Sidebar({
                       >
                         <div className="relative flex justify-between items-center rounded-md px-2 py-1 overflow-hidden truncate">
                           <motion.div
-                            className="absolute inset-0 bg-white dark:bg-[#261922] z-0"
+                            className="absolute inset-0 bg-card dark:bg-card z-0"
                             variants={{
                               rest: { x: "100%" },
                               hover: { x: "0%" },
                             }}
                             transition={{ duration: 0.1, ease: "easeInOut" }}
                           />
-                          <div className="relative z-10 flex items-center truncate text-[#ac1668] dark:text-[#e7d0dd]">
+                          <div className="relative z-10 flex items-center truncate text-sidebar-foreground">
                             <Link href={`/chat/${thread.id}`}>
                               {!isCollapsed ? (
                                 <span className="text-sm font-medium">
@@ -431,7 +435,7 @@ export default function Sidebar({
                               className="relative z-10 flex gap-1"
                             >
                               <span
-                                className="p-1 hover:bg-pink-300 dark:hover:bg-[#312630] rounded-md"
+                                className="p-1 hover:bg-sidebar-accent rounded-md"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   togglePinThread(thread.id, thread.pinned);
@@ -440,7 +444,7 @@ export default function Sidebar({
                                 <Pin className="w-4 h-4 cursor-pointer" />
                               </span>
                               <span
-                                className="p-1 hover:bg-pink-300 dark:hover:bg-[#611837] rounded-md"
+                                className="p-1 hover:bg-sidebar-accent rounded-md"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setThreadToDelete(thread.id);

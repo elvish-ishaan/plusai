@@ -1,3 +1,38 @@
+// Color scheme constants
+export const colors = {
+  primary: {
+    main: 'var(--primary)',
+    light: 'var(--primary)',
+    dark: 'var(--primary)',
+    contrast: 'var(--primary-foreground)'
+  },
+  secondary: {
+    main: 'var(--secondary)',
+    light: 'var(--secondary)',
+    dark: 'var(--secondary)',
+    contrast: 'var(--secondary-foreground)'
+  },
+  text: {
+    primary: 'var(--foreground)',
+    secondary: 'var(--muted-foreground)',
+    disabled: 'var(--muted-foreground)',
+    inverse: 'var(--background)'
+  },
+  background: {
+    primary: 'var(--background)',
+    secondary: 'var(--muted)',
+    dark: 'var(--background)',
+    card: 'var(--card)',
+    cardDark: 'var(--card)'
+  },
+  border: {
+    light: 'var(--border)',
+    dark: 'var(--border)',
+    primary: 'var(--primary)',
+    secondary: 'var(--secondary)'
+  }
+};
+
 export const models = [
   // Gemini
   {

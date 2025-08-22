@@ -28,7 +28,7 @@ export default function Customization() {
   };
 
   return (
-    <div className=" space-y-5 text-[#501854] dark:text-white">
+    <div className=" space-y-5 text-foreground dark:text-foreground">
       {/* Customize T3 Chat Section */}
       <section className="space-y-6">
         <h2 className="text-xl font-bold">Customize T3 Chat</h2>
@@ -39,7 +39,7 @@ export default function Customization() {
             <Input
               maxLength={50}
               placeholder="Enter your name"
-              className="mt-1 border border-[#e7c1dc]  "
+              className="mt-1 border border-border  "
             />
           </div>
 
@@ -60,13 +60,13 @@ export default function Customization() {
               onChange={(e) => setTraitInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && addTrait(traitInput)}
               placeholder="Type a trait and press Enter or Tab..."
-              className="mt-1 border-[#e7c1dc] "
+              className="mt-1 border-border "
             />
             <div className="flex flex-wrap gap-2 mt-2">
               {traits.map((trait) => (
                 <span
                   key={trait}
-                  className="bg-[#3e3343] text-white px-2 py-1 rounded-full text-sm"
+                  className="bg-accent text-foreground px-2 py-1 rounded-full text-sm"
                 >
                   {trait} +
                 </span>
@@ -81,13 +81,13 @@ export default function Customization() {
             <Textarea
               placeholder="Interests, values, or preferences to keep in mind"
               maxLength={3000}
-              className="mt-1 border-[#e7c1dc] "
+              className="mt-1 border-border "
             />
           </div>
 
           <div className="flex gap-4">
             <Button variant="secondary">Load Legacy Data</Button>
-            <Button className="bg-[#a74576] hover:bg-[#913d68]">
+            <Button className="bg-primary hover:bg-primary/80">
               Save Preferences
             </Button>
           </div>
@@ -95,7 +95,7 @@ export default function Customization() {
       </section>
 
       {/* Visual Options Section */}
-      <section className="space-y-6 text-[#77347c] dark:text-white">
+      <section className="space-y-6 text-foreground dark:text-foreground">
         <h2 className="text-xl font-bold">Visual Options</h2>
 
         <div className="space-y-4">
@@ -123,7 +123,7 @@ export default function Customization() {
             >
               <div className="flex-1">
                 <p className="font-medium">{item.title}</p>
-                <p className="text-sm text-[#ac1668] dark:text-[#e7d0dd]">
+                <p className="text-sm text-primary dark:text-primary">
                   {item.desc}
                 </p>
               </div>
@@ -137,10 +137,10 @@ export default function Customization() {
           <div className="space-y-4">
             <div>
               <p className="font-medium">Main Text Font</p>
-              <p className="text-sm text-[#ac1668] dark:text-[#e7d0dd]">
+              <p className="text-sm text-primary dark:text-primary">
                 Used in general text throughout the app.
               </p>
-              <select className="bg-[#f5ddef] border border-[#e7c1dc]  dark:bg-[#1e1b20] p-2 rounded-md w-full mt-1 text-[#77347c] dark:text-white">
+              <select className="bg-accent border border-border  dark:bg-card p-2 rounded-md w-full mt-1 text-foreground dark:text-foreground">
                 <option>System Font</option>
                 <option>Sans-serif</option>
                 <option>Serif</option>
@@ -149,10 +149,10 @@ export default function Customization() {
 
             <div>
               <p className="font-medium">Code Font</p>
-              <p className="text-sm text-[#ac1668] dark:text-[#e7d0dd]">
+              <p className="text-sm text-primary dark:text-primary">
                 Used in code blocks and inline code in chat messages.
               </p>
-              <select className="bg-[#f5ddef] border border-[#e7c1dc]  dark:bg-[#1e1b20] p-2 rounded-md w-full mt-1 text-[#77347c] dark:text-white">
+              <select className="bg-accent border border-border  dark:bg-card p-2 rounded-md w-full mt-1 text-foreground dark:text-foreground">
                 <option>Select font</option>
                 <option>Monospace</option>
                 <option>Fira Code</option>
@@ -162,37 +162,37 @@ export default function Customization() {
 
           <div>
             <p className="font-medium">Fonts Preview</p>
-            <div className="border border-dashed border-[#e9c7e2]  dark:border-[#302029]  rounded-md p-4 text-sm bg-[#f0ddf4] dark:bg-[#2d2530]">
-              <div className="mb-2 bg-[#f5d0ea] dark:bg-[#362d3d] p-2 rounded">
-                <p className="text-[#77347c] dark:text-white">
+            <div className="border border-dashed border-border  dark:border-border  rounded-md p-4 text-sm bg-accent dark:bg-accent">
+              <div className="mb-2 bg-accent dark:bg-accent p-2 rounded">
+                <p className="text-foreground dark:text-foreground">
                   Can you write me a simple hello world program?
                 </p>
               </div>
               <p className="mb-1">Sure, here you go:</p>
-              <div className="bg-white dark:bg-[#3a2e3f] rounded font-mono text-xs">
-                <div className="bg-[#f1c4e6] dark:bg-[#362d3d] dark:text-white text-[#77347c] pl-2 text-sm  font-normal w-full inline-block rounded-t p-1">
+              <div className="bg-card dark:bg-card rounded font-mono text-xs">
+                <div className="bg-accent dark:bg-accent dark:text-foreground text-foreground pl-2 text-sm  font-normal w-full inline-block rounded-t p-1">
                   typescript
                 </div>
-                <pre className="pt-2 text-sm p-2 bg-white dark:bg-[#17141c]">
-                  <span className="text-purple-600 dark:text-purple-400">
+                <pre className="pt-2 text-sm p-2 bg-card dark:bg-card">
+                  <span className="text-primary dark:text-primary">
                     function{" "}
                   </span>
-                  <span className="text-pink-600 dark:text-pink-400">
+                  <span className="text-primary dark:text-primary">
                     greet
                   </span>
                   (
-                  <span className="text-cyan-600 dark:text-cyan-400">
+                  <span className="text-primary dark:text-primary">
                     name: string
                   </span>
                   ) {"{"}
                   <br />
-                  <span className="ml-4 text-[#77347c] dark:text-white">
+                  <span className="ml-4 text-foreground dark:text-foreground">
                     console.log(`Hello, $&#123;name&#125;`);
                   </span>
                   <br />
                   {"}"}
                   <br />
-                  <span className="text-pink-600 dark:text-pink-300">
+                  <span className="text-primary dark:text-primary">
                     return true;
                   </span>
                 </pre>

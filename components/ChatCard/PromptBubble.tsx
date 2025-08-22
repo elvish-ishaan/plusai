@@ -13,8 +13,8 @@ export default function PromptBubble({ prompt }: { prompt: string }) {
     >
       {/* Prompt bubble */}
       <motion.div
-        className={`p-3 bg-[#f5dcf0] dark:bg-[#2c2633] dark:text-white text-[#492c61] rounded-lg max-w-xs md:max-w-md lg:max-w-lg cursor-pointer ${
-          hovered ? "bg-[#f3cde8]" : ""
+        className={`p-3 bg-accent dark:bg-accent dark:text-foreground text-foreground rounded-lg max-w-xs md:max-w-md lg:max-w-lg cursor-pointer ${
+          hovered ? "bg-accent/80" : ""
         }`}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -37,29 +37,29 @@ export default function PromptBubble({ prompt }: { prompt: string }) {
             <button
               title="Retry"
               onClick={() => console.log("Retry", prompt)}
-              className="py-2 px-2.5 hover:bg-[#f3cde8] dark:hover:bg-[#2e2833] rounded-sm transition cursor-pointer"
+              className="py-2 px-2.5 hover:bg-accent/80 dark:hover:bg-accent/80 rounded-sm transition cursor-pointer"
             >
               <RefreshCcw
                 size={16}
-                className="text-[#492c61] dark:text-[#f9f8fb]"
+                className="text-foreground dark:text-foreground"
               />
             </button>
             <button
               title="Edit"
               onClick={() => console.log("Edit", prompt)}
-              className="p-1 hover:bg-[#f3cde8] dark:hover:bg-[#2e2833]  rounded-md transition cursor-pointer"
+              className="p-1 hover:bg-accent/80 dark:hover:bg-accent/80  rounded-md transition cursor-pointer"
             >
               <Pencil
                 size={16}
-                className="text-[#492c61] dark:text-[#f9f8fb]"
+                className="text-foreground dark:text-foreground"
               />
             </button>
             <button
               title="Copy"
               onClick={() => navigator.clipboard.writeText(prompt)}
-              className="p-1 hover:bg-[#f3cde8] dark:hover:bg-[#2e2833] rounded-md transition cursor-pointer"
+              className="p-1 hover:bg-accent/80 dark:hover:bg-accent/80 rounded-md transition cursor-pointer"
             >
-              <Copy size={16} className="text-[#492c61] dark:text-[#f9f8fb]" />
+              <Copy size={16} className="text-foreground dark:text-foreground" />
             </button>
           </motion.div>
         )}

@@ -32,7 +32,7 @@ export const uploadToS3 = async (formData: FormData) => {
       try {
         await prisma.attachmentMetaData.create({
         data: {
-          userid: session?.user.id as string,
+          userid: session?.user.id || "",
           fileName: file.name,
           fileType: file.type.split('/')[1] || 'unknown',   //eg application/pdf => pdf
           fileSize: file.size,

@@ -52,24 +52,24 @@ export default function Contact() {
   ];
 
   return (
-    <section className=" dark:bg-[#1c131b]  text-[#77347c] dark:text-white mb-4 ">
-      <h1 className="text-3xl font-semibold mb-4 text-[#501854] dark:text-white">
+    <section className=" dark:bg-card  text-foreground dark:text-foreground mb-4 ">
+      <h1 className="text-3xl font-semibold mb-4 text-foreground dark:text-foreground">
         We&apos;re here to help
       </h1>
       <div className="space-y-4">
         {links.map((item, index) => (
           <div
             key={index}
-            className="flex items-start gap-3 p-4 border rounded-lg bg-[#f9e2f0] dark:bg-[#191117] hover:bg-[#f1d7ef] dark:hover:bg-[#251d26] border-[#f4c6e3] dark:border-[#32212d]"
+            className="flex items-start gap-3 p-4 border rounded-lg bg-accent dark:bg-accent hover:bg-accent/80 dark:hover:bg-accent/80 border-border dark:border-border"
           >
-            <div className="pt-1 text-[#e33f86] dark:text-[#a3004c]">
+            <div className="pt-1 text-primary dark:text-primary">
               {item.icon}
             </div>
             <div>
-              <h3 className="font-semibold text-[#501854]  dark:text-white">
+              <h3 className="font-semibold text-foreground  dark:text-foreground">
                 {item.title}
               </h3>
-              <p className="text-sm text-[#ba3e83] dark:text-[#c0acb9] ">
+              <p className="text-sm text-primary dark:text-muted-foreground ">
                 {item.description}
               </p>
             </div>

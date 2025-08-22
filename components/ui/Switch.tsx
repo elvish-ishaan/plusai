@@ -25,13 +25,13 @@ export default function Switch({
     <button
       onClick={toggleSwitch}
       className={`w-11 h-6 rounded-full flex items-center transition-colors duration-300 ease-in-out
-        ${isChecked ? "bg-[#a74576]" : "bg-gray-700/60"}
+        ${isChecked ? "bg-primary" : "bg-muted"}
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
       role="switch"
       aria-checked={isChecked}
     >
       <span
-        className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out ml-1
+        className={`w-4 h-4 bg-card rounded-full shadow-md transform transition-transform duration-300 ease-in-out ml-1
           ${isChecked ? "translate-x-5" : "translate-x-0"}`}
       />
     </button>
