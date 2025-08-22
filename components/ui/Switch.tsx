@@ -31,7 +31,7 @@ export default function Switch({
       aria-checked={isChecked}
     >
       <span
-        className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out ml-1
+        className={`w-4 h-4 bg-card rounded-full shadow-md transform transition-transform duration-300 ease-in-out ml-1
           ${isChecked ? "translate-x-5" : "translate-x-0"}`}
       />
     </button>

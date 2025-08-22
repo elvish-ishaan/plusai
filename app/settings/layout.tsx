@@ -4,7 +4,7 @@ import Topbar from "@/components/Settings-comps/Topbar";
 
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-gradient-to-b from-[#f4e7f6] via-[#f1e1f4] to-[#efdaf3] dark:bg-[#1a1319] dark:bg-none w-full h-screen md:min-h-screen overflow-y-auto">
+    <div className="bg-gradient-to-b from-background via-background to-background dark:bg-background dark:bg-none w-full h-screen md:min-h-screen overflow-y-auto">
       <div className="w-full h-full md:w-fit max-w-[1200px] mx-auto pt-3 px-4">
         {/* Always on top */}
         <Topbar />

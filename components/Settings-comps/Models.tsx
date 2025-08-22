@@ -59,7 +59,7 @@ export default function Models() {
   };
 
   return (
-    <section className="text-[#77347c] dark:text-white mb-6">
+    <section className="text-foreground dark:text-foreground mb-6">
       <h2 className="text-xl font-bold mb-1">Available Models</h2>
       <p className="text-sm mb-4">
         Choose which models appear in your model selector. This won&apos;t
@@ -68,13 +68,13 @@ export default function Models() {
 
       <div className="flex items-center justify-between gap-2 flex-wrap mb-4">
         <div className="flex gap-2">
-          <button className="px-3 py-1 border rounded-md text-sm hover:bg-[#e5c2dc] dark:hover:bg-[#32212d] cursor-pointer">
+          <button className="px-3 py-1 border rounded-md text-sm hover:bg-accent dark:hover:bg-accent cursor-pointer">
             Filter by features
           </button>
         </div>
         <div className="flex gap-2">
           <button
-            className="px-3 py-1 border rounded-md text-sm hover:bg-[#e5c2dc] dark:hover:bg-[#32212d] cursor-pointer"
+            className="px-3 py-1 border rounded-md text-sm hover:bg-accent dark:hover:bg-accent cursor-pointer"
             onClick={() =>
               setModels(models.map((m) => ({ ...m, active: true })))
             }
@@ -82,7 +82,7 @@ export default function Models() {
             Select Recommended Models
           </button>
           <button
-            className="px-3 py-1 border rounded-md text-sm hover:bg-[#e5c2dc] dark:hover:bg-[#32212d] cursor-pointer"
+            className="px-3 py-1 border rounded-md text-sm hover:bg-accent dark:hover:bg-accent cursor-pointer"
             onClick={() =>
               setModels(models.map((m) => ({ ...m, active: false })))
             }
@@ -96,19 +96,19 @@ export default function Models() {
         {models.map((model, i) => (
           <div
             key={i}
-            className="flex flex-col gap-2 border bg-[#f1dff4] border-[#e6b0d4] dark:border-[#3a2937] rounded-lg px-4 py-3 dark:bg-black/20 relative"
+            className="flex flex-col gap-2 border bg-accent border-border dark:border-border rounded-lg px-4 py-3 dark:bg-black/20 relative"
           >
             <div className="flex justify-between items-start gap-2">
               <div>
                 <h3 className="text-base font-semibold">{model.name}</h3>
-                <p className="text-sm text-[#77347c] dark:text-[#caa9c4]">
+                <p className="text-sm text-foreground dark:text-muted-foreground">
                   {model.desc}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {model.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 text-xs rounded-full bg-[#ded6eb] dark:bg-[#332635] text-[#4d3b57] dark:text-white"
+                      className="px-2 py-0.5 text-xs rounded-full bg-accent dark:bg-accent text-foreground dark:text-foreground"
                     >
                       {tag}
                     </span>
@@ -117,7 +117,7 @@ export default function Models() {
               </div>
 
               <div className="flex flex-col items-end gap-2">
-                <button className="flex items-center gap-1 text-sm text-[#a74576] dark:text-pink-400 hover:underline cursor-pointer">
+                <button className="flex items-center gap-1 text-sm text-primary dark:text-primary hover:underline cursor-pointer">
                   <Link size={14} /> Search URL
                 </button>
                 <label className="inline-flex items-center cursor-pointer">

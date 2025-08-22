@@ -34,7 +34,7 @@ export default function ModelSelector({
     <div className="relative inline-block text-left" ref={ref}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center gap-1 text-[#ac1668] dark:text-[#f9f8fb] font-normal text-sm px-3 py-1.5 rounded-lg hover:bg-[#f4d6e7] dark:hover:bg-[#322c38]"
+        className="flex items-center gap-1 text-primary dark:text-primary-foreground font-normal text-sm px-3 py-1.5 rounded-lg hover:bg-accent dark:hover:bg-accent"
       >
         {selectedModel}
         <ChevronDown className="w-4 h-4" />
@@ -47,20 +47,20 @@ export default function ModelSelector({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="absolute bottom-full mb-3 z-50 w-72 bg-white dark:bg-[#1f1a23] rounded-xl shadow-lg border border-pink-200 dark:border-[#3a2937] overflow-hidden"
+            className="absolute bottom-full mb-3 z-50 w-72 bg-card dark:bg-card rounded-xl shadow-lg border border-border dark:border-border overflow-hidden"
           >
             <div className="px-3 py-2">
               <Input
                 placeholder="Search models..."
-                className="w-full px-3 py-1.5 text-sm border border-pink-300 dark:border-[#4d3a47] rounded-lg outline-none placeholder:text-pink-400 bg-white dark:bg-[#2d2531] text-[#77347c] dark:text-[#f4cbe5]"
+                className="w-full px-3 py-1.5 text-sm border border-border dark:border-border rounded-lg outline-none placeholder:text-muted-foreground bg-card dark:bg-card text-foreground dark:text-foreground"
               />
             </div>
 
             <div className="px-3 pb-2">
-              <div className="bg-gradient-to-r from-[#ffb0de] to-[#ffd0eb] dark:bg-none border border-pink-300 dark:border-[#8a004c] dark:bg-[#170c12] text-[#b4005c] dark:text-[#f9d2e3] p-3 rounded-lg text-sm font-semibold shadow-sm mb-2">
+              <div className="bg-gradient-to-r from-primary/20 to-secondary/20 dark:bg-none border border-border dark:border-border dark:bg-accent text-primary dark:text-primary-foreground p-3 rounded-lg text-sm font-semibold shadow-sm mb-2">
                 <div className="text-lg font-bold">$8/month</div>
                 <p className="mt-1">Unlock all models + higher limits</p>
-                <button className="mt-2 w-full py-1.5 bg-[#a4005a] hover:bg-[#8a004c] text-white rounded-lg text-sm">
+                <button className="mt-2 w-full py-1.5 bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg text-sm">
                   Upgrade now
                 </button>
               </div>
@@ -79,8 +79,8 @@ export default function ModelSelector({
                     className={cn(
                       "flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm",
                       modelItem.active
-                        ? "hover:bg-pink-100 dark:hover:bg-[#322935] text-pink-900 dark:text-[#f6d2e2]"
-                        : "text-pink-300 cursor-not-allowed"
+                        ? "hover:bg-accent dark:hover:bg-accent text-foreground dark:text-foreground"
+                        : "text-muted-foreground cursor-not-allowed"
                     )}
                     disabled={!modelItem.active}
                   >

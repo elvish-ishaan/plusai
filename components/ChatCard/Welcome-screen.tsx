@@ -83,7 +83,7 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
   return (
     <div className="flex h-full w-full justify-center items-center text-center px-4 mt-10">
       <div className="w-full max-w-3xl space-y-8">
-        <h2 className="text-3xl font-bold text-start text-[#501854] dark:text-[#f9f8fb]">
+        <h2 className="text-3xl font-bold text-start text-foreground dark:text-foreground">
           How can I help you, { session?.user?.name || 'Anonymous'}?
         </h2>
 
@@ -104,10 +104,7 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
                     )
                   }
                   className={cn(
-                    "flex items-center gap-2 px-5 py-2 rounded-full border text-sm font-semibold cursor-pointer shadow-sm transition-colors bg-[#f7e4f3] hover:bg-[#f1c4e6] dark:bg-[#211c26] dark:hover:bg-[#362d3d] dark:border-none ",
-                    isSelected
-                      ? "bg-[#a44370] border-transparent hover:bg-[#d56b9e]  dark:bg-[#451a33] dark:hover:bg-[#6b2c4c] dark:text-[#eebed8] dark:hover:text-[#efbfd9]"
-                      : "text-[#7a375b] border-[#f2d9e5] dark:text-[#c2b6cf] "
+                    "flex items-center gap-2 px-4 py-2 rounded-lg border border-border dark:border-border text-sm font-medium text-foreground dark:text-foreground hover:bg-accent dark:hover:bg-accent cursor-pointer shadow-sm transition-colors bg-accent hover:bg-accent/80 dark:bg-accent dark:hover:bg-accent/80 dark:border-none "
                   )}
                 >
                   <Icon className="w-4 h-4" />
@@ -118,12 +115,12 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
         </div>
 
         {/* Prompt Suggestions */}
-        <div className="mx-auto space-y-1 text-[#7a375b] divide-y divide-[#f5e0f1] dark:divide-[#2a232f] divide-solid">
+        <div className="mx-auto space-y-1 text-foreground divide-y divide-border dark:divide-border divide-solid">
           {currentCategory?.prompts.map((prompt, index) => (
             <div key={index}>
               <button
                 onClick={() => onPromptSelect(prompt)}
-                className="w-full text-left text-[#77347c] p-2.5 hover:bg-[#f5dcf0] dark:text-[#d4c7e1] dark:hover:bg-[#2c2633] transition-colors rounded-lg my-1 cursor-pointer"
+                className="w-full text-left text-foreground p-2.5 hover:bg-accent dark:text-foreground dark:hover:bg-accent transition-colors rounded-lg my-1 cursor-pointer"
               >
                 {prompt}
               </button>
