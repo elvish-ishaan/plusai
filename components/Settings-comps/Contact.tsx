@@ -53,7 +53,7 @@ export default function Contact() {
 
   return (
     <section className=" dark:bg-[#1c131b]  text-[#77347c] dark:text-white mb-4 ">
-      <h1 className="text-3xl font-semibold mb-4 text-[#501854] dark:text-white">
+      <h1 className="text-3xl font-semibold mb-4 text-primary dark:text-white">
         We&apos;re here to help
       </h1>
       <div className="space-y-4">
@@ -66,7 +66,7 @@ export default function Contact() {
               {item.icon}
             </div>
             <div>
-              <h3 className="font-semibold text-[#501854]  dark:text-white">
+              <h3 className="font-semibold text-primary  dark:text-white">
                 {item.title}
               </h3>
               <p className="text-sm text-[#ba3e83] dark:text-[#c0acb9] ">

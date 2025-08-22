@@ -83,7 +83,7 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
   return (
     <div className="flex h-full w-full justify-center items-center text-center px-4 mt-10">
       <div className="w-full max-w-3xl space-y-8">
-        <h2 className="text-3xl font-bold text-start text-[#501854] dark:text-[#f9f8fb]">
+        <h2 className="text-3xl font-bold text-start text-primary dark:text-[#f9f8fb]">
           How can I help you, { session?.user?.name || 'Anonymous'}?
         </h2>
 
@@ -118,12 +118,12 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
         </div>
 
         {/* Prompt Suggestions */}
-        <div className="mx-auto space-y-1 text-[#7a375b] divide-y divide-[#f5e0f1] dark:divide-[#2a232f] divide-solid">
+        <div className="mx-auto space-y-1 text-primary divide-y divide-[#f5e0f1] dark:divide-[#2a232f] divide-solid">
           {currentCategory?.prompts.map((prompt, index) => (
             <div key={index}>
               <button
                 onClick={() => onPromptSelect(prompt)}
-                className="w-full text-left text-[#77347c] p-2.5 hover:bg-[#f5dcf0] dark:text-[#d4c7e1] dark:hover:bg-[#2c2633] transition-colors rounded-lg my-1 cursor-pointer"
+                className="w-full text-left text-primary p-2.5 hover:bg-[#f5dcf0] dark:text-[#d4c7e1] dark:hover:bg-[#2c2633] transition-colors rounded-lg my-1 cursor-pointer"
               >
                 {prompt}
               </button>

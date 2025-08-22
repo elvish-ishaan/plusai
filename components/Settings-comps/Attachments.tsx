@@ -34,7 +34,7 @@ export default function Attachments() {
                 </p>
               </div>
             </div>
-            <button className="bg-[#a23b67] hover:bg-[#d56a9d] text-white font-bold py-2 px-4 rounded-lg shadow">
+            <button className="bg-primary hover:bg-[#d56a9d] text-white font-bold py-2 px-4 rounded-lg shadow">
               Delete
             </button>
           </div>

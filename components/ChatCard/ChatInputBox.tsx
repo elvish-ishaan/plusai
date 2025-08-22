@@ -80,7 +80,7 @@ export default function ChatInputBox({
   return (
     <div className=" px-4 pt-4 mx-auto">
       <div
-        className="relative bg-[rgba(255,255,255,0.7)] dark:bg-[#25202b] backdrop-blur-lg rounded-t-[20px] border border-[#d9b4cc] dark:border-[#403040] border-b-0 p-2 pb-0 shadow-[0_80px_50px_rgba(0,0,0,0.1),0_50px_30px_rgba(0,0,0,0.07),0_30px_15px_rgba(0,0,0,0.06),0_15px_8px_rgba(0,0,0,0.04),0_6px_4px_rgba(0,0,0,0.04),0_2px_2px_rgba(0,0,0,0.02)] outline outline-1 outline-[rgba(207,155,205,0.4)] dark:outline-[rgba(172,114,190,0.3)]"
+        className="relative bg-[rgba(255,255,255,0.7)] dark:bg-[#25202b] backdrop-blur-lg rounded-t-[20px] border border-[#d9b4cc] dark:border-primary border-b-0 p-2 pb-0 shadow-[0_80px_50px_rgba(0,0,0,0.1),0_50px_30px_rgba(0,0,0,0.07),0_30px_15px_rgba(0,0,0,0.06),0_15px_8px_rgba(0,0,0,0.04),0_6px_4px_rgba(0,0,0,0.04),0_2px_2px_rgba(0,0,0,0.02)] outline outline-1 outline-[rgba(207,155,205,0.4)] dark:outline-[rgba(172,114,190,0.3)]"
         style={{
           //@ts-expect-error fix
           "--chat-input-gradient": "322 70% 85%",
@@ -95,7 +95,7 @@ export default function ChatInputBox({
             placeholder={
               isLoading ? "Please wait..." : "Type your message here..."
             }
-            className="w-full resize-none bg-transparent text-sm text-[#a14a86] dark:text-[#91869b] placeholder-[#d088b5] dark:placeholder-[#91869b] focus:outline-none leading-6"
+            className="w-full resize-none bg-transparent text-sm text-primary dark:text-[#91869b] placeholder-primary dark:placeholder-[#91869b] focus:outline-none leading-6"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -110,10 +110,10 @@ export default function ChatInputBox({
               disabled={isLoading ? false : isSendDisabled}
               className={`rounded-lg p-2 transition h-8 w-8 flex items-center justify-center mb-4 ${
                 isLoading
-                  ? "bg-[#a23b67] hover:bg-[#d56698] text-pink-50 dark:bg-[#4b1f39] dark:hover:bg-[#7d1d48] cursor-pointer"
+                  ? "bg-primary hover:bg-secondary text-pink-50 dark:bg-primary dark:hover:bg-secondary cursor-pointer"
                   : isSendDisabled
-                  ? "bg-[#e4b9cb] text-white dark:bg-[#3a2134] dark:text-[#8d818b] dark:border-[#7c2e51] cursor-not-allowed"
-                  : "bg-[#a23b67] hover:bg-[#d56698] text-pink-50 dark:bg-[#4b1f39] dark:border-[#7c2e51] dark:hover:bg-[#7d1d48] cursor-pointer"
+                  ? "bg-[#e4b9cb] text-white dark:bg-secondary dark:text-white dark:border-primary cursor-not-allowed"
+                  : "bg-primary hover:bg-secondary text-pink-50 dark:bg-primary dark:border-primary dark:hover:bg-secondary cursor-pointer"
               }`}
               aria-label={isLoading ? (isPaused ? "Resume" : "Pause") : "Send"}
               onClick={() => {
@@ -161,7 +161,7 @@ export default function ChatInputBox({
                   selectedTool === "search"
                     ? "bg-[#f4d6e7] dark:bg-[#322c38]"
                     : "hover:bg-[#f4d6e7] dark:hover:bg-[#322c38]"
-                }  text-[#ac1668] dark:text-[#f9f8fb]`}
+                }  text-primary dark:text-[#f9f8fb]`}
               >
                 <Globe className="w-4 h-4" />
                 <span className="hidden sm:inline">Search</span>
@@ -180,7 +180,7 @@ export default function ChatInputBox({
                 }
               >
                 <label className="cursor-pointer relative">
-                  <Paperclip className="w-4 h-4 text-[#ac1668] dark:text-[#f9f8fb]" />
+                  <Paperclip className="w-4 h-4 text-primary dark:text-[#f9f8fb]" />
                   <input
                     disabled={ session?.user?.id ? false : true }
                     type="file"

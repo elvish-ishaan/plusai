@@ -28,7 +28,7 @@ export default function ChatMessageArea({
               <div
                 className={`rounded-lg px-4 py-2 max-w-[70%] text-sm ${
                   msg.sender === "user"
-                    ? "bg-[#f0c7e0] text-[#501854] rounded-br-none"
+                    ? "bg-[#f0c7e0] text-primary rounded-br-none"
                     : "bg-[#f6ebf4] text-[#7a375b] rounded-bl-none"
                 }`}
               >

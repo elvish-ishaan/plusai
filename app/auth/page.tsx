@@ -33,7 +33,7 @@ export default function Page() {
       <div className="absolute left-4 top-4">
         <button
           onClick={() => router.push("/")}
-          className="flex items-center cursor-pointer h-9 px-4 py-2 gap-2 rounded-md text-sm font-medium text-[#501854] hover:bg-[#f0cee5] transition-colors dark:text-white dark:bg-[#171016] dark:hover:bg-[#2d222c]"
+          className="flex items-center cursor-pointer h-9 px-4 py-2 gap-2 rounded-md text-sm font-medium text-primary hover:bg-[#f0cee5] transition-colors dark:text-white dark:bg-[#171016] dark:hover:bg-[#2d222c]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Chat
@@ -41,7 +41,7 @@ export default function Page() {
       </div>
 
       {/* Main Content */}
-      <h1 className="mb-5 text-xl font-bold text-[#501854] dark:text-[#f9f8fb] flex items-center gap-2">
+      <h1 className="mb-5 text-xl font-bold text-primary dark:text-[#f9f8fb] flex items-center gap-2">
         Welcome to
         <Image
           src="/logo.png"
@@ -71,7 +71,7 @@ export default function Page() {
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="flex items-center justify-center gap-3 w-full h-14 px-6 py-2 text-lg font-semibold text-white bg-[#a23b67] hover:bg-[#d56698] active:bg-[#a23b67] dark:bg-[#3a0f25] dark:text-white rounded-lg shadow transition-all hover:shadow-lg cursor-pointer backdrop-blur-sm"
+          className="flex items-center justify-center gap-3 w-full h-14 px-6 py-2 text-lg font-semibold text-white bg-primary hover:bg-secondary active:bg-primary dark:bg-[#3a0f25] dark:text-white rounded-lg shadow transition-all hover:shadow-lg cursor-pointer backdrop-blur-sm"
         >
           <Image src="/google.png" alt="Google" width={24} height={24} />
           Continue with Google

@@ -62,7 +62,7 @@ export default function TopRightIconHolder({
         }`}
       >
         <button
-          className="flex items-center justify-center w-7 h-7 rounded-md text-[#ac1668] hover:text-[#501854] hover:bg-[#f0cde4] transition cursor-pointer dark:hover:text-[#e7d0dd] dark:text-white dark:hover:bg-[#29252e]"
+          className="flex items-center justify-center w-7 h-7 rounded-md text-primary hover:text-primary hover:bg-[#f0cde4] transition cursor-pointer dark:hover:text-[#e7d0dd] dark:text-white dark:hover:bg-[#29252e]"
           aria-label="Settings"
           onClick={() => {
             if (!session?.user) {
@@ -83,7 +83,7 @@ export default function TopRightIconHolder({
 
         <button
           onClick={toggleDarkMode}
-          className="flex items-center justify-center w-7 h-7 rounded-md text-[#ac1668] hover:text-[#501854] dark:hover:text-[#e7d0dd] dark:text-white dark:hover:bg-[#29252e] hover:bg-[#f0cde4] transition cursor-pointer"
+          className="flex items-center justify-center w-7 h-7 rounded-md text-primary hover:text-primary dark:hover:text-[#e7d0dd] dark:text-white dark:hover:bg-[#29252e] hover:bg-[#f0cde4] transition cursor-pointer"
           aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
           {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}

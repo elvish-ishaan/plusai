@@ -28,7 +28,7 @@ export default function Customization() {
   };
 
   return (
-    <div className=" space-y-5 text-[#501854] dark:text-white">
+    <div className=" space-y-5 text-primary dark:text-white">
       {/* Customize T3 Chat Section */}
       <section className="space-y-6">
         <h2 className="text-xl font-bold">Customize T3 Chat</h2>
@@ -123,7 +123,7 @@ export default function Customization() {
             >
               <div className="flex-1">
                 <p className="font-medium">{item.title}</p>
-                <p className="text-sm text-[#ac1668] dark:text-[#e7d0dd]">
+                <p className="text-sm text-primary dark:text-[#e7d0dd]">
                   {item.desc}
                 </p>
               </div>
@@ -137,7 +137,7 @@ export default function Customization() {
           <div className="space-y-4">
             <div>
               <p className="font-medium">Main Text Font</p>
-              <p className="text-sm text-[#ac1668] dark:text-[#e7d0dd]">
+              <p className="text-sm text-primary dark:text-[#e7d0dd]">
                 Used in general text throughout the app.
               </p>
               <select className="bg-[#f5ddef] border border-[#e7c1dc]  dark:bg-[#1e1b20] p-2 rounded-md w-full mt-1 text-[#77347c] dark:text-white">
@@ -149,7 +149,7 @@ export default function Customization() {
 
             <div>
               <p className="font-medium">Code Font</p>
-              <p className="text-sm text-[#ac1668] dark:text-[#e7d0dd]">
+              <p className="text-sm text-primary dark:text-[#e7d0dd]">
                 Used in code blocks and inline code in chat messages.
               </p>
               <select className="bg-[#f5ddef] border border-[#e7c1dc]  dark:bg-[#1e1b20] p-2 rounded-md w-full mt-1 text-[#77347c] dark:text-white">
