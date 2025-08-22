@@ -1,10 +1,12 @@
 "use client";
 
-import { Globe, Paperclip, ArrowUp } from "lucide-react";
+import { Globe, Paperclip, ArrowUp, Pause } from "lucide-react";
 import TextareaAutosize from "react-textarea-autosize";
 import ModelSelector from "./ModelSelector";
 import { useState } from "react";
 import { uploadToS3 } from "@/app/actions/uploads";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 type Props = {
   message: string;
@@ -18,6 +20,8 @@ type Props = {
   // inputRef: React.RefObject<HTMLTextAreaElement>;
   isLoading: boolean;
   currentThreadId?: string;
+  isPaused?: boolean;
+  setIsPaused?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ChatInputBox({
@@ -31,6 +35,8 @@ export default function ChatInputBox({
   onSend,
   currentThreadId,
   isLoading,
+  isPaused,
+  setIsPaused,
 }: Props) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -41,11 +47,15 @@ export default function ChatInputBox({
   const [selectedTool, setSelectedTool] = useState<
     "search" | "upload" | null
   >(null);
-
+  const {data: session} = useSession();
 
   const isSendDisabled = message.trim() === "" || isLoading;
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(!session?.user?.id){
+      toast.error("You need to be logged in to upload files");
+      return;
+    }
     const file = e.target.files?.[0];
     if (file) {
       //call the acion to upload the file
@@ -53,11 +63,14 @@ export default function ChatInputBox({
       formData.append('file', file);
       formData.append('threadId', currentThreadId || '')
       console.log('uploading file to s3');
+      const toastId = toast.loading("Uploading file...");
       const fileUrl = await uploadToS3(formData);
       if( fileUrl.success) {
         setFileUrl(fileUrl.url || null);
+        toast.success("File uploaded successfully!", { id: toastId });
       console.log(fileUrl, 'file url in chat input box');
-      if (fileUrl) {
+      if (!fileUrl.success) {
+        toast.error("Failed to upload file", { id: toastId });
         console.log('error in uploading file to s3');
     }
   };
@@ -94,32 +107,54 @@ export default function ChatInputBox({
           <div className="-mb-px mt-2 flex flex-row-reverse justify-between items-center">
             {/* Send button */}
             <button
-              disabled={isSendDisabled}
-              className={`rounded-lg p-2 transition h-9 w-9 flex items-center justify-center ${
-                isSendDisabled
-                  ? "bg-muted text-foreground dark:bg-muted dark:text-foreground dark:border-border cursor-not-allowed"
-                  : "bg-primary hover:bg-primary/80 text-primary-foreground dark:bg-primary dark:border-border dark:hover:bg-primary/80 cursor-pointer"
+              disabled={isLoading ? false : isSendDisabled}
+              className={`rounded-lg p-2 transition h-8 w-8 flex items-center justify-center mb-4 ${
+                isLoading
+                  ? "bg-[#a23b67] hover:bg-[#d56698] text-pink-50 dark:bg-[#4b1f39] dark:hover:bg-[#7d1d48] cursor-pointer"
+                  : isSendDisabled
+                  ? "bg-[#e4b9cb] text-white dark:bg-[#3a2134] dark:text-[#8d818b] dark:border-[#7c2e51] cursor-not-allowed"
+                  : "bg-[#a23b67] hover:bg-[#d56698] text-pink-50 dark:bg-[#4b1f39] dark:border-[#7c2e51] dark:hover:bg-[#7d1d48] cursor-pointer"
               }`}
-              aria-label="Send"
-              onClick={() => onSend(message)}
+              aria-label={isLoading ? (isPaused ? "Resume" : "Pause") : "Send"}
+              onClick={() => {
+                if (isLoading) {
+                  // While generating response, toggle pause
+                  setIsPaused?.((prev) => !prev);
+                } else if (message.trim() !== "") {
+                  // Send message
+                  onSend(message);
+                  setIsPaused?.(false); // Reset pause state on new message
+                }
+              }}
             >
-              <ArrowUp className="w-5 h-5" />
+              {isLoading ? (
+                isPaused ? (
+                  <ArrowUp className="w-5 h-5" />
+                ) : (
+                  <Pause className="w-5 h-5" />
+                )
+              ) : (
+                <ArrowUp className="w-5 h-5" />
+              )}
             </button>
 
             {/* ModelSelector, Search, Upload */}
             <div className="flex flex-wrap items-center gap-2 pr-2 mb-6">
               <div className="cursor-pointer">
-                <ModelSelector setModel={setModel} selectedModel={model} setProvider={setProvider} />
+                <ModelSelector
+                  setModel={setModel}
+                  selectedModel={model}
+                  setProvider={setProvider}
+                />
               </div>
 
               {/* Search Button */}
               <button
                 type="button"
                 onClick={() => {
-                  setSelectedTool(selectedTool === "search" ? null : "search")
+                  setSelectedTool(selectedTool === "search" ? null : "search");
                   setIsWebSearchEnabled((prev) => !prev);
-                }
-                }
+                }}
                 className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border cursor-pointer
               border-border dark:border-border
                 ${
@@ -147,10 +182,11 @@ export default function ChatInputBox({
                 <label className="cursor-pointer relative">
                   <Paperclip className="w-4 h-4 text-primary dark:text-primary-foreground" />
                   <input
+                    disabled={ session?.user?.id ? false : true }
                     type="file"
                     name="file"
                     onChange={handleFileUpload}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    className={ session?.user?.id ? "absolute inset-0 w-full h-full opacity-0 cursor-pointer" : "absolute inset-0 w-full h-full opacity-0 cursor-not-allowed"}
                   />
                 </label>
               </div>

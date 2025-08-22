@@ -141,6 +141,10 @@ export default function Sidebar({
     }
   };
 
+  const handleNewChat = () => {
+    router.refresh(); // This will shallow refresh the current route
+  };
+
   const { theme } = useTheme();
 
   useEffect(() => {
