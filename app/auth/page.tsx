@@ -51,7 +51,6 @@ export default function Page() {
           Sign in below (we&apos;ll increase your message limits if you do 😉)
         </p>
       </div>
-
       {/* Google Sign-In Button */}
       <div className="w-full max-w-sm">
         <button

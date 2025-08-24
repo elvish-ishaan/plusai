@@ -1,6 +1,8 @@
 import { generateText, LanguageModel } from 'ai';
 import { google } from '@ai-sdk/google';
 import { WebSearchTool } from './tools/webSearch';
+import { AddMemoryTool, GetMemoryTool } from './tools/memory';
+import { systemPrompt } from '@/libs/systemPrompt';
 
 interface UserParams {
     finalPrompt: string
@@ -26,12 +28,16 @@ export const generateResponse = async ( userParams: UserParams) => {
     try {
         const result = await generateText({
           model: parseChoosenLlm(userParams.llmProvider, userParams.model) as LanguageModel,
+          system: systemPrompt,
           prompt: userParams.finalPrompt,
           tools: {
-            searchWeb: WebSearchTool
+            searchWeb: WebSearchTool,
+            addMemory: AddMemoryTool,
+            getMemory: GetMemoryTool,
           },
           toolChoice: "auto"
         });
+        
         return result
     } catch (error) {
         console.log(error,'error while generating response from llm.')

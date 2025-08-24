@@ -32,10 +32,12 @@ const groupByDate = (threads: Thread[]) => {
 
 export default function Sidebar({
   isCollapsed,
+  isThreadsLoading,
   setIsCollapsed,
   threads,
   setThreads,
 }: {
+  isThreadsLoading: boolean;
   isCollapsed: boolean;
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   threads: Thread[];
@@ -116,16 +118,6 @@ export default function Sidebar({
   // Combined pin/unpin function
   const togglePinThread = async (threadId: string, currentPinnedState: boolean) => {
     try {
-      // Use consistent API endpoint
-      const response = await axios.patch(`/api/chat/threads/${threadId}`, {
-        pinned: !currentPinnedState
-      });
-      
-      if (!response.data.success) {
-        console.error("Failed to toggle pin:", response.data.message);
-        return;
-      }
-
       // Update the thread's pinned state
       setThreads((prev) =>
         prev.map((thread) =>
@@ -134,6 +126,28 @@ export default function Sidebar({
             : thread
         )
       );
+
+      // Use consistent API endpoint
+      const response = await axios.patch(`/api/chat/threads/${threadId}`, {
+        pinned: !currentPinnedState
+      });
+      
+      if (!response.data.success) {
+        //revert the state to origin 
+        // Update the thread's pinned state
+      setThreads((prev) =>
+        prev.map((thread) =>
+          thread.id === threadId 
+            ? { ...thread, pinned: !currentPinnedState } 
+            : thread
+        )
+      );
+
+        console.error("Failed to toggle pin:", response.data.message);
+        return;
+      }
+
+      
       
     } catch (error) {
       console.error("Failed to toggle pin:", error);
@@ -277,7 +291,7 @@ export default function Sidebar({
             </div>
           </div>
 
-          <nav
+            <nav
             aria-label="Thread list"
             className="flex-grow overflow-y-auto px-2 space-y-1 scrollbar-hide"
           >
@@ -361,7 +375,9 @@ export default function Sidebar({
             {/* Regular threads section below */}
             {Object.keys(grouped).length === 0 && pinnedThreads.length === 0 ? (
               <p className="text-xs text-muted-foreground pl-1">
-                No threads found
+                {
+                  isThreadsLoading ? "Loading Threads" : "No Threads Found"
+                }
               </p>
             ) : (
               Object.entries(grouped).map(([dateLabel, threads]) => (
@@ -446,7 +462,6 @@ export default function Sidebar({
               ))
             )}
           </nav>
-
           <UserInfo />
         </>
       )}

@@ -4,7 +4,7 @@ import { authOptions } from "@/libs/authOptions";
 import prisma from "@/prisma/prismaClient";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { success, z } from "zod/v4";
+import { z } from "zod/v4";
 
 export async function POST(req: Request) {
   const prevPromSchema = z.object({
@@ -31,16 +31,21 @@ export async function POST(req: Request) {
         llmProvider: z.string(),
         threadId: z.uuidv4(),
     });
+        const session = await getServerSession(authOptions);
+
     const { prompt, isWebSearchEnabled, attachmentUrl, temperature, model, maxOutputTokens, threadId, llmProvider, prevPrompts } = requestSchema.parse(await req.json()); 
     //generate diff client on the basis of provider
     const client = initClient('gemini');
     if (!client) {
         return new Response("Invalid model", { status: 400 });
     }
-    let finalPrompt: string = prompt;
+    //inject memories if present on initail prompt
+
+    let finalPrompt: string = `userId: ${session?.user.id}, prompt${prompt}`;
 
     if (prevPrompts && prevPrompts.length > 0 && prevPrompts[0].prompt !== '') {
       finalPrompt = `
+      userid: ${session?.user.id}
     previous conversation:
     ${prevPrompts.map((prompt) => "user:" + prompt.prompt +","+ "response" + prompt.response).join('\n')}
     
@@ -52,6 +57,8 @@ export async function POST(req: Request) {
     //@ts-expect-error fix it
     // const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
      const llmRes = await generateResponse( {finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl} );
+     console.log(llmRes?.toolResults,'geting tool output.........')
+
      if(!llmRes){
       return NextResponse.json({
         success: false,
@@ -60,7 +67,9 @@ export async function POST(req: Request) {
      }
 
      let llmGenRes;
-     if(isWebSearchEnabled){
+
+     if(!llmRes.text){
+      //that means tools been called collect the response from tools and give it back to llm to generate response
       llmGenRes = llmRes.toolResults
      }
 
@@ -71,7 +80,6 @@ export async function POST(req: Request) {
         message: 'something went wrong'
       })
      }
-    const session = await getServerSession(authOptions);
     if(!session?.user){
       return NextResponse.json({
         success: true,
@@ -80,7 +88,7 @@ export async function POST(req: Request) {
           id: Math.round(Math.random() * 1000000).toString(),
           prompt,
           model,
-          response: llmGenRes,
+          response: !llmRes ? llmRes?.toolResults : llmRes,
           provider: llmProvider,
           threadId,
           createdAt: new Date(),
