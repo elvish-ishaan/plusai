@@ -247,14 +247,14 @@ export default function Sidebar({
                 {/* Light logo (default) */}
                 <Image
                   src={logo}
-                  alt="T3.chat"
+                  alt="Plus AI"
                   height={18}
                   className="block dark:hidden"
                 />
                 {/* Dark logo */}
                 <Image
                   src={darklogo}
-                  alt="T3.chat"
+                  alt="Plus AI"
                   height={15}
                   className="hidden dark:block"
                 />

@@ -29,13 +29,13 @@ export default function Customization() {
 
   return (
     <div className=" space-y-5 text-foreground dark:text-foreground">
-      {/* Customize T3 Chat Section */}
+      {/* Customize Plus AI Section */}
       <section className="space-y-6">
-        <h2 className="text-xl font-bold">Customize T3 Chat</h2>
+        <h2 className="text-xl font-bold">Customize Plus AI</h2>
 
         <div className="space-y-4">
           <div>
-            <p className="font-medium">What should T3 Chat call you?</p>
+            <p className="font-medium">What should Plus AI call you?</p>
             <Input
               maxLength={50}
               placeholder="Enter your name"
@@ -53,7 +53,7 @@ export default function Customization() {
           </div>
 
           <div>
-            <p className="font-medium">What traits should T3 Chat have?</p>
+            <p className="font-medium">What traits should Plus AI have?</p>
             <Input
               maxLength={50}
               value={traitInput}
@@ -76,7 +76,7 @@ export default function Customization() {
 
           <div>
             <p className="font-medium">
-              Anything else T3 Chat should know about you?
+              Anything else Plus AI should know about you?
             </p>
             <Textarea
               placeholder="Interests, values, or preferences to keep in mind"

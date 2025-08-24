@@ -45,7 +45,7 @@ export default function Page() {
         Welcome to
         <Image
           src="/logo.png"
-          alt="T3.chat"
+          alt="Plus AI"
           width={96}
           height={20}
           className="-mt-1 block dark:hidden"
@@ -53,7 +53,7 @@ export default function Page() {
         {/* Dark logo */}
         <Image
           src="/darklogo.png"
-          alt="T3.chat"
+          alt="Plus AI"
           width={96}
           height={20}
           className="-mt-1 hidden dark:block"

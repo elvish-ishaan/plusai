@@ -41,7 +41,7 @@ export default function Account() {
             <h3 className="font-semibold">Priority Support</h3>
           </div>
           <p>
-            Get faster responses and dedicated assistance from the T3 team
+            Get faster responses and dedicated assistance from the Plus AI team
             whenever you need help!
           </p>
         </div>
