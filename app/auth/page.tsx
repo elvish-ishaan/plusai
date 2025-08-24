@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -43,21 +43,7 @@ export default function Page() {
       {/* Main Content */}
       <h1 className="mb-5 text-xl font-bold text-foreground dark:text-foreground flex items-center gap-2">
         Welcome to
-        <Image
-          src="/logo.png"
-          alt="Plus AI"
-          width={96}
-          height={20}
-          className="-mt-1 block dark:hidden"
-        />
-        {/* Dark logo */}
-        <Image
-          src="/darklogo.png"
-          alt="Plus AI"
-          width={96}
-          height={20}
-          className="-mt-1 hidden dark:block"
-        />
+        <Sparkles className=" text-primary size-10"/>
       </h1>
 
       <div className="mb-8 text-center text-primary dark:text-primary">

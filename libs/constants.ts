@@ -39,13 +39,13 @@ export const models = [
     title: "Gemini 2.5 Flash",
     name: "gemini-2.5-flash",
     active: true,
-    provider: "gemini",
+    provider: "google",
   },
   {
     title: "Gemini 2.5 Pro",
     name: "gemini-2.5-pro",
     active: true,
-    provider: "gemini",
+    provider: "google",
   },
 
   // OpenAI

@@ -5,16 +5,17 @@ import { Button } from "@/components/ui/button";
 
 export default function Account() {
   return (
-    <section className=" dark:bg-card  text-foreground dark:text-foreground pr-10">
-      <div className="text-2xl font-bold mb-6 flex justify-between items-center">
-        <p> Upgrade to Pro</p>
+    <section className="pr-10 text-foreground dark:bg-card dark:text-foreground">
+      {/* Header */}
+      <div className="mb-6 flex items-center justify-between text-2xl font-bold">
+        <p>Upgrade to Pro</p>
         <p>$8/month</p>
       </div>
 
       {/* Pro Cards */}
-      <div className="grid md:grid-cols-3 gap-4 text-sm font-medium mb-6">
-        <div className="rounded-xl border border-border dark:border-border p-4 bg-accent dark:bg-accent">
-          <div className="flex items-center gap-2 mb-2">
+      <div className="mb-6 grid gap-4 text-sm font-medium md:grid-cols-3">
+        <div className="rounded-xl border border-border bg-accent p-4 dark:border-border dark:bg-accent">
+          <div className="mb-2 flex items-center gap-2">
             <Rocket size={18} />
             <h3 className="font-semibold">Access to All Models</h3>
           </div>
@@ -24,8 +25,8 @@ export default function Account() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-border dark:border-border p-4 bg-accent dark:bg-accent">
-          <div className="flex items-center gap-2 mb-2">
+        <div className="rounded-xl border border-border bg-accent p-4 dark:border-border dark:bg-accent">
+          <div className="mb-2 flex items-center gap-2">
             <BadgeCheck size={18} />
             <h3 className="font-semibold">Generous Limits</h3>
           </div>
@@ -35,8 +36,8 @@ export default function Account() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-border dark:border-border p-4 bg-accent dark:bg-accent">
-          <div className="flex items-center gap-2 mb-2">
+        <div className="rounded-xl border border-border bg-accent p-4 dark:border-border dark:bg-accent">
+          <div className="mb-2 flex items-center gap-2">
             <Headphones size={18} />
             <h3 className="font-semibold">Priority Support</h3>
           </div>
@@ -47,13 +48,14 @@ export default function Account() {
         </div>
       </div>
 
-      {/* Upgrade button */}
-      <div className="flex justify-start mb-2">
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/80 cursor-pointer">
+      {/* Upgrade Button */}
+      <div className="mb-2 flex justify-start">
+        <Button className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80">
           Upgrade Now
         </Button>
       </div>
 
+      {/* Note */}
       <p className="text-xs text-foreground dark:text-muted-foreground">
         *Premium credits are used for GPT Image Gen, Claude Sonnet, and Grok 3.
         Additional Premium credits can be purchased separately.
@@ -61,13 +63,15 @@ export default function Account() {
 
       {/* Danger Zone */}
       <div className="mt-10">
-        <h3 className="text-xl font-semibold mb-2 text-destructive dark:text-destructive">
+        <h3 className="mb-2 text-xl font-semibold text-destructive dark:text-destructive">
           Danger Zone
         </h3>
-        <p className="text-sm mb-3">
+        <p className="mb-3 text-sm">
           Permanently delete your account and all associated data.
         </p>
-        <Button variant="destructive" className="cursor-pointer">Delete Account</Button>
+        <Button variant="destructive" className="cursor-pointer">
+          Delete Account
+        </Button>
       </div>
     </section>
   );

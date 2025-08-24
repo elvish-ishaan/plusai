@@ -93,8 +93,6 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
             .filter((category) => category.id !== "default")
             .map((category) => {
               const Icon = category.icon;
-              const isSelected = selectedCategory === category.id;
-
               return (
                 <button
                   key={category.id}

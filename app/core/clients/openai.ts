@@ -23,7 +23,7 @@ export class OpenAIClient {
     return {
       text: res.text as string,
       usage: {
-        prompt: res.metadata ,
+        prompt: res.metadata,
       },
     };
   }
