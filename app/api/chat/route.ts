@@ -1,9 +1,10 @@
 import { initClient } from "@/app/core";
+import { generateResponse } from "@/app/core/clientV2";
 import { authOptions } from "@/libs/authOptions";
 import prisma from "@/prisma/prismaClient";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { z } from "zod/v4";
+import { success, z } from "zod/v4";
 
 export async function POST(req: Request) {
   const prevPromSchema = z.object({
@@ -49,8 +50,27 @@ export async function POST(req: Request) {
     }
 
     //@ts-expect-error fix it
-    const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
+    // const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
+     const llmRes = await generateResponse( {finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl} );
+     if(!llmRes){
+      return NextResponse.json({
+        success: false,
+        message: 'something went wrong while generating response'
+      })
+     }
 
+     let llmGenRes;
+     if(isWebSearchEnabled){
+      llmGenRes = llmRes.toolResults
+     }
+
+     if(!llmGenRes){
+      console.log('cant access the llmGenRes....')
+      return NextResponse.json({
+        success: false,
+        message: 'something went wrong'
+      })
+     }
     const session = await getServerSession(authOptions);
     if(!session?.user){
       return NextResponse.json({
@@ -60,7 +80,7 @@ export async function POST(req: Request) {
           id: Math.round(Math.random() * 1000000).toString(),
           prompt,
           model,
-          response: llmRes.text,
+          response: llmGenRes,
           provider: llmProvider,
           threadId,
           createdAt: new Date(),
@@ -98,7 +118,7 @@ export async function POST(req: Request) {
          chat = await prisma.chat.create({
      data: {
        prompt,
-       response: llmRes.text,
+       response: llmGenRes,
        provider: llmProvider,
        model,
        thread: {
@@ -130,6 +150,6 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: "Chat created successfully",
-      genResponse: llmRes.text,
+      genResponse: llmGenRes,
     });
 }
