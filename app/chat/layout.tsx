@@ -7,10 +7,13 @@ import { useEffect, useState } from "react";
 export default function Layout({children}: {children: React.ReactNode}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [threads, setThreads] = useState<Thread[]>([]);
+  const [isThreadsLoading, setIsThreadsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchThreads = async () => {
+      setIsThreadsLoading(true)
       const res = await axios.get("/api/chat/threads");
+      setIsThreadsLoading(false)
       setThreads(res.data?.threads);
     };
     fetchThreads();
@@ -21,6 +24,7 @@ export default function Layout({children}: {children: React.ReactNode}) {
       {/* Sidebar */}
       <div className="hidden md:block">
         <Sidebar
+          isThreadsLoading={isThreadsLoading}
           threads={threads}
           setThreads={setThreads}
           isCollapsed={isCollapsed}

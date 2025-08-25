@@ -11,7 +11,7 @@ async function addMemory(memory: string, userId: string) {
 ]
 
     try {
-      //@ts-ignore
+      //@ts-expect-error message error should be fixed
         await client.add(messages, { user_id: userId });
         return "Memory has been successfully added";
     } catch (error) {
