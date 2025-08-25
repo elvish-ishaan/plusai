@@ -1,4 +1,4 @@
-import { generateText, LanguageModel } from 'ai';
+import { generateText, LanguageModel, stepCountIs } from 'ai';
 import { google } from '@ai-sdk/google';
 import { WebSearchTool } from './tools/webSearch';
 import { AddMemoryTool, GetMemoryTool } from './tools/memory';
@@ -35,7 +35,8 @@ export const generateResponse = async ( userParams: UserParams) => {
             addMemory: AddMemoryTool,
             getMemory: GetMemoryTool,
           },
-          toolChoice: "auto"
+          toolChoice: "auto",
+          stopWhen: stepCountIs(5),
         });
         
         return result

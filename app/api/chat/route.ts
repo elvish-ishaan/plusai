@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     //@ts-expect-error fix it
     // const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
      const llmRes = await generateResponse( {finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl} );
-     console.log(llmRes?.toolResults,'geting tool output.........')
+     console.log(llmRes?.text,'getting text.........')
 
      if(!llmRes){
       return NextResponse.json({
@@ -66,20 +66,6 @@ export async function POST(req: Request) {
       })
      }
 
-     let llmGenRes;
-
-     if(!llmRes.text){
-      //that means tools been called collect the response from tools and give it back to llm to generate response
-      llmGenRes = llmRes.toolResults
-     }
-
-     if(!llmGenRes){
-      console.log('cant access the llmGenRes....')
-      return NextResponse.json({
-        success: false,
-        message: 'something went wrong'
-      })
-     }
     if(!session?.user){
       return NextResponse.json({
         success: true,
@@ -88,7 +74,7 @@ export async function POST(req: Request) {
           id: Math.round(Math.random() * 1000000).toString(),
           prompt,
           model,
-          response: !llmRes ? llmRes?.toolResults : llmRes,
+          response: llmRes.text,
           provider: llmProvider,
           threadId,
           createdAt: new Date(),
@@ -126,7 +112,7 @@ export async function POST(req: Request) {
          chat = await prisma.chat.create({
      data: {
        prompt,
-       response: llmGenRes,
+       response: llmRes.text,
        provider: llmProvider,
        model,
        thread: {
@@ -158,6 +144,6 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: "Chat created successfully",
-      genResponse: llmGenRes,
+      genResponse: llmRes.text,
     });
 }
