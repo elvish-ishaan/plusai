@@ -9,12 +9,14 @@ import { useSearchParams } from "next/navigation";
 export default function HomePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [threads, setThreads] = useState<Thread[]>([]);
+  const [isThreadsLoading, setIsThreadsLoading] = useState<boolean>(false)
   const searchParams = useSearchParams();
   const threadId = searchParams.get("thread");
 
   useEffect(() => {
     const fetchThreads = async () => {
       try {
+        setIsThreadsLoading(true)
         const res = await axios.get("/api/chat/threads");
         if (!res.data.success) {
           console.error("Failed to fetch threads:", res.data.message);
@@ -25,6 +27,8 @@ export default function HomePage() {
       } catch (error) {
         console.error("Failed to fetch threads:", error);
         setThreads([]);
+      }finally{
+        setIsThreadsLoading(false)
       }
     };
     fetchThreads();
@@ -35,6 +39,7 @@ export default function HomePage() {
       {/* Sidebar */}
       <div className="hidden md:block">
         <Sidebar
+          isThreadsLoading={isThreadsLoading}
           threads={threads}
           setThreads={setThreads}
           isCollapsed={isCollapsed}

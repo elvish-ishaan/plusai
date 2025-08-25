@@ -1,4 +1,5 @@
 import { initClient } from "@/app/core";
+import { generateResponse } from "@/app/core/clientV2";
 import { authOptions } from "@/libs/authOptions";
 import prisma from "@/prisma/prismaClient";
 import { getServerSession } from "next-auth";
@@ -30,16 +31,21 @@ export async function POST(req: Request) {
         llmProvider: z.string(),
         threadId: z.uuidv4(),
     });
+        const session = await getServerSession(authOptions);
+
     const { prompt, isWebSearchEnabled, attachmentUrl, temperature, model, maxOutputTokens, threadId, llmProvider, prevPrompts } = requestSchema.parse(await req.json()); 
     //generate diff client on the basis of provider
     const client = initClient('gemini');
     if (!client) {
         return new Response("Invalid model", { status: 400 });
     }
-    let finalPrompt: string = prompt;
+    //inject memories if present on initail prompt
+
+    let finalPrompt: string = `userId: ${session?.user.id}, prompt${prompt}`;
 
     if (prevPrompts && prevPrompts.length > 0 && prevPrompts[0].prompt !== '') {
       finalPrompt = `
+      userid: ${session?.user.id}
     previous conversation:
     ${prevPrompts.map((prompt) => "user:" + prompt.prompt +","+ "response" + prompt.response).join('\n')}
     
@@ -49,9 +55,17 @@ export async function POST(req: Request) {
     }
 
     //@ts-expect-error fix it
-    const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
+    // const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
+     const llmRes = await generateResponse( {finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl} );
+     console.log(llmRes?.text,'getting text.........')
 
-    const session = await getServerSession(authOptions);
+     if(!llmRes){
+      return NextResponse.json({
+        success: false,
+        message: 'something went wrong while generating response'
+      })
+     }
+
     if(!session?.user){
       return NextResponse.json({
         success: true,

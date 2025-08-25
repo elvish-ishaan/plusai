@@ -9,8 +9,8 @@ import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import ChatLoader from "../Loaders/ChatLoader";
 import PromptBubble from "./PromptBubble";
-import TypingText from "../ui/TypingText";
 import { toast } from "sonner";
+import { TypingAnimation } from "./TypingAnimation";
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -239,7 +239,10 @@ export default function ChatCard({
                   </div>
                   {chatItem.response && (
                     <div className="flex justify-start">
-                      <TypingText text={chatItem.response} />
+                      {/* <TypingText text={chatItem.response} /> */}
+                      <TypingAnimation className=" text-sm font-normal"
+                       duration={10}
+                      >{chatItem.response}</TypingAnimation>
                     </div>
                   )}
                 </div>
