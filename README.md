@@ -1,6 +1,6 @@
-# T3 Plus
+# Plus AI
 
-T3 Chat is a modern AI-powered chat application built with [Next.js](https://nextjs.org), TypeScript, Prisma, and NextAuth. It supports multiple LLM providers (Gemini, OpenAI), file attachments, and user authentication.
+Plus AI is a modern AI-powered chat application built with [Next.js](https://nextjs.org), TypeScript, Prisma, and NextAuth. It supports multiple LLM providers (Gemini, OpenAI), file attachments, and user authentication.
 
 ## Features
 
@@ -14,14 +14,13 @@ T3 Chat is a modern AI-powered chat application built with [Next.js](https://nex
 - Modular, scalable codebase
 
 ---
-
 ## Getting Started
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/t3plus.git
-cd t3plus
+git clone https://github.com/your-username/plus-ai.git
+cd plus-ai
 ```
 
 ### 2. Install Dependencies
