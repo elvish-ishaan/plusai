@@ -2,19 +2,28 @@
 
 import Sidebar from "@/components/Sidebar/Sidebar";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function Layout({children}: {children: React.ReactNode}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [threads, setThreads] = useState<Thread[]>([]);
   const [isThreadsLoading, setIsThreadsLoading] = useState<boolean>(false)
+  const {data: session} = useSession()
 
   useEffect(() => {
     const fetchThreads = async () => {
-      setIsThreadsLoading(true)
+      if(!session?.user){
+        return
+      }
+      try {
+        setIsThreadsLoading(true)
       const res = await axios.get("/api/chat/threads");
       setIsThreadsLoading(false)
       setThreads(res.data?.threads);
+      } catch (error) {
+       console.log(error,'error in fetching threads') 
+      }
     };
     fetchThreads();
   }, [])

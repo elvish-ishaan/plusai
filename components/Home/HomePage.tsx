@@ -5,7 +5,7 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import AnnouncementBanner from "./ImportantAnc";
+import { useSession } from "next-auth/react";
 
 export default function HomePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -13,9 +13,13 @@ export default function HomePage() {
   const [isThreadsLoading, setIsThreadsLoading] = useState<boolean>(false)
   const searchParams = useSearchParams();
   const threadId = searchParams.get("thread");
+  const {data: session} = useSession();
 
   useEffect(() => {
     const fetchThreads = async () => {
+      if(!session?.user){
+        return
+      }
       try {
         setIsThreadsLoading(true)
         const res = await axios.get("/api/chat/threads");
@@ -37,7 +41,6 @@ export default function HomePage() {
 
   return (
     <>
-      <AnnouncementBanner />
       <div className="relative bg-background dark:bg-background h-screen overflow-hidden flex">
       {/* Sidebar */}
       <div className="hidden md:block">

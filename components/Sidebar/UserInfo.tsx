@@ -36,7 +36,7 @@ export default function UserInfo() {
   return (
     <div
       onClick={() => router.push("/auth")}
-      className="p-4 border-sidebar-border hover:bg-sidebar-accent m-3 rounded-lg cursor-pointer"
+      className="p-4 border-sidebar-border hover:bg-sidebar-accent m-3 rounded-lg cursor-pointer bg-primary"
     >
       <button className="flex items-center text-sidebar-foreground text-md font-medium gap-2 cursor-pointer ml-2">
         <LogOut className="w-4 h-4 text-sidebar-foreground" />

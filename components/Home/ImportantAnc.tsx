@@ -1,39 +1,29 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, X } from "lucide-react";
 
 export default function AnnouncementBanner() {
-  const [visible, setVisible] = useState(true);
-
-  if (!visible) return null;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full absolute top-0 z-50"
     >
-      <div className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md">
-        <div className="flex items-center justify-between px-3 py-2 text-sm">
-          <div className="flex items-center space-x-2">
-            <Sparkles className="h-4 w-4 text-yellow-300 animate-pulse" />
-            <span>
-              Our chat platform can now <span className="font-bold">memorize things</span>. Just log in and take a look!
-            </span>
+      <div className=" mb-10 relative bg-gradient-to-br from-slate-900 to-blue-950 rounded-2xl p-2 border border-blue-500/20 shadow-2xl backdrop-blur-sm">
+          <div className="flex items-start gap-4">
+            
+            {/* Text content */}
+            <div className="flex-1">
+              <h3 className="text-sm font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+                We Support Memory
+              </h3>
+              <p className="text-blue-200/80 text-xs leading-relaxed">
+                So that you feel <span className="text-purple-400 font-semibold">personalized</span>
+              </p>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setVisible(false)}
-              className="text-white hover:text-gray-200"
-            >
-              <X className="h-4 w-4" />
-            </button>
           </div>
-        </div>
-      </div>
     </motion.div>
   );
 }

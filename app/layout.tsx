@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { Montserrat } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import AuthProvider from "@/AuthProvider";
 import { Toaster } from 'sonner'
 
@@ -53,11 +53,11 @@ export const metadata: Metadata = {
   // },
 };
 
-
-const montserrat = Montserrat({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-montserrat",
-});
+  variable: "--font-spaceGrotesk"
+})
+
 
 export default function RootLayout({
   children,
@@ -65,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${montserrat.className}  antialiased min-h-screen bg-[radial-gradient(ellipse_at_center,var(--background)_20%,oklch(0.235_0.017_290)_100%)]`}
+        className={`${spaceGrotesk.className}  antialiased bg-[radial-gradient(ellipse_at_center,var(--background)_20%,oklch(0.235_0.017_290)_100%)]`}
       >
         <Toaster />
         <ThemeProvider>

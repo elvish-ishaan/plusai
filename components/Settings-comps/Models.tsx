@@ -12,13 +12,13 @@ const initialModels = [
     desc: "Google's latest fast model, known for speed and accuracy (and also web search!).",
     tags: ["Vision", "PDFs", "Search"],
   },
-  {
-    name: "Gemini 2.5 Pro",
-    active: false,
-    provider: "gemini",
-    desc: "Advanced reasoning model by Google, ideal for complex tasks.",
-    tags: ["Vision", "PDFs", "Search"],
-  },
+  // {
+  //   name: "Gemini 2.5 Pro",
+  //   active: false,
+  //   provider: "gemini",
+  //   desc: "Advanced reasoning model by Google, ideal for complex tasks.",
+  //   tags: ["Vision", "PDFs", "Search"],
+  // },
   {
     name: "GPT ImageGen",
     active: false,
