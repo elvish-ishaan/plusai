@@ -57,8 +57,7 @@ export async function POST(req: Request) {
     //@ts-expect-error fix it
     // const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
      const llmRes = await generateResponse( {finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl} );
-     console.log(llmRes?.text,'getting text.........')
-
+     
      if(!llmRes){
       return NextResponse.json({
         success: false,

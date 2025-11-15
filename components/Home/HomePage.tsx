@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import AnnouncementBanner from "./ImportantAnc";
 
 export default function HomePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -35,7 +36,9 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="relative bg-background dark:bg-background h-screen overflow-hidden flex">
+    <>
+      <AnnouncementBanner />
+      <div className="relative bg-background dark:bg-background h-screen overflow-hidden flex">
       {/* Sidebar */}
       <div className="hidden md:block">
         <Sidebar
@@ -56,5 +59,6 @@ export default function HomePage() {
         />
       </div>
     </div>
+    </>
   );
 }
