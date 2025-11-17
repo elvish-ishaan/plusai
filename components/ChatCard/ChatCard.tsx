@@ -147,6 +147,7 @@ export default function ChatCard({
           const titleRes = await axios.post(`/api/chat/generate-title`, {
             initPrompt: text,
           });
+          console.log(titleRes,'generating title................')
 
           if (titleRes.data.success) {
             setIsInitPrompt(false);
@@ -161,7 +162,7 @@ export default function ChatCard({
                 ...prev,
                 {
                   id: newThreadId,
-                  title: titleRes.data.title,
+                  title: titleRes.data?.title,
                   createdAt: new Date(),
                   updatedAt: new Date(),
                   userId: session?.user?.id || "",

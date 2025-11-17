@@ -1,4 +1,3 @@
-import { initClient } from "@/app/core";
 import { generateResponse } from "@/app/core/clientV2";
 import { authOptions } from "@/libs/authOptions";
 import prisma from "@/prisma/prismaClient";
@@ -34,13 +33,8 @@ export async function POST(req: Request) {
         const session = await getServerSession(authOptions);
 
     const { prompt, isWebSearchEnabled, attachmentUrl, temperature, model, maxOutputTokens, threadId, llmProvider, prevPrompts } = requestSchema.parse(await req.json()); 
-    //generate diff client on the basis of provider
-    const client = initClient('gemini');
-    if (!client) {
-        return new Response("Invalid model", { status: 400 });
-    }
+    
     //inject memories if present on initail prompt
-
     let finalPrompt: string = `userId: ${session?.user.id}, prompt${prompt}`;
 
     if (prevPrompts && prevPrompts.length > 0 && prevPrompts[0].prompt !== '') {
@@ -55,7 +49,6 @@ export async function POST(req: Request) {
     }
 
     //@ts-expect-error fix it
-    // const llmRes = await client.generate( finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl );
      const llmRes = await generateResponse( {finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl} );
      
      if(!llmRes){
