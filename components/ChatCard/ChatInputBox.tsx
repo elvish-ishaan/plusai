@@ -1,12 +1,12 @@
 "use client";
 
-import { Globe, Paperclip, ArrowUp, Pause } from "lucide-react";
+import { Globe, ArrowUp, Pause } from "lucide-react";
 import TextareaAutosize from "react-textarea-autosize";
 import ModelSelector from "./ModelSelector";
 import { useState } from "react";
-import { uploadToS3 } from "@/app/actions/uploads";
-import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+// import { uploadToS3 } from "@/app/actions/uploads";
+// import { toast } from "sonner";
+// import { useSession } from "next-auth/react";
 
 type Props = {
   message: string;
@@ -31,9 +31,9 @@ export default function ChatInputBox({
   model,
   setProvider,
   setModel,
-  setFileUrl,
+  // setFileUrl,
   onSend,
-  currentThreadId,
+  // currentThreadId,
   isLoading,
   isPaused,
   setIsPaused,
@@ -47,35 +47,35 @@ export default function ChatInputBox({
   const [selectedTool, setSelectedTool] = useState<
     "search" | "upload" | null
   >(null);
-  const {data: session} = useSession();
+  // const {data: session} = useSession();
 
   const isSendDisabled = message.trim() === "" || isLoading;
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(!session?.user?.id){
-      toast.error("You need to be logged in to upload files");
-      return;
-    }
-    const file = e.target.files?.[0];
-    if (file) {
-      //call the acion to upload the file
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('threadId', currentThreadId || '')
-      console.log('uploading file to s3');
-      const toastId = toast.loading("Uploading file...");
-      const fileUrl = await uploadToS3(formData);
-      if( fileUrl.success) {
-        setFileUrl(fileUrl.url || null);
-        toast.success("File uploaded successfully!", { id: toastId });
-      console.log(fileUrl, 'file url in chat input box');
-      if (!fileUrl.success) {
-        toast.error("Failed to upload file", { id: toastId });
-        console.log('error in uploading file to s3');
-    }
-  };
-}
-  }
+//   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+//     if(!session?.user?.id){
+//       toast.error("You need to be logged in to upload files");
+//       return;
+//     }
+//     const file = e.target.files?.[0];
+//     if (file) {
+//       //call the acion to upload the file
+//       const formData = new FormData();
+//       formData.append('file', file);
+//       formData.append('threadId', currentThreadId || '')
+//       console.log('uploading file to s3');
+//       const toastId = toast.loading("Uploading file...");
+//       const fileUrl = await uploadToS3(formData);
+//       if( fileUrl.success) {
+//         setFileUrl(fileUrl.url || null);
+//         toast.success("File uploaded successfully!", { id: toastId });
+//       console.log(fileUrl, 'file url in chat input box');
+//       if (!fileUrl.success) {
+//         toast.error("Failed to upload file", { id: toastId });
+//         console.log('error in uploading file to s3');
+//     }
+//   };
+// }
+//   }
 
   return (
     <div className=" px-4 pt-4 mx-auto">
@@ -168,7 +168,7 @@ export default function ChatInputBox({
               </button>
 
               {/* Paperclip file input button */}
-              <div
+              {/* <div
                 className={`cursor-pointer p-2 rounded-md transition-colors duration-150
                 ${
                   selectedTool === "upload"
@@ -189,7 +189,7 @@ export default function ChatInputBox({
                     className={ session?.user?.id ? "absolute inset-0 w-full h-full opacity-0 cursor-pointer" : "absolute inset-0 w-full h-full opacity-0 cursor-not-allowed"}
                   />
                 </label>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

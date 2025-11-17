@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Space_Grotesk } from "next/font/google";
 import AuthProvider from "@/AuthProvider";
 import { Toaster } from 'sonner'
-
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 
 export const metadata: Metadata = {
@@ -68,7 +67,12 @@ export default function RootLayout({
         className={`${spaceGrotesk.className}  antialiased bg-[radial-gradient(ellipse_at_center,var(--background)_20%,oklch(0.235_0.017_290)_100%)]`}
       >
         <Toaster />
-        <ThemeProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
           <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </body>

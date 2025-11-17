@@ -5,6 +5,7 @@ import {  Sun, Moon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 
 export default function TopRightIconHolder({
   isCollapsed,
@@ -14,35 +15,19 @@ export default function TopRightIconHolder({
   const [isDark, setIsDark] = useState(true);
   const router = useRouter();
   const {data : session} = useSession();
+  const {theme, setTheme} = useTheme();
+  console.log(theme,'getting current theme')
 
   useEffect(() => {
     const html = document.documentElement;
     setIsDark(html.classList.contains("dark"));
   }, []);
 
-  const toggleDarkMode = () => {
-    const html = document.documentElement;
-    const newTheme = html.classList.contains("dark") ? "light" : "dark";
-    html.classList.toggle("dark", newTheme === "dark");
-    localStorage.setItem("theme", newTheme);
-    setIsDark(newTheme === "dark");
-  };
-
   const lightFilter =
     "brightness(0.2) saturate(100%) invert(19%) sepia(47%) saturate(3761%) hue-rotate(309deg) brightness(95%) contrast(88%)"; // dark pink
   const darkFilter =
     "brightness(0.9) saturate(200%) invert(85%) sepia(5%) saturate(120%) hue-rotate(300deg) contrast(105%)"; // light pink
 
-  
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const applyDark = storedTheme === "dark" || (!storedTheme && prefersDark);
-    document.documentElement.classList.toggle("dark", applyDark);
-    setIsDark(applyDark);
-  }, []);
 
 
   return (
@@ -82,11 +67,11 @@ export default function TopRightIconHolder({
         </button>
 
         <button
-          onClick={toggleDarkMode}
+          onClick={ () => theme == "dark" ? setTheme("light") : setTheme("dark")}
           className="flex items-center justify-center w-7 h-7 rounded-md text-primary hover:text-primary/80 dark:hover:text-primary-foreground dark:text-primary-foreground dark:hover:bg-accent hover:bg-accent transition cursor-pointer"
           aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
-          {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {theme == "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
       </div>
     </div>
