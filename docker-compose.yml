@@ -10,11 +10,13 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    #it mounts the local code files inside container without over writing the node_modules for hot reloading
     volumes:
       - .:/app
       - /app/node_modules
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/plusai
+      #must set these envs else hot module not work, it will tell nextjs to pool for the changes
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
       WATCHPACK_POLLING_INTERVAL: 100

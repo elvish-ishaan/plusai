@@ -1,0 +1,57 @@
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
+RUN set -ex; \
+    apk update; \
+    apk add --no-cache \
+    openssl
+
+COPY . .
+
+RUN npm install && \
+  npm add sharp && \
+  npm run build
+
+RUN DATABASE_URL=${DATABASE_URL} npx prisma@6.9.0 generate
+
+FROM node:20-alpine AS run
+
+# This is a shell flag:
+# -e → stop the script on any error
+# -x → print every executed command (for debugging)
+# So if something fails inside this RUN, you’ll know exactly what and why.
+RUN set -ex; \
+    apk update; \
+    apk add --no-cache \
+    openssl
+
+# This creates an .npm cache folder in the root (/) directory.
+# Then it changes ownership to user 1001.
+# This is needed ONLY if:
+# You switch to a non-root user
+# And npm needs to write cache/npm temp files
+RUN mkdir /.npm && chown -R 1001:1001 /.npm
+
+# This drops privileges so your app runs as a non-root user.
+# User ID 1001 = arbitrary low-privilege user.
+# Why?
+# More secure
+# Avoids root in container
+# Some platforms (Cloud Run, Heroku, Render) require non-root
+USER 1001:1001
+
+WORKDIR /app
+
+COPY --from=build --chown=1001:1001 /app/.next/standalone ./
+COPY --from=build --chown=1001:1001 /app/.next/static ./.next/static
+COPY --from=build --chown=1001:1001 /app/public ./public
+
+ENV NODE_ENV production
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+CMD [ "node", "server.js" ]
