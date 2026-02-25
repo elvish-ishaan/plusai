@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 //using in memory for rate limmiting
 const inMemDb = new Map<string, number>();
 
-export const middleware = async (request: NextRequest) => {
+export const proxy = async (request: NextRequest) => {
     // const ip = request.headers.get("x-forwarded-for");
     // const key = ip || "";
 
@@ -20,7 +20,7 @@ export const middleware = async (request: NextRequest) => {
     // } else {
     //     inMemDb.set(key, 1);
     //     return NextResponse.next();
-    // }   
+    // }
     return NextResponse.next()
 }
 
