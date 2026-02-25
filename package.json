@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "bun --bun run next dev",
+    "build": "bun --bun run next build",
+    "start": "bun --bun run next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -30,7 +30,7 @@
     "next-auth": "^4.24.11",
     "next-themes": "^0.4.6",
     "openai": "^5.3.0",
-    "react": "^19.0.0",
+    "react": "^19.2.1",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
     "react-scroll": "^1.9.3",
