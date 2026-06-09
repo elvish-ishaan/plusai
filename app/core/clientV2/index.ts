@@ -1,8 +1,6 @@
-import { OpenRouter } from "@openrouter/sdk";
-import type { ChatMessages } from "@openrouter/sdk/models";
 import { systemPrompt } from "@/libs/systemPrompt";
 
-const openrouter = new OpenRouter({ apiKey: process.env.OPENROUTER_API_KEY });
+const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 interface UserParams {
     finalPrompt: string;
@@ -13,17 +11,21 @@ interface UserParams {
     attachmentUrl?: string | null;
 }
 
-function buildMessages(finalPrompt: string, attachmentUrl?: string | null): ChatMessages[] {
-    const userContent = attachmentUrl
+type MessageContent =
+    | string
+    | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }>;
+
+function buildMessages(finalPrompt: string, attachmentUrl?: string | null) {
+    const userContent: MessageContent = attachmentUrl
         ? [
               { type: "text" as const, text: finalPrompt },
-              { type: "image_url" as const, imageUrl: { url: attachmentUrl } },
+              { type: "image_url" as const, image_url: { url: attachmentUrl } },
           ]
         : finalPrompt;
 
     return [
         { role: "system", content: systemPrompt },
-        { role: "user", content: userContent as string },
+        { role: "user", content: userContent },
     ];
 }
 
@@ -31,40 +33,57 @@ function buildMessages(finalPrompt: string, attachmentUrl?: string | null): Chat
 export async function* generateStreamingResponse(userParams: UserParams): AsyncGenerator<string> {
     const { finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl } = userParams;
 
-    const stream = await openrouter.chat.send({
-        chatRequest: {
-            model,
-            messages: buildMessages(finalPrompt, attachmentUrl),
-            maxTokens: maxOutputTokens ?? undefined,
-            temperature: temperature ?? undefined,
-            stream: true,
-            ...(isWebSearchEnabled && { plugins: [{ id: "web" as const }] }),
+    const body: Record<string, unknown> = {
+        model,
+        messages: buildMessages(finalPrompt, attachmentUrl),
+        max_tokens: maxOutputTokens ?? undefined,
+        temperature: temperature ?? undefined,
+        stream: true,
+    };
+
+    if (isWebSearchEnabled) {
+        body.plugins = [{ id: "web", max_results: 5 }];
+    }
+
+    const response = await fetch(OPENROUTER_API_URL, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+            "Content-Type": "application/json",
         },
+        body: JSON.stringify(body),
     });
 
-    for await (const chunk of stream) {
-        if (chunk.error) throw new Error(chunk.error.message);
-        const content = chunk.choices?.[0]?.delta?.content;
-        if (content) yield content;
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`OpenRouter error ${response.status}: ${errorText}`);
+    }
+
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            const data = line.slice(6).trim();
+            if (data === "[DONE]") return;
+            try {
+                const chunk = JSON.parse(data);
+                if (chunk.error) throw new Error(chunk.error.message ?? "Stream error");
+                const content = chunk.choices?.[0]?.delta?.content;
+                if (content) yield content;
+            } catch (e) {
+                if ((e as Error).message?.includes("Stream error") || (e as Error).message?.startsWith("OpenRouter")) throw e;
+                // skip malformed SSE lines
+            }
+        }
     }
 }
-
-// Non-streaming: used by title generation
-export const generateResponse = async (userParams: UserParams) => {
-    const { finalPrompt, maxOutputTokens, temperature, model, isWebSearchEnabled, attachmentUrl } = userParams;
-    try {
-        const response = await openrouter.chat.send({
-            chatRequest: {
-                model,
-                messages: buildMessages(finalPrompt, attachmentUrl),
-                maxTokens: maxOutputTokens ?? undefined,
-                temperature: temperature ?? undefined,
-                ...(isWebSearchEnabled && { plugins: [{ id: "web" as const }] }),
-            },
-        });
-        const content = response.choices[0].message.content;
-        return { text: typeof content === "string" ? content : "" };
-    } catch (error) {
-        console.log(error, "error while generating response from llm.");
-    }
-};
