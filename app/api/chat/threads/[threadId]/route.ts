@@ -50,7 +50,6 @@ export async function GET(request: NextRequest) {
     
 }
 
-//write post post route to pin a thread
 export async function PATCH(request: NextRequest) {
     const url = request.nextUrl;
     const threadId = url.pathname.split('/')[4]
@@ -62,12 +61,8 @@ export async function PATCH(request: NextRequest) {
                 message: "You are not logged in",
             }, { status: 401 });
         }
-        //first get the thread 
-       try {
-         const thread = await prisma.thread.findUnique({
-            where: {
-                id: threadId || "",
-            },
+        const thread = await prisma.thread.findUnique({
+            where: { id: threadId || "" },
         });
         if (!thread) {
             return NextResponse.json({
@@ -75,31 +70,24 @@ export async function PATCH(request: NextRequest) {
                 message: "Thread not found",
             }, { status: 404 });
         }
-        //update the thread
-        await prisma.thread.updateMany({
-            where: {
-                id: threadId || "",
-            },
-            data: {
-                pinned: !thread.pinned, // Toggle the pinned status
-            },
+
+        const body = await request.json().catch(() => ({}));
+        const updateData: { pinned?: boolean; title?: string } = {};
+        if (typeof body.title === "string") updateData.title = body.title;
+        if (typeof body.pinned === "boolean") updateData.pinned = body.pinned;
+        if (Object.keys(updateData).length === 0) updateData.pinned = !thread.pinned;
+
+        await prisma.thread.update({
+            where: { id: threadId || "" },
+            data: updateData,
         });
 
         return NextResponse.json({
             success: true,
-            message: "Thread pinned successfully",
-            thread,
+            message: "Thread updated successfully",
         }, { status: 200 });
-       } catch (error) {
-        console.error("Error fetching thread from db:", error);
-        return NextResponse.json({
-            success: false,
-            message: "Thread not found",
-        }, { status: 404 });
-        
-       }
     } catch (error) {
-        console.error("Error pinning thread:", error);
+        console.error("Error updating thread:", error);
         return NextResponse.json({
             success: false,
             message: "Internal server error",

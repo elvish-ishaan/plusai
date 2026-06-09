@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image"; 
-import {  Sun, Moon } from "lucide-react";
+import Image from "next/image";
+import { Sun, Moon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 
@@ -12,23 +12,21 @@ export default function TopRightIconHolder({
 }: {
   isCollapsed: boolean;
 }) {
-  const [isDark, setIsDark] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  const {data : session} = useSession();
-  const {theme, setTheme} = useTheme();
-  console.log(theme,'getting current theme')
+  const { data: session } = useSession();
+  const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => {
-    const html = document.documentElement;
-    setIsDark(html.classList.contains("dark"));
+    setMounted(true);
   }, []);
 
+  const isDark = resolvedTheme === "dark";
+
   const lightFilter =
-    "brightness(0.2) saturate(100%) invert(19%) sepia(47%) saturate(3761%) hue-rotate(309deg) brightness(95%) contrast(88%)"; // dark pink
+    "brightness(0.2) saturate(100%) invert(19%) sepia(47%) saturate(3761%) hue-rotate(309deg) brightness(95%) contrast(88%)";
   const darkFilter =
-    "brightness(0.9) saturate(200%) invert(85%) sepia(5%) saturate(120%) hue-rotate(300deg) contrast(105%)"; // light pink
-
-
+    "brightness(0.9) saturate(200%) invert(85%) sepia(5%) saturate(120%) hue-rotate(300deg) contrast(105%)";
 
   return (
     <div className="absolute top-0 right-0 z-10">
@@ -62,16 +60,17 @@ export default function TopRightIconHolder({
             alt="Settings"
             width={24}
             height={24}
-            style={{ filter: isDark ? darkFilter : lightFilter }}
+            style={{ filter: mounted ? (isDark ? darkFilter : lightFilter) : "none" }}
           />
         </button>
 
         <button
-          onClick={ () => theme == "dark" ? setTheme("light") : setTheme("dark")}
+          onClick={() => setTheme(isDark ? "light" : "dark")}
           className="flex items-center justify-center w-7 h-7 rounded-md text-primary hover:text-primary/80 dark:hover:text-primary-foreground dark:text-primary-foreground dark:hover:bg-accent hover:bg-accent transition cursor-pointer"
           aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
-          {theme == "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {/* Render a placeholder until mounted to avoid hydration mismatch */}
+          {mounted ? (isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />) : <Moon className="w-5 h-5" />}
         </button>
       </div>
     </div>

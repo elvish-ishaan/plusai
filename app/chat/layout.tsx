@@ -22,11 +22,11 @@ export default function Layout({children}: {children: React.ReactNode}) {
       setIsThreadsLoading(false)
       setThreads(res.data?.threads);
       } catch (error) {
-       console.log(error,'error in fetching threads') 
+       console.log(error,'error in fetching threads')
       }
     };
     fetchThreads();
-  }, [])
+  }, [session?.user?.id])
   
   return (
     <div className="relative bg-background dark:bg-background h-screen overflow-hidden flex">

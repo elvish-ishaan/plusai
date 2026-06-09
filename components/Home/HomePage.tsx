@@ -11,6 +11,7 @@ export default function HomePage() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [threads, setThreads] = useState<Thread[]>([]);
   const [isThreadsLoading, setIsThreadsLoading] = useState<boolean>(false)
+  const [chatKey, setChatKey] = useState(0);
   const searchParams = useSearchParams();
   const threadId = searchParams.get("thread");
   const {data: session} = useSession();
@@ -37,7 +38,7 @@ export default function HomePage() {
       }
     };
     fetchThreads();
-  }, []);
+  }, [session?.user?.id]);
 
   return (
     <>
@@ -50,12 +51,14 @@ export default function HomePage() {
           setThreads={setThreads}
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
+          onNewChat={() => setChatKey((k) => k + 1)}
         />
       </div>
 
       {/* Main Content */}
       <div className="flex-1 transition-all duration-300 h-screen">
         <ChatCard
+          key={chatKey}
           isCollapsed={isCollapsed}
           setThreads={setThreads}
           threadId={threadId || undefined}

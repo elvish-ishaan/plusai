@@ -36,12 +36,14 @@ export default function Sidebar({
   setIsCollapsed,
   threads,
   setThreads,
+  onNewChat,
 }: {
   isThreadsLoading: boolean;
   isCollapsed: boolean;
   setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   threads: Thread[];
   setThreads: React.Dispatch<React.SetStateAction<Thread[]>>;
+  onNewChat?: () => void;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -258,13 +260,18 @@ export default function Sidebar({
               </Link>
             </div>
 
-            <Link href={'/'}>
             <Button
               className="w-full mt-2"
+              onClick={() => {
+                if (onNewChat) {
+                  onNewChat();
+                } else {
+                  router.push('/');
+                }
+              }}
             >
               New Chat
             </Button>
-            </Link>
 
             {/* Search box */}
             <div className="text-sm font-normal">

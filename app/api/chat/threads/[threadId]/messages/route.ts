@@ -34,7 +34,7 @@ export async function GET( request: NextRequest) {
     });
 
     // Format messages
-    const messages = chats.flatMap(chat => [
+    const messages = chats.flatMap((chat: { prompt: string; response: string }) => [
       { sender: "user", text: chat.prompt },
       { sender: "ai", text: chat.response }
     ]);

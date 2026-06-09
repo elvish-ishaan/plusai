@@ -127,6 +127,17 @@ const MarkdownComponents: Components = {
   hr: () => <hr className="my-6 border-gray-300 dark:border-gray-600" />,
 };
 
+// Pure markdown renderer — no animation, used for streamed responses
+export function MarkdownRenderer({ content, className }: { content: string; className?: string }) {
+  return (
+    <div className={cn("prose prose-lg max-w-none dark:prose-invert text-sm font-normal", className)}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+}
+
 export function TypingAnimation({
   children,
   className,

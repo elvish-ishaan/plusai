@@ -33,144 +33,87 @@ export const colors = {
   }
 };
 
-export const models = [
-  // Gemini
+export interface ModelEntry {
+  title: string;
+  name: string;       // OpenRouter model ID, e.g. "google/gemini-2.5-flash"
+  active: boolean;
+  provider: string;
+  description?: string;
+}
+
+// Recommended models shown at the top of the model selector
+export const recommendedModels: ModelEntry[] = [
   {
     title: "Gemini 2.5 Flash",
-    name: "gemini-2.5-flash",
+    name: "google/gemini-2.5-flash",
     active: true,
     provider: "google",
+    description: "Google's fast multimodal model with web search support.",
   },
   {
     title: "Gemini 2.5 Pro",
-    name: "gemini-2.5-pro",
+    name: "google/gemini-2.5-pro",
     active: true,
     provider: "google",
+    description: "Google's most capable model for complex reasoning tasks.",
   },
-
-  // OpenAI
   {
     title: "GPT-4o",
-    name: "gpt-4o",
-    active: false,
+    name: "openai/gpt-4o",
+    active: true,
     provider: "openai",
+    description: "OpenAI's flagship multimodal model.",
   },
   {
     title: "GPT-4 Turbo",
-    name: "gpt-4-turbo",
-    active: false,
+    name: "openai/gpt-4-turbo",
+    active: true,
     provider: "openai",
+    description: "Fast and capable GPT-4 variant.",
   },
   {
-    title: "GPT-4",
-    name: "gpt-4",
-    active: false,
-    provider: "openai",
-  },
-  {
-    title: "GPT-3.5 Turbo",
-    name: "gpt-3.5-turbo",
-    active: false,
-    provider: "openai",
-  },
-  {
-    title: "GPT ImageGen",
-    name: "gpt-image-gen",
-    active: false,
-    provider: "openai",
-  },
-
-  // Claude
-  {
-    title: "Claude 3 Opus",
-    name: "claude-3-opus",
-    active: false,
-    provider: "claude",
-  },
-  {
-    title: "Claude 3 Sonnet",
-    name: "claude-3-sonnet",
-    active: false,
-    provider: "claude",
+    title: "Claude 3.5 Sonnet",
+    name: "anthropic/claude-3-5-sonnet",
+    active: true,
+    provider: "anthropic",
+    description: "Anthropic's balanced model for complex tasks.",
   },
   {
     title: "Claude 3 Haiku",
-    name: "claude-3-haiku",
-    active: false,
-    provider: "claude",
+    name: "anthropic/claude-3-haiku",
+    active: true,
+    provider: "anthropic",
+    description: "Anthropic's fast and compact model.",
   },
-
-  // DeepSeek
   {
-    title: "DeepSeek-V2",
-    name: "deepseek-v2",
-    active: false,
+    title: "DeepSeek Chat",
+    name: "deepseek/deepseek-chat",
+    active: true,
     provider: "deepseek",
+    description: "DeepSeek's general-purpose chat model.",
   },
   {
-    title: "DeepSeek-Coder V1.5",
-    name: "deepseek-coder-1.5",
-    active: false,
-    provider: "deepseek",
-  },
-  {
-    title: "DeepSeek R1 (Llama Distilled)",
-    name: "deepseek-r1-llama-distilled",
-    active: false,
-    provider: "deepseek",
-  },
-
-  // Mistral
-  {
-    title: "Mistral 7B",
-    name: "mistral-7b",
-    active: false,
+    title: "Mistral 7B Instruct",
+    name: "mistralai/mistral-7b-instruct",
+    active: true,
     provider: "mistral",
-  },
-  {
-    title: "Mixtral 8x7B",
-    name: "mixtral-8x7b",
-    active: false,
-    provider: "mistral",
-  },
-
-  // Qwen
-  {
-    title: "Qwen1.5-72B",
-    name: "qwen1.5-72b",
-    active: false,
-    provider: "qwen",
-  },
-  {
-    title: "Qwen1.5-14B",
-    name: "qwen1.5-14b",
-    active: false,
-    provider: "qwen",
-  },
-  {
-    title: "Qwen1.5-7B",
-    name: "qwen1.5-7b",
-    active: false,
-    provider: "qwen",
-  },
-
-  // Others (add more as needed)
-  {
-    title: "Command R+",
-    name: "command-r-plus",
-    active: false,
-    provider: "cohere",
+    description: "Fast and efficient open-source model by Mistral.",
   },
   {
     title: "LLaMA 3 70B",
-    name: "llama3-70b",
-    active: false,
+    name: "meta-llama/llama-3-70b-instruct",
+    active: true,
     provider: "meta",
+    description: "Meta's powerful open-source large language model.",
   },
   {
     title: "LLaMA 3 8B",
-    name: "llama3-8b",
-    active: false,
+    name: "meta-llama/llama-3-8b-instruct",
+    active: true,
     provider: "meta",
+    description: "Meta's lightweight open-source model.",
   },
 ];
+
+// Kept for backwards compatibility — use recommendedModels directly
+export const models = recommendedModels;

@@ -10,7 +10,13 @@ import { useSession } from "next-auth/react";
 import ChatLoader from "../Loaders/ChatLoader";
 import PromptBubble from "./PromptBubble";
 import { toast } from "sonner";
-import { TypingAnimation } from "./TypingAnimation";
+import { MarkdownRenderer } from "./TypingAnimation";
+
+// NDJSON message types from the streaming API
+type StreamChunk = { t: "c"; v: string };
+type StreamDone = { t: "d"; id: string; threadId: string; model: string; provider: string; prompt: string; response: string; createdAt: string; updatedAt: string };
+type StreamError = { t: "e"; message: string };
+type StreamMessage = StreamChunk | StreamDone | StreamError;
 
 interface ChatCardProps {
   isCollapsed: boolean;
@@ -18,27 +24,20 @@ interface ChatCardProps {
   threadId?: string;
 }
 
-export default function ChatCard({
-  isCollapsed,
-  setThreads,
-  threadId,
-}: ChatCardProps) {
+export default function ChatCard({ isCollapsed, setThreads, threadId }: ChatCardProps) {
   const [chat, setchat] = useState<Chat[]>([]);
   const [message, setMessage] = useState<string>("");
-  const [provider, setProvider] = useState<string>("gemini");
-  const [model, setModel] = useState<string>("gemini-2.0-flash");
+  const [provider, setProvider] = useState<string>("google");
+  const [model, setModel] = useState<string>("google/gemini-2.5-flash");
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingChatId, setStreamingChatId] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [isInitPrompt, setIsInitPrompt] = useState<boolean>(true);
   const [isWebSearchEnabled, setIsWebSearchEnabled] = useState<boolean>(false);
   const { data: session } = useSession();
-
-  // Generate UUID for new threads
   const [currentThreadId, setCurrentThreadId] = useState<string>(() => uuid());
   const [fileUrl, setFileUrl] = useState<string | null>(null);
 
-
-  // Load thread data when threadId changes
   useEffect(() => {
     if (!threadId) {
       setchat([]);
@@ -58,19 +57,17 @@ export default function ChatCard({
         }
       } catch (err) {
         console.error("Failed to fetch thread:", err);
-        setchat([
-          {
-            id: uuid(),
-            prompt: "Error loading conversation",
-            response: "Failed to load the conversation. Please try again.",
-            provider: "system",
-            model: "system",
-            thread: threadId,
-            userId: session?.user?.id || "unknown-user",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ]);
+        setchat([{
+          id: uuid(),
+          prompt: "Error loading conversation",
+          response: "Failed to load the conversation. Please try again.",
+          provider: "system",
+          model: "system",
+          thread: threadId,
+          userId: session?.user?.id || "unknown-user",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }]);
       } finally {
         setIsLoading(false);
       }
@@ -87,16 +84,17 @@ export default function ChatCard({
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
 
+    const tempId = uuid();
+    setStreamingChatId(tempId);
     setIsLoading(true);
-    // Create temporary chat entry while waiting for response
-    const tempChatId = uuid();
+
     setchat((prev) => [
       ...prev,
       {
-        id: tempChatId,
+        id: tempId,
         prompt: text,
         response: "",
-        provider: provider || "gemini",
+        provider: provider || "google",
         model,
         attachmentUrl: fileUrl || null,
         thread: currentThreadId,
@@ -109,66 +107,117 @@ export default function ChatCard({
     setMessage("");
 
     try {
-      const body = {
-        prompt: text,
-        prevPrompts: chat,
-        model,
-        threadId: currentThreadId,
-        attachmentUrl: fileUrl || null,
-        isWebSearchEnabled,
-        maxOutputTokens: 500,
-        temperature: 0.5,
-        systemPrompt: "you are helpful assistant.",
-        llmProvider: provider || "gemini",
-      };
-      // Send request
-      const res = await axios.post(`/api/chat`, body);
-      if(!res.data.success){
-        toast.error(res.data.message);
-        return;
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: text,
+          prevPrompts: chat,
+          model,
+          threadId: currentThreadId,
+          attachmentUrl: fileUrl || null,
+          isWebSearchEnabled,
+          maxOutputTokens: 2000,
+          temperature: 0.5,
+          systemPrompt: "",
+          llmProvider: provider || "google",
+        }),
+      });
+
+      if (!res.ok || !res.body) {
+        throw new Error(`Request failed: ${res.status}`);
       }
 
-      if (res.data.success) {
-        // Remove temp entry and add real response
-        setchat((prev) => {
-          const filtered = prev.filter((c) => c.id !== tempChatId);
-          return [...filtered, res.data.genResponse];
-        });
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let finalData: StreamDone | null = null;
 
-        // Set thread ID if this is a new thread and we get one back from API
-        if (res.data.genResponse?.thread?.id) {
-          setCurrentThreadId(res.data.genResponse.thread.id);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const msg = JSON.parse(line) as StreamMessage;
+
+            if (msg.t === "c") {
+              setchat((prev) =>
+                prev.map((c) =>
+                  c.id === tempId ? { ...c, response: c.response + msg.v } : c
+                )
+              );
+            } else if (msg.t === "d") {
+              finalData = msg;
+              // Replace temp entry with DB-confirmed entry
+              setchat((prev) =>
+                prev.map((c) =>
+                  c.id === tempId
+                    ? {
+                        ...c,
+                        id: msg.id,
+                        model: msg.model,
+                        provider: msg.provider,
+                        createdAt: new Date(msg.createdAt),
+                        updatedAt: new Date(msg.updatedAt),
+                      }
+                    : c
+                )
+              );
+              setCurrentThreadId(msg.threadId);
+            } else if (msg.t === "e") {
+              throw new Error(msg.message);
+            }
+          } catch {
+            // skip malformed lines
+          }
         }
       }
 
-      // Handle title generation for first prompt
-      if (isInitPrompt) {
+      // Generate thread title on first message
+      if (isInitPrompt && finalData) {
         try {
-          const titleRes = await axios.post(`/api/chat/generate-title`, {
-            initPrompt: text,
+          const titleRes = await fetch("/api/chat/generate-title", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ initPrompt: text }),
           });
-          console.log(titleRes,'generating title................')
+          const title = (await titleRes.text()).trim();
 
-          if (titleRes.data.success) {
+          if (title) {
             setIsInitPrompt(false);
-            // Use the backend thread ID if available
-            const newThreadId =
-              res.data.genResponse?.thread?.id || currentThreadId;
-              //@ts-expect-error fix it
+            const newThreadId = finalData.threadId || currentThreadId;
+            //@ts-expect-error Thread type mismatch
             setThreads?.((prev) => {
-              // Only add if not already present
-              if (prev.some((t) => t.id === newThreadId)) return prev;
+              const exists = prev.some((t) => t.id === newThreadId);
+              if (exists) {
+                return prev.map((t) => t.id === newThreadId ? { ...t, title } : t);
+              }
               return [
-                ...prev,
                 {
                   id: newThreadId,
-                  title: titleRes.data?.title,
+                  title,
                   createdAt: new Date(),
                   updatedAt: new Date(),
                   userId: session?.user?.id || "",
                 },
+                ...prev,
               ];
             });
+
+            // Persist the LLM-generated title to DB
+            if (session?.user) {
+              fetch(`/api/chat/threads/${newThreadId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title }),
+              }).catch(() => {});
+            }
           }
         } catch (err) {
           console.error("Failed to generate title:", err);
@@ -176,33 +225,18 @@ export default function ChatCard({
       }
     } catch (err) {
       console.error("Failed to send message:", err);
-      // Remove temp entry on error
-      setchat((prev) => prev.filter((c) => c.id !== tempChatId));
-      // Add error message
-      setchat((prev) => [
-        ...prev,
-        {
-          id: uuid(),
-          prompt: "Error",
-          response: "Failed to send message. Please try again.",
-          provider: "system",
-          model: "system",
-          thread: currentThreadId,
-          userId: session?.user?.id || "unknown-user",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ]);
+      setchat((prev) => prev.filter((c) => c.id !== tempId));
+      toast.error("Failed to send message. Please try again.");
     } finally {
+      setStreamingChatId(null);
       setIsLoading(false);
     }
   };
 
-  //Automatically scroll to bottom when chat updates
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if ( chatContainerRef.current) {
+    if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
         top: chatContainerRef.current.scrollHeight,
         behavior: "smooth",
@@ -210,13 +244,12 @@ export default function ChatCard({
     }
   }, [chat, isLoading]);
 
-
   return (
     <div
       className={`relative flex flex-col ${
         isCollapsed
           ? "w-screen h-screen bg-background dark:bg-background"
-          : "h-screen w-full md:mt-3.5 md:rounded-l-xl md:border dark:bg-background border-border dark:border-border  bg-background shadow-md"
+          : "h-screen w-full md:mt-3.5 md:rounded-l-xl md:border dark:bg-background border-border dark:border-border bg-background shadow-md"
       } overflow-hidden`}
     >
       <TopRightIconHolder isCollapsed={isCollapsed} />
@@ -231,40 +264,36 @@ export default function ChatCard({
               className="max-w-4xl mx-auto h-full overflow-y-auto scrollbar-hide pb-42 pr-2"
             >
               {chat?.map((chatItem) => (
-                <div
-                  key={chatItem.id}
-                  className="flex flex-col space-y-4 mb-3 mt-8 px-2"
-                >
+                <div key={chatItem.id} className="flex flex-col space-y-4 mb-3 mt-8 px-2">
                   <div className="flex justify-end">
                     <PromptBubble prompt={chatItem?.prompt} />
                   </div>
-                  {chatItem.response && (
-                    <div className="flex justify-start">
-                      {/* <TypingText text={chatItem.response} /> */}
-                      <TypingAnimation className=" text-sm font-normal"
-                       duration={10}
-                      >{chatItem.response}</TypingAnimation>
-                    </div>
-                  )}
-                </div>
-              ))}
 
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="flex flex-col space-y-4 mb-3 mt-8 px-4">
-                    <div className="p-3 animate-pulse">
-                      <ChatLoader />
-                    </div>
+                  <div className="flex justify-start">
+                    {/* Show loader until first chunk arrives */}
+                    {chatItem.id === streamingChatId && chatItem.response === "" ? (
+                      <div className="p-3 animate-pulse">
+                        <ChatLoader />
+                      </div>
+                    ) : chatItem.response ? (
+                      <div className="relative">
+                        <MarkdownRenderer content={chatItem.response} />
+                        {/* Blinking cursor while this message is streaming */}
+                        {chatItem.id === streamingChatId && (
+                          <span className="inline-block w-0.5 h-4 bg-foreground/70 rounded-full animate-pulse ml-0.5 align-middle" />
+                        )}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
-              )}
+              ))}
             </div>
           </div>
         )}
       </div>
 
       <div className="relative z-10">
-        <div className="max-w-4xl w-full mx-auto sticky bottom-0 backdrop-blur-md  ">
+        <div className="max-w-4xl w-full mx-auto sticky bottom-0 backdrop-blur-md">
           <ChatInputBox
             message={message}
             setFileUrl={setFileUrl}
@@ -281,4 +310,4 @@ export default function ChatCard({
       </div>
     </div>
   );
-}  
+}
