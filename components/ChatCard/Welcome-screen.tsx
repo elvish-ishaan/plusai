@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Sparkles, Newspaper, Code, GraduationCap } from "lucide-react";
 import { cn } from "@/libs/utils";
 import { useSession } from "next-auth/react";
-import AnnouncementBanner from "../Home/ImportantAnc";
 
 interface WelcomeScreenProps {
   onPromptSelect: (prompt: string) => void;
@@ -83,7 +82,6 @@ export default function WelcomeScreen({ onPromptSelect }: WelcomeScreenProps) {
 
   return (
     <div className="flex flex-col h-full w-full justify-center items-center text-center px-4 mt-10">
-      <AnnouncementBanner/>
       <div className="w-full max-w-3xl space-y-8">
         <h2 className="text-3xl font-bold text-start text-foreground dark:text-foreground">
           How can I help you, { session?.user?.name || 'Anonymous'}?
