@@ -39,6 +39,8 @@ export interface ModelEntry {
   active: boolean;
   provider: string;
   description?: string;
+  capabilities?: string[];  // e.g. ["vision", "fast", "long-context", "reasoning", "code", "image-gen"]
+  contextLength?: number;
 }
 
 // Recommended models shown at the top of the model selector
@@ -49,6 +51,8 @@ export const recommendedModels: ModelEntry[] = [
     active: true,
     provider: "google",
     description: "Google's fast multimodal model with web search support.",
+    capabilities: ["vision", "fast", "long-context"],
+    contextLength: 1048576,
   },
   {
     title: "Gemini 2.5 Pro",
@@ -56,6 +60,8 @@ export const recommendedModels: ModelEntry[] = [
     active: true,
     provider: "google",
     description: "Google's most capable model for complex reasoning tasks.",
+    capabilities: ["vision", "long-context", "reasoning"],
+    contextLength: 2097152,
   },
   {
     title: "GPT-4o",
@@ -63,6 +69,8 @@ export const recommendedModels: ModelEntry[] = [
     active: true,
     provider: "openai",
     description: "OpenAI's flagship multimodal model.",
+    capabilities: ["vision", "long-context"],
+    contextLength: 128000,
   },
   {
     title: "GPT-4 Turbo",
@@ -70,6 +78,8 @@ export const recommendedModels: ModelEntry[] = [
     active: true,
     provider: "openai",
     description: "Fast and capable GPT-4 variant.",
+    capabilities: ["vision", "long-context"],
+    contextLength: 128000,
   },
   {
     title: "Claude 3.5 Sonnet",
@@ -77,6 +87,8 @@ export const recommendedModels: ModelEntry[] = [
     active: true,
     provider: "anthropic",
     description: "Anthropic's balanced model for complex tasks.",
+    capabilities: ["vision", "long-context"],
+    contextLength: 200000,
   },
   {
     title: "Claude 3 Haiku",
@@ -84,6 +96,8 @@ export const recommendedModels: ModelEntry[] = [
     active: true,
     provider: "anthropic",
     description: "Anthropic's fast and compact model.",
+    capabilities: ["vision", "fast"],
+    contextLength: 200000,
   },
   {
     title: "DeepSeek Chat",
@@ -91,27 +105,35 @@ export const recommendedModels: ModelEntry[] = [
     active: true,
     provider: "deepseek",
     description: "DeepSeek's general-purpose chat model.",
+    capabilities: ["code", "long-context"],
+    contextLength: 163840,
   },
   {
     title: "Mistral 7B Instruct",
     name: "mistralai/mistral-7b-instruct",
     active: true,
-    provider: "mistral",
+    provider: "mistralai",
     description: "Fast and efficient open-source model by Mistral.",
+    capabilities: ["fast"],
+    contextLength: 32768,
   },
   {
     title: "LLaMA 3 70B",
     name: "meta-llama/llama-3-70b-instruct",
     active: true,
-    provider: "meta",
+    provider: "meta-llama",
     description: "Meta's powerful open-source large language model.",
+    capabilities: [],
+    contextLength: 8192,
   },
   {
     title: "LLaMA 3 8B",
     name: "meta-llama/llama-3-8b-instruct",
     active: true,
-    provider: "meta",
+    provider: "meta-llama",
     description: "Meta's lightweight open-source model.",
+    capabilities: ["fast"],
+    contextLength: 8192,
   },
 ];
 

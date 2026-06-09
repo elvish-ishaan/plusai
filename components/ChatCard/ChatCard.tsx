@@ -292,7 +292,7 @@ export default function ChatCard({ isCollapsed, setThreads, threadId }: ChatCard
         )}
       </div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 mb-6">
         <div className="max-w-4xl w-full mx-auto sticky bottom-0 backdrop-blur-md">
           <ChatInputBox
             message={message}

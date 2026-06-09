@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { recommendedModels } from "@/libs/constants";
 
+export const revalidate = 300;
+
 interface OpenRouterModel {
     id: string;
     name: string;
@@ -9,22 +11,42 @@ interface OpenRouterModel {
     architecture?: {
         modality?: string;
         input_modalities?: string[];
+        output_modalities?: string[];
     };
 }
 
-let cachedModels: OpenRouterModel[] | null = null;
-let cacheExpiry = 0;
-const CACHE_TTL_MS = 5 * 60 * 1000;
+function deriveCapabilities(m: OpenRouterModel): string[] {
+    const caps: string[] = [];
+    const inputMods = m.architecture?.input_modalities ?? [];
+    const outputMods = m.architecture?.output_modalities ?? [];
+    const modality = m.architecture?.modality ?? "";
+    const id = m.id.toLowerCase();
+
+    if (inputMods.includes("image") || modality.includes("+image") || modality.startsWith("image")) {
+        caps.push("vision");
+    }
+    if (outputMods.includes("image") || modality.includes("->image")) {
+        caps.push("image-gen");
+    }
+    if (id.includes("code") || id.includes("coder")) {
+        caps.push("code");
+    }
+    if (id.includes("-r1") || id.includes("reasoning") || id.includes("thinking") || id.includes(":thinking")) {
+        caps.push("reasoning");
+    }
+    if ((m.context_length ?? 0) >= 100000) {
+        caps.push("long-context");
+    }
+
+    return caps;
+}
 
 async function fetchOpenRouterModels(): Promise<OpenRouterModel[]> {
-    if (cachedModels && Date.now() < cacheExpiry) {
-        return cachedModels;
-    }
-    const res = await fetch("https://openrouter.ai/api/v1/models");
-    const data = await res.json() as { data: OpenRouterModel[] };
-    cachedModels = data.data ?? [];
-    cacheExpiry = Date.now() + CACHE_TTL_MS;
-    return cachedModels;
+    const res = await fetch("https://openrouter.ai/api/v1/models", {
+        next: { revalidate: 300 },
+    });
+    const data = (await res.json()) as { data: OpenRouterModel[] };
+    return data.data ?? [];
 }
 
 export async function GET() {
@@ -41,7 +63,7 @@ export async function GET() {
                 provider: m.id.split("/")[0] ?? "unknown",
                 description: m.description ?? "",
                 contextLength: m.context_length,
-                modality: m.architecture?.modality,
+                capabilities: deriveCapabilities(m),
             }))
             .sort((a, b) => a.title.localeCompare(b.title));
 
